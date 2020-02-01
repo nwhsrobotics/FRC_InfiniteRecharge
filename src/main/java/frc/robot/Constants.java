@@ -23,6 +23,12 @@ public final class Constants {
     // TODO: Storage
 
     // TODO: Shooter
+    public final class Shooter {
+        public static final int CANID_FLYWHEEL1=10;
+        public static final int CANID_FLYWHEEL2=11;
+        public static final int CANID_TURRET=12;
+        public static final int CANID_HOOD=13;
+    }
 
     // TODO: Hang
 
