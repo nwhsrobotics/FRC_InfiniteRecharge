@@ -10,7 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveTurretCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -33,6 +35,9 @@ public class RobotContainer {
 
   // TODO: Create m_shooterSubsystem
   // TODO: create commands for shooter
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+
+  private final MoveTurretCommand m_moveTurretCommand = new MoveTurretCommand(m_shooterSubsystem);
 
   // TODO: Create m_storageSubsystem
   // TODO: Create commands for storage
