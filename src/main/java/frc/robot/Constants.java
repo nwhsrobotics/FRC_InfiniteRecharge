@@ -16,4 +16,22 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // TODO: General constants
+
+    // TODO: Intake
+
+    // TODO: Storage
+
+    // TODO: Shooter
+
+    // TODO: Hang
+
+    // TODO: Control Panel (wheel)
+    
+    // TODO: Vision
+
+    // TODO: Drive
+    public final class Drive {
+        public static final int FRONT_LEFT_TALON = 6;  // For example
+    }
 }
