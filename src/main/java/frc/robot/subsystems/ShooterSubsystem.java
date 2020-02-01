@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -16,6 +18,7 @@ public class ShooterSubsystem extends SubsystemBase {
   //TODO: Add Flywheel
   //TODO: Add Turret
   //TODO: Add Hood
+  CANSparkMax m_hoodMotor;
 
   public ShooterSubsystem() {
     //TODO: Add Flywheel
