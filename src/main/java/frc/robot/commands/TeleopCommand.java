@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TeleopCommand extends CommandBase {
+  private final int DRIVE_THROTTLE_AXIS = 1;
+  private final int DRIVE_TURN_AXIS = 4;
   private XboxController m_joy;
   private DriveSubsystem m_drive;
 
@@ -35,7 +37,7 @@ public class TeleopCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.setDrivePower(m_joy.getY(), m_joy.getX());
+    m_drive.setDrivePower(-m_joy.getRawAxis(DRIVE_THROTTLE_AXIS), m_joy.getRawAxis(DRIVE_TURN_AXIS));
   }
 
   // Called once the command ends or is interrupted.
