@@ -8,21 +8,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class MoveTurretCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  public final ShooterSubsystem m_shooterSubsystem;
+public class CenterTurretCommand extends CommandBase {
   /**
-   * Creates a new MoveTurretCommand.
-   * @param subsystem //The subsystem
+   * Creates a new CenterTurretCommand.
    */
-
-  public MoveTurretCommand(ShooterSubsystem shooterSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.    
+  public final ShooterSubsystem m_shooterSubsystem;
+  public CenterTurretCommand(ShooterSubsystem shooterSubsystem) {
+    // Use addRequirements() here to declare subsystem dependencies.
     m_shooterSubsystem = shooterSubsystem;
-    addRequirements(shooterSubsystem);
+    addRequirements(m_shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -33,7 +29,7 @@ public class MoveTurretCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.MoveTurret(50);
+    m_shooterSubsystem.CenterTurret();
   }
 
   // Called once the command ends or is interrupted.
