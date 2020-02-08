@@ -31,7 +31,10 @@ public final class Constants {
     }
 
     // TODO: Hang
-
+    public final class Hang{ 
+        public static final int CANID_WINCH=20;
+    }
+    
     // TODO: Control Panel (wheel)
     
     // TODO: Vision
