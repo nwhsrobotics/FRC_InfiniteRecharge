@@ -18,6 +18,7 @@ public class ParkCommand extends CommandBase {
    */
   public ParkCommand(DriveSubsystem drive) {
     m_driveSubsystem = drive;
+    addRequirements(m_driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -30,6 +31,7 @@ public class ParkCommand extends CommandBase {
   @Override
   public void execute() {
     m_driveSubsystem.setDrivePower(0, 0);
+    System.out.println("Park");
   }
 
   // Called once the command ends or is interrupted.

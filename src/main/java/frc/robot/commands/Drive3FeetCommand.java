@@ -25,6 +25,7 @@ public class Drive3FeetCommand extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_driveSubsystem = drive;
     m_time = 0.0;
+    addRequirements(m_driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -38,6 +39,7 @@ public class Drive3FeetCommand extends CommandBase {
   public void execute() {
     m_time += TIME_PER_EXEC;
     m_driveSubsystem.setDrivePower(POWER,0.0);
+    System.out.println("Drive 3 feet");
   }
 
   // Called once the command ends or is interrupted.

@@ -117,7 +117,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //TODO: Add Flywheel
     //TODO: Add Turret
-    System.out.println(m_turretEncoder.getPosition());
+    // System.out.println(m_turretEncoder.getPosition());
     //TODO: Add Hood
     m_hoodMotor.set(m_hoodPower);
   }
