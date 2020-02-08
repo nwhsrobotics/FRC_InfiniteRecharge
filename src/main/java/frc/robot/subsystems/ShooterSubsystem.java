@@ -62,7 +62,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     //TODO: Add Turret
-    m_turret = new CANSparkMax(14, MotorType.kBrushless);
+    m_turret = new CANSparkMax(Constants.Shooter.CANID_TURRET, MotorType.kBrushless);
 
     m_turretPID = m_turret.getPIDController();
     m_turretEncoder = m_turret.getEncoder();
@@ -73,8 +73,8 @@ public class ShooterSubsystem extends SubsystemBase {
     kD = 0;
     kIz = 0;
     kFF = 0;
-    kmaxOutput = 0;
-    kminOutput = 0;
+    kmaxOutput = 1;
+    kminOutput = -1;
     //maxRPM = 0;
 
     m_turretPID.setP(kP);
@@ -126,7 +126,10 @@ public class ShooterSubsystem extends SubsystemBase {
   //TODO: Add Turret
   public void MoveTurret(double setPoint){
     m_turretPID.setReference(setPoint, ControlType.kPosition);
-    System.out.println("Running Function moveTurretCommand");
+  }
+  
+  public void CenterTurret(){
+    m_turretPID.setReference(0, ControlType.kPosition);
   }
   //TODO: Add Hood
   public void setHoodPower(double power){
