@@ -14,6 +14,7 @@ import frc.robot.commands.MoveTurretCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -22,6 +23,8 @@ import edu.wpi.first.wpilibj2.command.Command;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  XboxController joy = new XboxController(0);
+  private final JoystickButton a = new JoystickButton(joy, 1);
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -74,6 +77,7 @@ public class RobotContainer {
     // TODO: Buttons for intake
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
+    a.whenPressed(m_moveTurretCommand);
     // TODO: Buttons for hang
     // TODO: Buttons for drive
     // TODO: Buttons for vision
@@ -88,6 +92,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_moveTurretCommand;
+    return m_autoCommand;
   }
 }
