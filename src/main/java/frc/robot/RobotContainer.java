@@ -10,10 +10,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ExtendHookCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.HangSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -50,6 +52,9 @@ public class RobotContainer {
 
   // TODO: Create m_hangSubsystem
   // TODO: Create commands for hang
+  private final HangSubsystem m_hangSubsystem = new HangSubsystem();
+
+  private final ExtendHookCommand m_extendHookCommand =  new ExtendHookCommand(m_hangSubsystem);
 
   // TODO: Create m_controlPanelSubsystem (wheel thing)
   // TODO: Create commands for control panel
@@ -99,6 +104,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_moveTurretCommand;
+    return m_extendHookCommand;
   }
 }
