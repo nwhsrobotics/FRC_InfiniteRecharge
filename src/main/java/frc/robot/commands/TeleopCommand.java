@@ -23,6 +23,8 @@ public class TeleopCommand extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = driveSubsystem;
     m_joy = joy;
+
+    addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.
@@ -44,6 +46,6 @@ public class TeleopCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

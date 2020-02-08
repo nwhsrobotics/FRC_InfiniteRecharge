@@ -70,6 +70,8 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    m_driveSubsystem.setDefaultCommand(m_teleopCommand);
+    
     // Configure the button bindings
     configureButtonBindings();
     
