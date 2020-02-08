@@ -7,18 +7,40 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class HangSubsystem extends SubsystemBase {
   /**
    * Creates a new HangSubsystem.
    */
+  ///TODO: Add Winch
+  private final CANSparkMax m_winch;
+  
+
+
+  ///TODO: Add Hook
+
+
+
   public HangSubsystem() {
+    ///TODO: Add Winch
+    m_winch = new CANSparkMax(Constants.Hang.CANID_WINCH, MotorType.kBrushless);
+    m_winch.set(0.0);
+
+    ///TODO: Add Hook
 
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void MoveWinch(double speed){
+    m_winch.set(speed);
   }
 }
