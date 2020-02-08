@@ -38,6 +38,9 @@ public final class Constants {
 
     // TODO: Drive
     public final class Drive {
-        public static final int FRONT_LEFT_TALON = 6;  // For example
+        public static final int CANID_LEFT1 = 1;  // For example
+        public static final int CANID_LEFT2 = 2;
+        public static final int CANID_RIGHT1 = 10;
+        public static final int CANID_RIGHT2 = 11;
     }
 }
