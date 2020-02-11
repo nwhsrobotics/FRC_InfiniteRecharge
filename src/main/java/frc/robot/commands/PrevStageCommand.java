@@ -8,23 +8,29 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.StorageSubsystem;
 
-public class ExampleCommand extends CommandBase {
+public class PrevStageCommand extends CommandBase {
+  private final StorageSubsystem m_storageSubsystem;
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new PrevStageCommand.
    */
-  public ExampleCommand() {
+  public PrevStageCommand(StorageSubsystem subsystem) {
+    m_storageSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_storageSubsystem.PrevStage();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
   }
 
   // Called once the command ends or is interrupted.

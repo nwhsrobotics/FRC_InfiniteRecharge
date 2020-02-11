@@ -8,12 +8,21 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveTurretCommand;
+import frc.robot.commands.NextStageCommand;
+import frc.robot.commands.PrevStageCommand;
+import frc.robot.commands.StorageCommand;
+import frc.robot.commands.StorageSequentialCommandGroup;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.StorageSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -22,11 +31,16 @@ import edu.wpi.first.wpilibj2.command.Command;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  XboxController joy = new XboxController(0);
+  private final JoystickButton a = new JoystickButton(joy, 1);
+  private final JoystickButton b = new JoystickButton(joy, 2);
+  private final JoystickButton x = new JoystickButton(joy, 3);
+  private final JoystickButton y = new JoystickButton(joy, 4);
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final ExampleCommand m_autoCommand = new ExampleCommand();
 
   // --- Create Subsystems and Commands ----------------------
   // 
@@ -40,7 +54,12 @@ public class RobotContainer {
   private final MoveTurretCommand m_moveTurretCommand = new MoveTurretCommand(m_shooterSubsystem);
 
   // TODO: Create m_storageSubsystem
+  private final StorageSubsystem m_storageSubsystem = new StorageSubsystem();
   // TODO: Create commands for storage
+  private final StorageCommand m_StorageCommand = new StorageCommand(m_storageSubsystem);
+  private final NextStageCommand m_NextStageCommand = new NextStageCommand(m_storageSubsystem);
+  private final PrevStageCommand m_PrevStageCommand = new PrevStageCommand(m_storageSubsystem);
+  private final StorageSequentialCommandGroup m_StorageSequential = new StorageSequentialCommandGroup(m_storageSubsystem);
 
   // TODO: Create m_hangSubsystem
   // TODO: Create commands for hang
@@ -63,6 +82,10 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
+  public void update(){
+
+  }
+
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -72,6 +95,10 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // TODO: Buttons for intake
     // TODO: Buttons for storage
+    a.whenPressed(m_StorageCommand);
+    x.whenPressed(m_NextStageCommand);
+    b.whenPressed(m_PrevStageCommand);
+    y.whenPressed(m_StorageSequential);
     // TODO: Buttons for shooter
     // TODO: Buttons for hang
     // TODO: Buttons for drive
@@ -87,6 +114,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return m_StorageCommand;
   }
 }
