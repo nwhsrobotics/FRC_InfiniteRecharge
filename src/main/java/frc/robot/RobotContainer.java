@@ -17,6 +17,7 @@ import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -64,6 +65,7 @@ public class RobotContainer {
   // TODO: Create commands for control panel
 
   // TODO: Create m_visionSubsystem
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
   // TODO: Create commands for vision
 
   // TODO: Create m_driveSubsystem
