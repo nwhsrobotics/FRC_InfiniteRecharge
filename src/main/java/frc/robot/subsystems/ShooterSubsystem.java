@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -117,7 +118,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //TODO: Add Flywheel
     //TODO: Add Turret
-    System.out.println(m_turretEncoder.getPosition());
+    SmartDashboard.putNumber("Rotation Position", m_turretEncoder.getPosition());
     //TODO: Add Hood
     m_hoodMotor.set(m_hoodPower);
   }
@@ -125,7 +126,14 @@ public class ShooterSubsystem extends SubsystemBase {
   //TODO: Add Flywheel
   //TODO: Add Turret
   public void MoveTurret(double setPoint){
-    m_turretPID.setReference(setPoint, ControlType.kPosition);
+    double currentPos = m_turretEncoder.getPosition();
+    if(m_turretEncoder.getPosition() >= 128) {
+      m_turretPID.setReference( 127 , ControlType.kPosition);
+    } else if(m_turretEncoder.getPosition() <= -128){
+      m_turretPID.setReference( -127 , ControlType.kPosition);
+    } else {
+      m_turretPID.setReference( (currentPos + setPoint) , ControlType.kPosition);
+    }
   }
   
   public void CenterTurret(){

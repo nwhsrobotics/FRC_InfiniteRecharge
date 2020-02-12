@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   XboxController joy = new XboxController(0);
   private final JoystickButton a = new JoystickButton(joy, 1);
+  private final JoystickButton b = new JoystickButton(joy, 2);
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
   private final XboxController m_joy0 = new XboxController(0);
@@ -46,7 +47,10 @@ public class RobotContainer {
   // TODO: create commands for shooter
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
-  private final MoveTurretCommand m_moveTurretCommand = new MoveTurretCommand(m_shooterSubsystem);
+  private final MoveTurretCommand m_turretRightCommand = new MoveTurretCommand(m_shooterSubsystem, 20);
+  private final MoveTurretCommand m_stopTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
+  private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -20);
+
 
   // TODO: Create m_storageSubsystem
   // TODO: Create commands for storage
@@ -90,7 +94,10 @@ public class RobotContainer {
     // TODO: Buttons for intake
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
-    a.whenPressed(m_moveTurretCommand);
+    a.whenPressed(m_turretRightCommand);
+    a.whenReleased(m_stopTurretCommand);
+    b.whenPressed(m_turretLeftCommand);
+    b.whenReleased(m_stopTurretCommand);
     // TODO: Buttons for hang
     // TODO: Buttons for drive
     // TODO: Buttons for vision

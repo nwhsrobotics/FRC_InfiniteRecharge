@@ -14,13 +14,15 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class MoveTurretCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   public final ShooterSubsystem m_shooterSubsystem;
+  private double m_speed;
   /**
    * Creates a new MoveTurretCommand.
    * @param subsystem //The subsystem
    */
 
-  public MoveTurretCommand(ShooterSubsystem shooterSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.    
+  public MoveTurretCommand(ShooterSubsystem shooterSubsystem, double speed) {
+    // Use addRequirements() here to declare subsystem dependencies. 
+    m_speed = speed;   
     m_shooterSubsystem = shooterSubsystem;
     addRequirements(shooterSubsystem);
   }
@@ -33,7 +35,7 @@ public class MoveTurretCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.MoveTurret(50);
+    m_shooterSubsystem.MoveTurret(m_speed);
   }
 
   // Called once the command ends or is interrupted.
