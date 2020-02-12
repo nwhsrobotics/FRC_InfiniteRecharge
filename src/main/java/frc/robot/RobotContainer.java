@@ -9,8 +9,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.Drive3FeetCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveTurretCommand;
+import frc.robot.commands.ParkCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -70,6 +72,10 @@ public class RobotContainer {
 
   private final TeleopCommand m_teleopCommand = new TeleopCommand(m_driveSubsystem,m_joy0);
 
+  private final Drive3FeetCommand m_drive3FeetCommand = new Drive3FeetCommand(m_driveSubsystem);
+
+  private final ParkCommand m_parkCommand = new ParkCommand(m_driveSubsystem);
+
   // TODO: Create commands for drive 
 
 
@@ -78,7 +84,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     m_driveSubsystem.setDefaultCommand(m_teleopCommand);
-    
+
     // Configure the button bindings
     configureButtonBindings();
     
