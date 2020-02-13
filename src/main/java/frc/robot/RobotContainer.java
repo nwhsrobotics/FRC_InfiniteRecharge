@@ -14,6 +14,8 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ParkCommand;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -42,8 +44,16 @@ public class RobotContainer {
 
   // --- Create Subsystems and Commands ----------------------
   // 
+
+    //private final XboxController m_joy1 = new XboxController(1);
+  private final JoystickButton intakeButtonOn = new JoystickButton(m_joy1, 1);
+  private final JoystickButton intakeButtonOff = new JoystickButton(m_joy1, 2);
+
   // Create m_intakeSubsystem
   // Create commands for intake
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final IntakeCommand m_intakeOnCommand = new IntakeCommand(m_intakeSubsystem, Constants.Intake.INTAKE_POWER);
+  private final IntakeCommand m_intakeOffCommand = new IntakeCommand(m_intakeSubsystem, 0.0);
 
   // TODO: Create m_shooterSubsystem
   // TODO: create commands for shooter
@@ -98,6 +108,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // TODO: Buttons for intake
+    intakeButtonOn.whenPressed(m_intakeOnCommand);
+    intakeButtonOff.whenPressed(m_intakeOffCommand);
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
     a.whenPressed(m_turretRightCommand);

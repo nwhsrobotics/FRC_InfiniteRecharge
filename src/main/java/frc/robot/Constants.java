@@ -19,6 +19,9 @@ public final class Constants {
     // TODO: General constants
 
     // TODO: Intake
+    public final class Intake {
+        public static final double INTAKE_POWER = 0.5;
+    }
 
     // TODO: Storage
 
