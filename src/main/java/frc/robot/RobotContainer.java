@@ -44,8 +44,9 @@ public class RobotContainer {
   private final JoystickButton joy1_a = new JoystickButton(m_joy1, 1);
   private final JoystickButton joy1_b = new JoystickButton(m_joy1, 2);
   private final JoystickButton joy1_x = new JoystickButton(m_joy1, 3);
-  private final JoystickButton a = new JoystickButton(m_joy0, 1);
-  private final JoystickButton y = new JoystickButton(m_joy0, 4);
+  private final JoystickButton joy1_y = new JoystickButton(m_joy1, 4);
+  private final JoystickButton joy0_a = new JoystickButton(m_joy0, 1);
+  private final JoystickButton joy0_y = new JoystickButton(m_joy0, 4);
 
 
 
@@ -131,13 +132,13 @@ public class RobotContainer {
     joy1_b.whenReleased(m_stopTurretCommand);
     joy1_x.toggleWhenPressed(m_trackTargetCommand);
     // TODO: Buttons for hang
-    a.whenPressed(m_moveWinch);
-    a.whenReleased(m_stopWinch);
-    y.whenPressed(m_extendHookCommand);
-    y.whenReleased(m_retractHookCommand);
+    joy0_a.whenPressed(m_moveWinch);
+    joy0_a.whenReleased(m_stopWinch);
+    joy0_y.whenPressed(m_extendHookCommand);
+    joy0_y.whenReleased(m_retractHookCommand);
      // TODO: Buttons for drive
     // TODO: Buttons for vision
-    y.whenPressed(m_switchCameraCommand);
+    joy1_y.whenPressed(m_switchCameraCommand);
     // TODO: Buttons for control panel
   }
 
