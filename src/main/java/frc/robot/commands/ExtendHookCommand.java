@@ -11,14 +11,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HangSubsystem;
 
 public class ExtendHookCommand extends CommandBase {
-  public final HangSubsystem m_hangSubsystem;
+  private final double m_height;
+  private HangSubsystem m_hangSubsystem;
+
   /**
    * Creates a new ExtendHookCommand.
    */
-  public ExtendHookCommand(HangSubsystem hangSubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_hangSubsystem = hangSubsystem;
-    addRequirements(hangSubsystem);
+
+  public ExtendHookCommand(HangSubsystem subsystem, double height) {
+    m_hangSubsystem = subsystem;
+    addRequirements(m_hangSubsystem);
+    m_height = height;
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +32,7 @@ public class ExtendHookCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_hangSubsystem.ExtendHook(40);
+    m_hangSubsystem.ExtendHook(m_height);
   }
 
   // Called once the command ends or is interrupted.

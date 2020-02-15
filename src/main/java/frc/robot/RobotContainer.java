@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendHookCommand;
@@ -35,6 +36,8 @@ public class RobotContainer {
   private final XboxController m_joy0 = new XboxController(0);
   private final XboxController m_joy1 = new XboxController(1);
   private final JoystickButton a = new JoystickButton(m_joy0, 1);
+  private final JoystickButton y = new JoystickButton(m_joy0, 4);
+
 
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -61,7 +64,8 @@ public class RobotContainer {
   private final MoveWinchCommand m_moveWinch = new MoveWinchCommand(m_hangSubsystem, 0.3);
   private final MoveWinchCommand m_stopWinch = new MoveWinchCommand(m_hangSubsystem, 0.0);
 
-  private final ExtendHookCommand m_extendHookCommand =  new ExtendHookCommand(m_hangSubsystem);
+  private final ExtendHookCommand m_extendHookCommand =  new ExtendHookCommand(m_hangSubsystem, 10);
+  private final ExtendHookCommand m_retractHookCommand =  new ExtendHookCommand(m_hangSubsystem, 0);
 
   // TODO: Create m_controlPanelSubsystem (wheel thing)
   // TODO: Create commands for control panel
@@ -99,11 +103,13 @@ public class RobotContainer {
     // TODO: Buttons for intake
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
-    a.whenPressed(m_moveTurretCommand);
+    //a.whenPressed(m_moveTurretCommand);
     // TODO: Buttons for hang
     a.whenPressed(m_moveWinch);
     a.whenReleased(m_stopWinch);
-    // TODO: Buttons for drive
+    y.whenPressed(m_extendHookCommand);
+    y.whenReleased(m_retractHookCommand);
+     // TODO: Buttons for drive
     // TODO: Buttons for vision
     // TODO: Buttons for control panel
   }
