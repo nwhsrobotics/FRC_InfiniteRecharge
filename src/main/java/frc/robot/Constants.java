@@ -19,6 +19,9 @@ public final class Constants {
     // TODO: General constants
 
     // TODO: Intake
+    public final class Intake {
+        public static final double INTAKE_POWER = 0.5;
+    }
 
     // TODO: Storage
 
@@ -26,13 +29,14 @@ public final class Constants {
     public final class Shooter {
         public static final int CANID_FLYWHEEL1=10;
         public static final int CANID_FLYWHEEL2=11;
-        public static final int CANID_TURRET=12;
+        public static final int CANID_TURRET=14;
         public static final int CANID_HOOD=13;
     }
 
     // TODO: Hang
     public final class Hang{ 
-        public static final int CANID_WINCH=14;
+        public static final int CANID_WINCH=20;
+        public static final int CANID_HOOK=21;
     }
     
     // TODO: Control Panel (wheel)
@@ -41,6 +45,9 @@ public final class Constants {
 
     // TODO: Drive
     public final class Drive {
-        public static final int FRONT_LEFT_TALON = 6;  // For example
+        public static final int CANID_LEFT1 = 1;  // For example
+        public static final int CANID_LEFT2 = 2;
+        public static final int CANID_RIGHT1 = 10;
+        public static final int CANID_RIGHT2 = 11;
     }
 }

@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ExtendHookCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.MoveWinchCommand;
 import frc.robot.commands.TeleopCommand;
@@ -27,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  XboxController joy = new XboxController(0);
+  //private final JoystickButton a = new JoystickButton(joy, 1);
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
   private final XboxController m_joy0 = new XboxController(0);
@@ -47,7 +50,7 @@ public class RobotContainer {
   // TODO: create commands for shooter
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
-  private final MoveTurretCommand m_moveTurretCommand = new MoveTurretCommand(m_shooterSubsystem);
+  private final MoveTurretCommand m_moveTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
 
   // TODO: Create m_storageSubsystem
   // TODO: Create commands for storage
@@ -57,6 +60,9 @@ public class RobotContainer {
   // TODO: Create commands for hang
   private final MoveWinchCommand m_moveWinch = new MoveWinchCommand(m_hangSubsystem, 0.3);
   private final MoveWinchCommand m_stopWinch = new MoveWinchCommand(m_hangSubsystem, 0.0);
+
+  private final ExtendHookCommand m_extendHookCommand =  new ExtendHookCommand(m_hangSubsystem);
+
   // TODO: Create m_controlPanelSubsystem (wheel thing)
   // TODO: Create commands for control panel
 
@@ -76,6 +82,8 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    m_driveSubsystem.setDefaultCommand(m_teleopCommand);
+    
     // Configure the button bindings
     configureButtonBindings();
     
@@ -91,6 +99,7 @@ public class RobotContainer {
     // TODO: Buttons for intake
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
+    a.whenPressed(m_moveTurretCommand);
     // TODO: Buttons for hang
     a.whenPressed(m_moveWinch);
     a.whenReleased(m_stopWinch);
@@ -107,6 +116,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_moveTurretCommand;
+    return m_autoCommand;
   }
 }
