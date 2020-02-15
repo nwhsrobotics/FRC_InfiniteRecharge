@@ -10,17 +10,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.HangSubsystem;
 
-public class MoveWinchCommand extends CommandBase {
-  public final HangSubsystem m_hangSubsystem;
-  private double m_speed;
+public class ExtendHookCommand extends CommandBase {
+  private final double m_height;
+  private HangSubsystem m_hangSubsystem;
+
   /**
-   * Creates a new MoveWinchCommand.
+   * Creates a new ExtendHookCommand.
    */
-  public MoveWinchCommand(HangSubsystem hangSubsystem, double speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    m_hangSubsystem = hangSubsystem;
-    m_speed= speed;
-    addRequirements(hangSubsystem);
+
+  public ExtendHookCommand(HangSubsystem subsystem, double height) {
+    m_hangSubsystem = subsystem;
+    addRequirements(m_hangSubsystem);
+    m_height = height;
   }
 
   // Called when the command is initially scheduled.
@@ -31,7 +32,7 @@ public class MoveWinchCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_hangSubsystem.MoveWinch(m_speed);
+    m_hangSubsystem.ExtendHook(m_height);
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +43,6 @@ public class MoveWinchCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
