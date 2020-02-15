@@ -13,6 +13,7 @@ import frc.robot.commands.Drive3FeetCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ParkCommand;
+import frc.robot.commands.SwitchCameraCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -33,6 +34,8 @@ public class RobotContainer {
   XboxController joy = new XboxController(0);
   private final JoystickButton a = new JoystickButton(joy, 1);
   private final JoystickButton b = new JoystickButton(joy, 2);
+  //private final JoystickButton x = new JoystickButton(joy, 3);
+  private final JoystickButton y = new JoystickButton(joy, 4);
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
   private final XboxController m_joy0 = new XboxController(0);
@@ -77,7 +80,7 @@ public class RobotContainer {
   // TODO: Create m_visionSubsystem
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
   // TODO: Create commands for vision
-
+  private final SwitchCameraCommand m_switchCameraCommand = new SwitchCameraCommand(m_visionSubsystem);
   // TODO: Create m_driveSubsystem
 
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
@@ -121,6 +124,7 @@ public class RobotContainer {
     // TODO: Buttons for hang
     // TODO: Buttons for drive
     // TODO: Buttons for vision
+    y.whenPressed(m_switchCameraCommand);
     // TODO: Buttons for control panel
   }
 
