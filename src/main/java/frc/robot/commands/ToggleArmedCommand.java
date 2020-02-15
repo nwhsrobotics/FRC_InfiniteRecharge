@@ -10,12 +10,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.StorageSubsystem;
 
-public class PrevStageCommand extends CommandBase {
+public class ToggleArmedCommand extends CommandBase {
   private final StorageSubsystem m_storageSubsystem;
+
   /**
-   * Creates a new PrevStageCommand.
+   * Creates a new ToggleArmedCommand.
    */
-  public PrevStageCommand(StorageSubsystem subsystem) {
+  public ToggleArmedCommand(StorageSubsystem subsystem) {
     m_storageSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -24,13 +25,13 @@ public class PrevStageCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_storageSubsystem.PrevStage();
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    m_storageSubsystem.setArmed(!m_storageSubsystem.getArmed());
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +42,6 @@ public class PrevStageCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

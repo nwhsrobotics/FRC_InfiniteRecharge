@@ -14,10 +14,8 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveTurretCommand;
-import frc.robot.commands.NextStageCommand;
-import frc.robot.commands.PrevStageCommand;
-import frc.robot.commands.StorageCommand;
-import frc.robot.commands.StorageSequentialCommandGroup;
+import frc.robot.commands.ToggleSensorCommand;
+import frc.robot.commands.ToggleArmedCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
@@ -36,6 +34,8 @@ public class RobotContainer {
   private final JoystickButton b = new JoystickButton(joy, 2);
   private final JoystickButton x = new JoystickButton(joy, 3);
   private final JoystickButton y = new JoystickButton(joy, 4);
+  private final JoystickButton startButton = new JoystickButton(joy, 7);
+  
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -56,10 +56,11 @@ public class RobotContainer {
   // TODO: Create m_storageSubsystem
   private final StorageSubsystem m_storageSubsystem = new StorageSubsystem();
   // TODO: Create commands for storage
-  private final StorageCommand m_StorageCommand = new StorageCommand(m_storageSubsystem);
-  private final NextStageCommand m_NextStageCommand = new NextStageCommand(m_storageSubsystem);
-  private final PrevStageCommand m_PrevStageCommand = new PrevStageCommand(m_storageSubsystem);
-  private final StorageSequentialCommandGroup m_StorageSequential = new StorageSequentialCommandGroup(m_storageSubsystem);
+  private final ToggleSensorCommand m_sensor1Command = new ToggleSensorCommand(m_storageSubsystem, 1);
+  private final ToggleSensorCommand m_sensor2Command = new ToggleSensorCommand(m_storageSubsystem, 2);
+  private final ToggleSensorCommand m_Sensor3Command = new ToggleSensorCommand(m_storageSubsystem, 3);
+  private final ToggleArmedCommand m_toggleArmedCommand = new ToggleArmedCommand(m_storageSubsystem);
+  
 
   // TODO: Create m_hangSubsystem
   // TODO: Create commands for hang
@@ -95,10 +96,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // TODO: Buttons for intake
     // TODO: Buttons for storage
-    a.whenPressed(m_StorageCommand);
-    x.whenPressed(m_NextStageCommand);
-    b.whenPressed(m_PrevStageCommand);
-    y.whenPressed(m_StorageSequential);
+    //a.toggleWhenActive(m_StorageCommand); //sensor2 toggle
+    //x.toggleWhenActive(m_NextStageCommand); //sensor1 toggle
+    //y.whenPressed(m_deleteCommand); //sensor2 false
+    x.whenPressed(m_sensor1Command); //sensor1 toggle
+    b.whenPressed(m_sensor2Command); //sensor2 toggle 
+    startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
+    y.whenPressed(m_Sensor3Command); //sensor3 toggle
     // TODO: Buttons for shooter
     // TODO: Buttons for hang
     // TODO: Buttons for drive
@@ -114,6 +118,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_StorageCommand;
+    return m_sensor2Command;
   }
 }
