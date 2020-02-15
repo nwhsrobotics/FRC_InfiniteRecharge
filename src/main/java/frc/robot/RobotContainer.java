@@ -14,6 +14,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ParkCommand;
 import frc.robot.commands.TeleopCommand;
+import frc.robot.commands.TrackTargetCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -31,13 +32,14 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   XboxController joy = new XboxController(0);
-  private final JoystickButton a = new JoystickButton(joy, 1);
-  private final JoystickButton b = new JoystickButton(joy, 2);
+  
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
   private final XboxController m_joy0 = new XboxController(0);
   private final XboxController m_joy1 = new XboxController(1);
-
+  private final JoystickButton joy1_a = new JoystickButton(m_joy1, 1);
+  private final JoystickButton joy1_b = new JoystickButton(m_joy1, 2);
+  private final JoystickButton joy1_x = new JoystickButton(m_joy1, 3);
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
@@ -50,6 +52,8 @@ public class RobotContainer {
   private final JoystickButton intakeButtonOn = new JoystickButton(m_joy1, 1);
   private final JoystickButton intakeButtonOff = new JoystickButton(m_joy1, 2);
 
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+
   // Create m_intakeSubsystem
   // Create commands for intake
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
@@ -58,11 +62,12 @@ public class RobotContainer {
 
   // TODO: Create m_shooterSubsystem
   // TODO: create commands for shooter
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_visionSubsystem);
 
   private final MoveTurretCommand m_turretRightCommand = new MoveTurretCommand(m_shooterSubsystem, 20);
   private final MoveTurretCommand m_stopTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
   private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -20);
+  //private final 
 
 
   // TODO: Create m_storageSubsystem
@@ -75,7 +80,8 @@ public class RobotContainer {
   // TODO: Create commands for control panel
 
   // TODO: Create m_visionSubsystem
-  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+  private TrackTargetCommand m_trackTargetCommand = new TrackTargetCommand(m_shooterSubsystem);//m_visionSubsystem.getTargetX());
+
   // TODO: Create commands for vision
 
   // TODO: Create m_driveSubsystem
@@ -114,10 +120,11 @@ public class RobotContainer {
     intakeButtonOff.whenPressed(m_intakeOffCommand);
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
-    a.whenPressed(m_turretRightCommand);
-    a.whenReleased(m_stopTurretCommand);
-    b.whenPressed(m_turretLeftCommand);
-    b.whenReleased(m_stopTurretCommand);
+    joy1_a.whenPressed(m_turretRightCommand);
+    joy1_a.whenReleased(m_stopTurretCommand);
+    joy1_b.whenPressed(m_turretLeftCommand);
+    joy1_b.whenReleased(m_stopTurretCommand);
+    joy1_x.toggleWhenPressed(m_trackTargetCommand);
     // TODO: Buttons for hang
     // TODO: Buttons for drive
     // TODO: Buttons for vision

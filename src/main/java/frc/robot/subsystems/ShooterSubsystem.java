@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ShooterSubsystem extends SubsystemBase {
   /**
@@ -37,9 +38,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CANPIDController m_hoodPid;
   private CANEncoder m_hoodEncoder;
   private double kHoodP, kHoodI, kHoodD, kHoodIz, kHoodFF, kHoodMaxOutput, kHoodMinOutput;
+  private VisionSubsystem m_visionSubsystem;
+  private double m_x;
   
 
-  public ShooterSubsystem() {
+  public ShooterSubsystem(VisionSubsystem visionSubsystem) {
+    m_visionSubsystem = visionSubsystem;
     //TODO: Add Flywheel
       //1621 rpm 5676: NEO max (28%)
     m_flywheel = new CANSparkMax(13, MotorType.kBrushless);
@@ -86,6 +90,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_turretPID.setOutputRange(kminOutput, kmaxOutput);
     System.out.println("Sparks Initialized.");
     
+    m_turret.setClosedLoopRampRate(Constants.Shooter.TURRET_RAMP_RATE);
 
 
     //TODO: Add Hood
@@ -119,6 +124,7 @@ public class ShooterSubsystem extends SubsystemBase {
     //TODO: Add Flywheel
     //TODO: Add Turret
     SmartDashboard.putNumber("Rotation Position", m_turretEncoder.getPosition());
+    m_x = m_visionSubsystem.getTargetX();
     //TODO: Add Hood
     m_hoodMotor.set(m_hoodPower);
   }
@@ -142,5 +148,23 @@ public class ShooterSubsystem extends SubsystemBase {
   //TODO: Add Hood
   public void setHoodPower(double power){
     m_hoodPower = power;
+  }
+
+  public void trackTarget(){
+    double currentPos = m_turretEncoder.getPosition();
+    double m_X = 0.1*(m_x - 320);
+    System.out.println(m_X);
+    if (m_X > 15){
+      m_X = 15;
+    }else if (m_X < -15){
+      m_X = -15;
+    } 
+
+
+    if (m_x != -1){
+      m_turretPID.setReference((currentPos + m_X), ControlType.kPosition);
+
+    }
+    
   }
 }
