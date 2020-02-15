@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -62,7 +63,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     //TODO: Add Turret
-    m_turret = new CANSparkMax(14, MotorType.kBrushless);
+    m_turret = new CANSparkMax(Constants.Shooter.CANID_TURRET, MotorType.kBrushless);
 
     m_turretPID = m_turret.getPIDController();
     m_turretEncoder = m_turret.getEncoder();
@@ -73,8 +74,8 @@ public class ShooterSubsystem extends SubsystemBase {
     kD = 0;
     kIz = 0;
     kFF = 0;
-    kmaxOutput = 0;
-    kminOutput = 0;
+    kmaxOutput = 1;
+    kminOutput = -1;
     //maxRPM = 0;
 
     m_turretPID.setP(kP);
@@ -117,7 +118,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //TODO: Add Flywheel
     //TODO: Add Turret
-    System.out.println(m_turretEncoder.getPosition());
+    SmartDashboard.putNumber("Rotation Position", m_turretEncoder.getPosition());
     //TODO: Add Hood
     m_hoodMotor.set(m_hoodPower);
   }
@@ -125,8 +126,18 @@ public class ShooterSubsystem extends SubsystemBase {
   //TODO: Add Flywheel
   //TODO: Add Turret
   public void MoveTurret(double setPoint){
-    m_turretPID.setReference(setPoint, ControlType.kPosition);
-    System.out.println("Running Function moveTurretCommand");
+    double currentPos = m_turretEncoder.getPosition();
+    if(m_turretEncoder.getPosition() >= 128) {
+      m_turretPID.setReference( 127 , ControlType.kPosition);
+    } else if(m_turretEncoder.getPosition() <= -128){
+      m_turretPID.setReference( -127 , ControlType.kPosition);
+    } else {
+      m_turretPID.setReference( (currentPos + setPoint) , ControlType.kPosition);
+    }
+  }
+  
+  public void CenterTurret(){
+    m_turretPID.setReference(0, ControlType.kPosition);
   }
   //TODO: Add Hood
   public void setHoodPower(double power){
