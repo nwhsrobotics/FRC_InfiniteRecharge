@@ -19,6 +19,7 @@ public class HangSubsystem extends SubsystemBase {
    */
   ///TODO: Add Winch
   private final CANSparkMax m_winch;
+  private double m_speed=0;
   
 
 
@@ -37,10 +38,11 @@ public class HangSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    m_winch.set(m_speed);
     // This method will be called once per scheduler run
   }
 
   public void MoveWinch(double speed){
-    m_winch.set(speed);
+   m_speed= speed;
   }
 }

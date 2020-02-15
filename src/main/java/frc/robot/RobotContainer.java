@@ -11,11 +11,14 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveTurretCommand;
+import frc.robot.commands.MoveWinchCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.HangSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -28,6 +31,7 @@ public class RobotContainer {
   // TODO: Remove examples and things that depend on them.
   private final XboxController m_joy0 = new XboxController(0);
   private final XboxController m_joy1 = new XboxController(1);
+  private final JoystickButton a = new JoystickButton(m_joy0, 1);
 
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -49,8 +53,10 @@ public class RobotContainer {
   // TODO: Create commands for storage
 
   // TODO: Create m_hangSubsystem
+  private final HangSubsystem m_hangSubsystem = new HangSubsystem();
   // TODO: Create commands for hang
-
+  private final MoveWinchCommand m_moveWinch = new MoveWinchCommand(m_hangSubsystem, 0.3);
+  private final MoveWinchCommand m_stopWinch = new MoveWinchCommand(m_hangSubsystem, 0.0);
   // TODO: Create m_controlPanelSubsystem (wheel thing)
   // TODO: Create commands for control panel
 
@@ -86,6 +92,8 @@ public class RobotContainer {
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
     // TODO: Buttons for hang
+    a.whenPressed(m_moveWinch);
+    a.whenReleased(m_stopWinch);
     // TODO: Buttons for drive
     // TODO: Buttons for vision
     // TODO: Buttons for control panel

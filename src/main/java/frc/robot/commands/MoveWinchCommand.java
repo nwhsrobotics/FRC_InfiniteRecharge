@@ -12,12 +12,14 @@ import frc.robot.subsystems.HangSubsystem;
 
 public class MoveWinchCommand extends CommandBase {
   public final HangSubsystem m_hangSubsystem;
+  private double m_speed;
   /**
    * Creates a new MoveWinchCommand.
    */
-  public MoveWinchCommand(HangSubsystem hangSubsystem) {
+  public MoveWinchCommand(HangSubsystem hangSubsystem, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_hangSubsystem = hangSubsystem;
+    m_speed= speed;
     addRequirements(hangSubsystem);
   }
 
@@ -29,7 +31,7 @@ public class MoveWinchCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_hangSubsystem.MoveWinch(0.3);
+    m_hangSubsystem.MoveWinch(m_speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -40,6 +42,6 @@ public class MoveWinchCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

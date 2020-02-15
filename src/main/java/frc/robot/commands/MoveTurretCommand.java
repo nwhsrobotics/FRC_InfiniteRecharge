@@ -33,7 +33,7 @@ public class MoveTurretCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.MoveTurret(10);
+    //m_shooterSubsystem.MoveTurret(10);
   }
 
   // Called once the command ends or is interrupted.
