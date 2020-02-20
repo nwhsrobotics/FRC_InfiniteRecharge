@@ -64,6 +64,9 @@ public class VisionSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Camera chooser", 2);
       m_chooseCamera = 2;
     } else if (m_chooseCamera == 2) {
+      SmartDashboard.putNumber("Camera chooser", 3);
+      m_chooseCamera = 3;
+    } else if (m_chooseCamera == 3) {
       SmartDashboard.putNumber("Camera chooser", 1);
       m_chooseCamera = 1;
     } else {
