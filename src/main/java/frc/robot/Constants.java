@@ -41,9 +41,6 @@ public final class Constants {
     // TODO: Vision
 
     // TODO: Drive
-    public final class Drive {
-        public static final int FRONT_LEFT_TALON = 6;  // For example
-    }
 
 
 
@@ -51,8 +48,8 @@ public final class Constants {
 
     public static final class OIConstants {
         XboxController joy = new XboxController(0);
-        public final int StartSequenceCommand = 1;  //NOT REAL VALUE
-        public final int NextStageButton = 0;  //NOT REAL VALUE
-        public final int PrevStageButton = 0;  //NOT REAL VALUE
+        //public final int StartSequenceCommand = 1;  //NOT REAL VALUE
+        //public final int NextStageButton = 0;  //NOT REAL VALUE
+        //public final int PrevStageButton = 0;  //NOT REAL VALUE
     }
 }

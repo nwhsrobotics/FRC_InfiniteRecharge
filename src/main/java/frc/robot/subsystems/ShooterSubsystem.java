@@ -18,7 +18,7 @@ public class ShooterSubsystem extends SubsystemBase {
   //TODO: Add Flywheel
   //TODO: Add Turret
   //TODO: Add Hood
-  CANSparkMax m_hoodMotor;
+
 
   public ShooterSubsystem() {
     //TODO: Add Flywheel

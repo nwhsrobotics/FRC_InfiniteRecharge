@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,6 +53,9 @@ public class StorageSubsystem extends SubsystemBase {
     //private final boolean m_closedloop = true; // True = Position Control, Flase = PT
 
     public boolean sensor[] = new boolean[4];
+    private static final DigitalInput m_Sensor1 = new DigitalInput(0);
+    private static final DigitalInput m_Sensor2 = new DigitalInput(1);
+    //private static final DigitalInput m_Sensor3 = new DigitalInput(2);
     
 
 
@@ -68,7 +72,7 @@ public class StorageSubsystem extends SubsystemBase {
     /**
      * Creates a new ExampleSubsystem.
      */
-    private static final int deviceID_1 = 30;
+    private static final int deviceID_1 = 14;
     //private static final int deviceID_2 = 0; Assign value 
     private CANSparkMax m_motor;
     //private CANSparkMax m_motor2;
@@ -166,6 +170,10 @@ public class StorageSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Sensor 3:  ", sensor[3]);
         SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
         SmartDashboard.putNumber("Ball Prediction: ", ballPrediction);
+        System.out.println(m_Sensor1.get());
+        SmartDashboard.putBoolean("Ball Sensor:  ", (m_Sensor1.get()));
+        //System.out.println(m_Sensor2.get());
+        //SmartDashboard.putBoolean("Ball 2 Sensor:  ", (m_Sensor2.get()));
         setActuators();
     }
 
@@ -182,6 +190,11 @@ public class StorageSubsystem extends SubsystemBase {
             isFinished = false;
         }
     }
+
+   /* public void autoStorage() {
+      setActuators();                   USE IN CASE AUTO REQUIRES ANOTHER FUNCTION
+    }
+    */
 
     public void setSensor(int sensorID, boolean sensorState) {
       sensor[sensorID] = sensorState;
@@ -265,9 +278,7 @@ public class StorageSubsystem extends SubsystemBase {
                 if (sensor[1] == true) {
                   if (sensor[2] == false){
                     constantMotion(3);
-                  } else {
-                    m_BeltState = BeltState.INTAKE_S2A;
-                  }
+                  } 
                 } else if (sensor[1] == false) {
                   if(sensor[2] == true){
                     m_BeltState = BeltState.INTAKE_S1B;
@@ -295,8 +306,6 @@ public class StorageSubsystem extends SubsystemBase {
               if (sensor[1] == true) {
                 if (sensor[2] == false){
                   constantMotion(3);
-                } else {
-                  m_BeltState = BeltState.INTAKE_S3A;
                 }
               } else if (sensor[1] == false) {
                 if(sensor[2] == true){
@@ -325,9 +334,7 @@ public class StorageSubsystem extends SubsystemBase {
                 if (sensor[1] == true) {
                   if (sensor[2] == false){
                     constantMotion(3);
-                  } else {
-                    m_BeltState = BeltState.INTAKE_S4A;
-                  }
+                  } 
                 } else if (sensor[1] == false) {
                   if(sensor[2] == true){
                     m_BeltState = BeltState.INTAKE_S3B;
@@ -354,9 +361,7 @@ public class StorageSubsystem extends SubsystemBase {
             if (sensor[1] == true) {
               if (sensor[2] == false){
                 constantMotion(3);
-              } else {
-                m_BeltState = BeltState.FULL;
-              }
+              } 
             } else if (sensor[1] == false && sensor[2] == true) {
                     m_BeltState = BeltState.INTAKE_S4B;
                     ballPrediction = 4;

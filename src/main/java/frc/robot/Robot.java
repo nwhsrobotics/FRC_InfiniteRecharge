@@ -28,8 +28,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private boolean robotReady = false;
   private RobotContainer m_robotContainer;
-
-  private static final DigitalInput m_dio = new DigitalInput(0);
+  
+ 
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -59,8 +59,6 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     m_robotContainer.update();
-    System.out.println(m_dio.get());
-    SmartDashboard.putBoolean("Ball Sensor:  ", !(m_dio.get()));
   }
 
   /**

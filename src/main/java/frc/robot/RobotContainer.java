@@ -12,11 +12,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.AutoCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ToggleSensorCommand;
 import frc.robot.commands.ToggleArmedCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,9 +37,8 @@ public class RobotContainer {
   
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand();
+ 
+  
 
   // --- Create Subsystems and Commands ----------------------
   // 
@@ -61,6 +59,7 @@ public class RobotContainer {
   private final ToggleSensorCommand m_Sensor3Command = new ToggleSensorCommand(m_storageSubsystem, 3);
   private final ToggleArmedCommand m_toggleArmedCommand = new ToggleArmedCommand(m_storageSubsystem);
   
+  private final AutoCommand m_autoCommand = new AutoCommand(m_storageSubsystem, m_shooterSubsystem, 0, 0, 0);
 
   // TODO: Create m_hangSubsystem
   // TODO: Create commands for hang
@@ -118,6 +117,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_sensor2Command;
+    return m_autoCommand;
   }
 }
