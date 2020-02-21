@@ -22,6 +22,12 @@ public final class Constants {
     public final class Intake {
         public static final double INTAKE_POWER = 0.5;
     }
+    
+    public final class IntakeArm{
+        public static final int CANID_INTAKE = 14;
+    }
+    
+    
 
     // TODO: Storage
 

@@ -15,6 +15,7 @@ import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ParkCommand;
 import frc.robot.commands.TeleopCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakePosCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -46,15 +47,20 @@ public class RobotContainer {
   // --- Create Subsystems and Commands ----------------------
   // 
 
-    //private final XboxController m_joy1 = new XboxController(1);
-  private final JoystickButton intakeButtonOn = new JoystickButton(m_joy1, 1);
-  private final JoystickButton intakeButtonOff = new JoystickButton(m_joy1, 2);
+  private final JoystickButton intakeButtonOn = new JoystickButton(m_joy1, 1); //a
+  private final JoystickButton intakeButtonOff = new JoystickButton(m_joy1, 2); //b
+
+  private final JoystickButton intakeButtonUp = new JoystickButton(m_joy1, 1); //a
+  private final JoystickButton intakeButtonDown = new JoystickButton(m_joy1, 2); //b
 
   // Create m_intakeSubsystem
   // Create commands for intake
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final IntakeCommand m_intakeOnCommand = new IntakeCommand(m_intakeSubsystem, Constants.Intake.INTAKE_POWER);
   private final IntakeCommand m_intakeOffCommand = new IntakeCommand(m_intakeSubsystem, 0.0);
+
+  private final IntakePosCommand m_intakePosUp = new IntakePosCommand(m_intakeSubsystem, false);
+  private final IntakePosCommand m_intakePosDown = new IntakePosCommand(m_intakeSubsystem, true);
 
   // TODO: Create m_shooterSubsystem
   // TODO: create commands for shooter
@@ -110,14 +116,17 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // TODO: Buttons for intake
-    intakeButtonOn.whenPressed(m_intakeOnCommand);
-    intakeButtonOff.whenPressed(m_intakeOffCommand);
+    //intakeButtonOn.whenPressed(m_intakeOnCommand);
+    //intakeButtonOff.whenPressed(m_intakeOffCommand);
+
+    intakeButtonUp.whenPressed(m_intakePosUp);
+    intakeButtonDown.whenPressed(m_intakePosDown);
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
-    a.whenPressed(m_turretRightCommand);
-    a.whenReleased(m_stopTurretCommand);
-    b.whenPressed(m_turretLeftCommand);
-    b.whenReleased(m_stopTurretCommand);
+    //a.whenPressed(m_turretRightCommand);
+    //a.whenReleased(m_stopTurretCommand);
+    //b.whenPressed(m_turretLeftCommand);
+    //b.whenReleased(m_stopTurretCommand);
     // TODO: Buttons for hang
     // TODO: Buttons for drive
     // TODO: Buttons for vision
