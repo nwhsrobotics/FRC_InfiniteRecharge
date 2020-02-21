@@ -24,6 +24,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_intake;
   private double m_intakeSpeed = 0.0;
   //private CANEncoder m_intakeEncoder;
+  
   private final int deviceId = 14;
   
   

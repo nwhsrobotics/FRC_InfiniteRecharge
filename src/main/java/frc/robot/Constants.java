@@ -37,11 +37,13 @@ public final class Constants {
         public static final int CANID_FLYWHEEL2=11;
         public static final int CANID_TURRET=14;
         public static final int CANID_HOOD=13;
+        public static final double TURRET_RAMP_RATE = 0.25;
     }
 
     // TODO: Hang
     public final class Hang{ 
-        public static final int CANID_WINCH=20;
+        public static final int CANID_WINCH=21;
+        public static final int CANID_HOOK=20;
     }
     
     // TODO: Control Panel (wheel)
