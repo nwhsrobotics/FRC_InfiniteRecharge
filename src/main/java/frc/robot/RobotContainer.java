@@ -18,6 +18,18 @@ import frc.robot.commands.ToggleSensorCommand;
 import frc.robot.commands.ToggleArmedCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
+import frc.robot.commands.ExtendHookCommand;
+import frc.robot.commands.ParkCommand;
+import frc.robot.commands.SwitchCameraCommand;
+import frc.robot.commands.MoveWinchCommand;
+import frc.robot.commands.TeleopCommand;
+import frc.robot.commands.TrackTargetCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakePosCommand;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.HangSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -28,58 +40,123 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  XboxController joy = new XboxController(0);
-  private final JoystickButton a = new JoystickButton(joy, 1);
-  private final JoystickButton b = new JoystickButton(joy, 2);
-  private final JoystickButton x = new JoystickButton(joy, 3);
-  private final JoystickButton y = new JoystickButton(joy, 4);
-  private final JoystickButton startButton = new JoystickButton(joy, 7);
-  
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
  
   
+  
+  // The robot's subsystems and commands are defined here...
+  // TODO: Remove examples and things that depend on them.
+  private final XboxController m_joy0 = new XboxController(0);
+  private final XboxController m_joy1 = new XboxController(1);
+  private final JoystickButton joy1_a = new JoystickButton(m_joy1, 1);
+  private final JoystickButton joy1_b = new JoystickButton(m_joy1, 2);
+  private final JoystickButton joy1_x = new JoystickButton(m_joy1, 3);
+  private final JoystickButton joy1_y = new JoystickButton(m_joy1, 4);
+  private final JoystickButton joy0_a = new JoystickButton(m_joy0, 1);
+  private final JoystickButton joy0_b = new JoystickButton(m_joy0, 2);
+  private final JoystickButton joy0_x = new JoystickButton(m_joy0, 3);
+  private final JoystickButton joy0_y = new JoystickButton(m_joy0, 4);
+  private final JoystickButton joy0_startButton = new JoystickButton(m_joy1, 7);
+
+
+  //private final JoystickButton intakeButtonOn = new JoystickButton(m_joy1, 1); //a
+  //private final JoystickButton intakeButtonOff = new JoystickButton(m_joy1, 2); //b
+  //private final JoystickButton intakeButtonUp = new JoystickButton(m_joy1, 1); //a
+  //private final JoystickButton intakeButtonDown = new JoystickButton(m_joy1, 2); //b
+
+
+
+
+  
 
   // --- Create Subsystems and Commands ----------------------
   // 
+
+  
+  
+  //VISION Subsystem
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+
+
   // Create m_intakeSubsystem
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+
   // Create commands for intake
+  private final IntakePosCommand m_intakePosUp = new IntakePosCommand(m_intakeSubsystem, false);
+  private final IntakePosCommand m_intakePosDown = new IntakePosCommand(m_intakeSubsystem, true);
+
 
   // TODO: Create m_shooterSubsystem
-  // TODO: create commands for shooter
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_visionSubsystem);
 
-  private final MoveTurretCommand m_moveTurretCommand = new MoveTurretCommand(m_shooterSubsystem);
+  // TODO: create commands for shooter
+  private final MoveTurretCommand m_turretRightCommand = new MoveTurretCommand(m_shooterSubsystem, 20);
+  private final MoveTurretCommand m_stopTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
+  private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -20);
+
+
+
+
 
   // TODO: Create m_storageSubsystem
   private final StorageSubsystem m_storageSubsystem = new StorageSubsystem();
+
   // TODO: Create commands for storage
   private final ToggleSensorCommand m_sensor1Command = new ToggleSensorCommand(m_storageSubsystem, 1);
   private final ToggleSensorCommand m_sensor2Command = new ToggleSensorCommand(m_storageSubsystem, 2);
   private final ToggleSensorCommand m_Sensor3Command = new ToggleSensorCommand(m_storageSubsystem, 3);
   private final ToggleArmedCommand m_toggleArmedCommand = new ToggleArmedCommand(m_storageSubsystem);
   
-  private final AutoCommand m_autoCommand = new AutoCommand(m_storageSubsystem, m_shooterSubsystem, 0, 0, 0);
+
 
   // TODO: Create m_hangSubsystem
+  private final HangSubsystem m_hangSubsystem = new HangSubsystem();
+
   // TODO: Create commands for hang
+  private final MoveWinchCommand m_moveWinch = new MoveWinchCommand(m_hangSubsystem, 0.3);
+  private final MoveWinchCommand m_stopWinch = new MoveWinchCommand(m_hangSubsystem, 0.0);
+  private final ExtendHookCommand m_extendHookCommand =  new ExtendHookCommand(m_hangSubsystem, 10);
+  private final ExtendHookCommand m_retractHookCommand =  new ExtendHookCommand(m_hangSubsystem, 0);
+
+
 
   // TODO: Create m_controlPanelSubsystem (wheel thing)
   // TODO: Create commands for control panel
 
+
+
   // TODO: Create m_visionSubsystem
+  private TrackTargetCommand m_trackTargetCommand = new TrackTargetCommand(m_shooterSubsystem);//m_visionSubsystem.getTargetX());
+
   // TODO: Create commands for vision
+  private final SwitchCameraCommand m_switchCameraCommand = new SwitchCameraCommand(m_visionSubsystem);
+
+
 
   // TODO: Create m_driveSubsystem
-  // TODO: Create commands for drive
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+
+  // TODO: Create commands for drive 
+  private final TeleopCommand m_teleopCommand = new TeleopCommand(m_driveSubsystem,m_joy0);
+
+  
+
+
+
+  //AUTOCOMMAND
+  private final AutoCommand m_autoCommand = new AutoCommand(m_storageSubsystem, m_shooterSubsystem, 0, 0, 0);
 
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    m_driveSubsystem.setDefaultCommand(m_teleopCommand);
+    
     // Configure the button bindings
     configureButtonBindings();
+    
   }
 
   public void update(){
@@ -94,18 +171,42 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // TODO: Buttons for intake
+    //intakeButtonOn.whenPressed(m_intakeOnCommand);
+    //intakeButtonOff.whenPressed(m_intakeOffCommand);
+
+    //intakeButtonUp.whenPressed(m_intakePosUp);
+    //intakeButtonDown.whenPressed(m_intakePosDown);
+
+    // TODO: Buttons for storage
+    // TODO: Buttons for shooter
+    //a.whenPressed(m_turretRightCommand);
+    //a.whenReleased(m_stopTurretCommand);
+    //b.whenPressed(m_turretLeftCommand);
+    //b.whenReleased(m_stopTurretCommand);
     // TODO: Buttons for storage
     //a.toggleWhenActive(m_StorageCommand); //sensor2 toggle
     //x.toggleWhenActive(m_NextStageCommand); //sensor1 toggle
     //y.whenPressed(m_deleteCommand); //sensor2 false
-    x.whenPressed(m_sensor1Command); //sensor1 toggle
-    b.whenPressed(m_sensor2Command); //sensor2 toggle 
-    startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
-    y.whenPressed(m_Sensor3Command); //sensor3 toggle
+    joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
+    joy0_b.whenPressed(m_sensor2Command); //sensor2 toggle 
+    joy0_startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
+    joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
     // TODO: Buttons for shooter
+    joy1_a.whenPressed(m_turretRightCommand);
+    joy1_a.whenReleased(m_stopTurretCommand);
+    joy1_b.whenPressed(m_turretLeftCommand);
+    joy1_b.whenReleased(m_stopTurretCommand);
+    joy1_x.toggleWhenPressed(m_trackTargetCommand);
     // TODO: Buttons for hang
-    // TODO: Buttons for drive
+
+    //joy0_a.whenPressed(m_moveWinch);
+    //joy0_a.whenReleased(m_stopWinch);
+    //joy0_y.whenPressed(m_extendHookCommand);
+    //joy0_y.whenReleased(m_retractHookCommand);
+
+     // TODO: Buttons for drive
     // TODO: Buttons for vision
+    joy1_y.whenPressed(m_switchCameraCommand);
     // TODO: Buttons for control panel
   }
 

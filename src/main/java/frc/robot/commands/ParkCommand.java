@@ -8,23 +8,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class MoveTurretCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  public final ShooterSubsystem m_shooterSubsystem;
-  private double m_speed;
+public class ParkCommand extends CommandBase {
+  private DriveSubsystem m_driveSubsystem;
+
   /**
-   * Creates a new MoveTurretCommand.
-   * @param subsystem //The subsystem
+   * Creates a new ParkCommand.
    */
-
-  public MoveTurretCommand(ShooterSubsystem shooterSubsystem, double speed) {
-    // Use addRequirements() here to declare subsystem dependencies. 
-    m_speed = speed;   
-    m_shooterSubsystem = shooterSubsystem;
-    addRequirements(shooterSubsystem);
+  public ParkCommand(DriveSubsystem drive) {
+    m_driveSubsystem = drive;
+    addRequirements(m_driveSubsystem);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -35,7 +30,8 @@ public class MoveTurretCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.MoveTurret(m_speed);
+    m_driveSubsystem.setDrivePower(0, 0);
+    System.out.println("Park");
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +42,6 @@ public class MoveTurretCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

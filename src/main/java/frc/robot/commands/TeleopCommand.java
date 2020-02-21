@@ -7,24 +7,26 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class MoveTurretCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  public final ShooterSubsystem m_shooterSubsystem;
-  private double m_speed;
+public class TeleopCommand extends CommandBase {
+  private final int DRIVE_THROTTLE_AXIS = 1;
+  private final int DRIVE_TURN_AXIS = 4;
+  private XboxController m_joy;
+  private DriveSubsystem m_drive;
+
   /**
-   * Creates a new MoveTurretCommand.
-   * @param subsystem //The subsystem
+   * Creates a new TeleopCommand.
    */
 
-  public MoveTurretCommand(ShooterSubsystem shooterSubsystem, double speed) {
-    // Use addRequirements() here to declare subsystem dependencies. 
-    m_speed = speed;   
-    m_shooterSubsystem = shooterSubsystem;
-    addRequirements(shooterSubsystem);
+  public TeleopCommand(DriveSubsystem driveSubsystem, XboxController joy) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_drive = driveSubsystem;
+    m_joy = joy;
+
+    addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.
@@ -35,7 +37,7 @@ public class MoveTurretCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.MoveTurret(m_speed);
+    m_drive.setDrivePower(-m_joy.getRawAxis(DRIVE_THROTTLE_AXIS), m_joy.getRawAxis(DRIVE_TURN_AXIS));
   }
 
   // Called once the command ends or is interrupted.

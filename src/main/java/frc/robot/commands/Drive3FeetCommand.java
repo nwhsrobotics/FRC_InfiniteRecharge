@@ -8,44 +8,49 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class MoveTurretCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  public final ShooterSubsystem m_shooterSubsystem;
-  private double m_speed;
+public class Drive3FeetCommand extends CommandBase {
+  private final double TIME_PER_EXEC = 0.02; //seconds per execute loop
+  private final double TIME_LIMIT = 1.0; //seconds to move
+  private final double POWER = 0.1; //drive power to use
+
+  private DriveSubsystem m_driveSubsystem;
+  private double m_time;
+
   /**
-   * Creates a new MoveTurretCommand.
-   * @param subsystem //The subsystem
+   * Creates a new Drive3FeetCommand.
    */
-
-  public MoveTurretCommand(ShooterSubsystem shooterSubsystem, double speed) {
-    // Use addRequirements() here to declare subsystem dependencies. 
-    m_speed = speed;   
-    m_shooterSubsystem = shooterSubsystem;
-    addRequirements(shooterSubsystem);
+  public Drive3FeetCommand(DriveSubsystem drive) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_driveSubsystem = drive;
+    m_time = 0.0;
+    addRequirements(m_driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_time = 0.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.MoveTurret(m_speed);
+    m_time += TIME_PER_EXEC;
+    m_driveSubsystem.setDrivePower(POWER,0.0);
+    System.out.println("Drive 3 feet");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_driveSubsystem.setDrivePower(0,0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (m_time > TIME_LIMIT);
   }
 }

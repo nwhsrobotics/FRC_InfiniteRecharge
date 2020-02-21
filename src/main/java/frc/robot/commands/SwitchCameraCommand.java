@@ -8,26 +8,23 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
-public class MoveTurretCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  public final ShooterSubsystem m_shooterSubsystem;
-  private double m_speed;
+public class SwitchCameraCommand extends CommandBase {
+  private VisionSubsystem m_visionSubsystem;
+
   /**
-   * Creates a new MoveTurretCommand.
-   * @param subsystem //The subsystem
+   * Creates a new SwitchCameraCommand.
    */
 
-  public MoveTurretCommand(ShooterSubsystem shooterSubsystem, double speed) {
-    // Use addRequirements() here to declare subsystem dependencies. 
-    m_speed = speed;   
-    m_shooterSubsystem = shooterSubsystem;
-    addRequirements(shooterSubsystem);
-  }
+public SwitchCameraCommand(VisionSubsystem visionSubsystem) {
+  // Use addRequirements() here to declare subsystem dependencies.
+  m_visionSubsystem = visionSubsystem;
+  addRequirements(m_visionSubsystem);
+}
 
-  // Called when the command is initially scheduled.
+
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {
   }
@@ -35,7 +32,7 @@ public class MoveTurretCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterSubsystem.MoveTurret(m_speed);
+    m_visionSubsystem.switchCamera();
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +43,6 @@ public class MoveTurretCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
