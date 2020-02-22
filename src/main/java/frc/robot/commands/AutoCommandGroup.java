@@ -21,6 +21,6 @@ public class AutoCommandGroup extends SequentialCommandGroup {
   public AutoCommandGroup(StorageSubsystem storage, ShooterSubsystem shooter, double time) { // ADD REST OF SUBSYSTEMS
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new MoveTurretCommand(shooter));
+    super();
   }
 }

@@ -36,7 +36,7 @@ public class HangSubsystem extends SubsystemBase {
     ///TODO: Add Winch
     m_winch = new CANSparkMax(Constants.Hang.CANID_WINCH, MotorType.kBrushless);
     m_winch.set(0.0);
-
+    
     ///TODO: Add Hook
     m_hook = new CANSparkMax(Constants.Hang.CANID_HOOK, MotorType.kBrushless);
     m_hookPID = m_hook.getPIDController();
@@ -57,6 +57,9 @@ public class HangSubsystem extends SubsystemBase {
     m_hookPID.setFF(kHookFF);
     m_hookPID.setOutputRange(kHookminOutput, kHookmaxOutput);
     System.out.println("Sparks Initialized");
+
+    System.out.println("The hook temp is:  " + m_hook.getMotorTemperature());
+    System.out.println("The Winch Temp is:  " + m_winch.getMotorTemperature());
 
   }
 

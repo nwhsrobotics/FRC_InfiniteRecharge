@@ -24,7 +24,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class StorageSubsystem extends SubsystemBase {
 
-    enum BeltState {
+    public enum BeltState {
         EMPTYBALLS,
         INTAKE_S1A,
         INTAKE_S1B,
@@ -39,12 +39,13 @@ public class StorageSubsystem extends SubsystemBase {
         ARMED_S3,
         ARMED_S4,
         FULL,
-        ARMED_FULL;
+        ARMED_FULL,
+        RUNALL_OVERRIDE;
         //FIRED_ALL; CHECK IF WE NEED THIS
         
     }
 
-    private BeltState m_BeltState = BeltState.EMPTYBALLS;
+    public BeltState m_BeltState = BeltState.EMPTYBALLS;
 
     // private static final EnumMap<BeltState, BeltState> nextStageMap = new EnumMap<>(BeltState.class);
     // private static final EnumMap<BeltState, BeltState> prevStageMap = new EnumMap<>(BeltState.class);
@@ -52,7 +53,7 @@ public class StorageSubsystem extends SubsystemBase {
     public boolean armedSwitch;
     //private final boolean m_closedloop = true; // True = Position Control, Flase = PT
 
-    public boolean sensor[] = new boolean[4];
+    public boolean sensor[] = new boolean[3];         //TODO: CHECK HOW MANY SENSORS
     private static final DigitalInput m_Sensor1 = new DigitalInput(0);
     private static final DigitalInput m_Sensor2 = new DigitalInput(1);
     //private static final DigitalInput m_Sensor3 = new DigitalInput(2);
@@ -94,9 +95,11 @@ public class StorageSubsystem extends SubsystemBase {
 
 
 
-      for(int n = 0; n < 4; n += 1) {
+      for(int n = 0; n < 3; n += 1) {
         sensor[n] = false;
       }
+
+      
 
      
 
@@ -165,15 +168,16 @@ public class StorageSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("storageEncoderPos", m_encoder.getPosition());
-        SmartDashboard.putBoolean("Sensor 1:  ", sensor[1]);
-        SmartDashboard.putBoolean("Sensor 2:  ", sensor[2]);
-        SmartDashboard.putBoolean("Sensor 3:  ", sensor[3]);
+        SmartDashboard.putBoolean("Sensor 1:  ", sensor[0]);
+        SmartDashboard.putBoolean("Sensor 2:  ", sensor[1]);
+        SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
         SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
         SmartDashboard.putNumber("Ball Prediction: ", ballPrediction);
-        System.out.println(m_Sensor1.get());
         SmartDashboard.putBoolean("Ball Sensor:  ", (m_Sensor1.get()));
-        //System.out.println(m_Sensor2.get());
-        //SmartDashboard.putBoolean("Ball 2 Sensor:  ", (m_Sensor2.get()));
+        SmartDashboard.putBoolean("Ball 2 Sensor:  ", (m_Sensor2.get()));
+        sensor[0] = m_Sensor1.get();
+        sensor[1] = m_Sensor2.get();
+        //TODO: add 3rd sensor
         setActuators();
     }
 
@@ -260,9 +264,9 @@ public class StorageSubsystem extends SubsystemBase {
         switch (m_BeltState) {
             //This case will run when there is nothing inside the storage
             case EMPTYBALLS:
-                if (sensor[1] == false && sensor[2] == false) {
+                if (sensor[0] == false && sensor[1] == false) {
                     //do nothing
-                } else if (sensor[1] == true) {
+                } else if (sensor[0] == true) {
                     m_BeltState = BeltState.INTAKE_S1A;
                 }
                 SmartDashboard.putString("Belt State is:   ", "EmptyBalls");
@@ -275,12 +279,12 @@ public class StorageSubsystem extends SubsystemBase {
 
 
             case INTAKE_S1A:
-                if (sensor[1] == true) {
-                  if (sensor[2] == false){
+                if (sensor[0] == true) {
+                  if (sensor[1] == false){
                     constantMotion(3);
                   } 
-                } else if (sensor[1] == false) {
-                  if(sensor[2] == true){
+                } else if (sensor[0] == false) {
+                  if(sensor[1] == true){
                     m_BeltState = BeltState.INTAKE_S1B;
                   }
                 }
@@ -290,9 +294,9 @@ public class StorageSubsystem extends SubsystemBase {
 
             case INTAKE_S1B:
                 if (armedSwitch == false) {
-                    if (sensor[1] == false) {
+                    if (sensor[0] == false) {
                         //do nothing
-                    } else if (sensor[1] == true) {
+                    } else if (sensor[0] == true) {
                         m_BeltState = BeltState.INTAKE_S2A;
                         ballPrediction = 2;
                     }
@@ -303,12 +307,12 @@ public class StorageSubsystem extends SubsystemBase {
                 break;
 
             case INTAKE_S2A:
-              if (sensor[1] == true) {
-                if (sensor[2] == false){
+              if (sensor[0] == true) {
+                if (sensor[1] == false){
                   constantMotion(3);
                 }
-              } else if (sensor[1] == false) {
-                if(sensor[2] == true){
+              } else if (sensor[0] == false) {
+                if(sensor[1] == true){
                   m_BeltState = BeltState.INTAKE_S2B;
                 }
               }
@@ -317,9 +321,9 @@ public class StorageSubsystem extends SubsystemBase {
 
             case INTAKE_S2B:
                 if (armedSwitch == false) {
-                    if (sensor[1] == false) {
+                    if (sensor[0] == false) {
                         //do nothing
-                    } else if (sensor[1] == true) {
+                    } else if (sensor[0] == true) {
                         m_BeltState = BeltState.INTAKE_S3A;
                         ballPrediction = 3;
                     }
@@ -331,12 +335,12 @@ public class StorageSubsystem extends SubsystemBase {
 
 
             case INTAKE_S3A:
-                if (sensor[1] == true) {
-                  if (sensor[2] == false){
+                if (sensor[0] == true) {
+                  if (sensor[1] == false){
                     constantMotion(3);
                   } 
-                } else if (sensor[1] == false) {
-                  if(sensor[2] == true){
+                } else if (sensor[0] == false) {
+                  if(sensor[1] == true){
                     m_BeltState = BeltState.INTAKE_S3B;
                   }
                 }
@@ -345,9 +349,9 @@ public class StorageSubsystem extends SubsystemBase {
 
             case INTAKE_S3B:
                 if (armedSwitch == false) {
-                    if (sensor[1] == false) {
+                    if (sensor[0] == false) {
                         //do nothing
-                    } else if (sensor[1] == true) {
+                    } else if (sensor[0] == true) {
                         m_BeltState = BeltState.INTAKE_S4A;
                         ballPrediction = 4;
                     }
@@ -358,11 +362,11 @@ public class StorageSubsystem extends SubsystemBase {
                 break;
 
             case INTAKE_S4A:
-            if (sensor[1] == true) {
-              if (sensor[2] == false){
+            if (sensor[0] == true) {
+              if (sensor[1] == false){
                 constantMotion(3);
               } 
-            } else if (sensor[1] == false && sensor[2] == true) {
+            } else if (sensor[0] == false && sensor[1] == true) {
                     m_BeltState = BeltState.INTAKE_S4B;
                     ballPrediction = 4;
                 }
@@ -371,9 +375,9 @@ public class StorageSubsystem extends SubsystemBase {
 
             case INTAKE_S4B:
                 if (armedSwitch == false) {
-                    if (sensor[1] == false) {
+                    if (sensor[0] == false) {
                         //do nothing
-                    } else if (sensor[1] == true) {
+                    } else if (sensor[0] == true) {
                         m_BeltState = BeltState.FULL;
                         ballPrediction = 5;
                     }
@@ -384,13 +388,13 @@ public class StorageSubsystem extends SubsystemBase {
                 break;
 
                 /*case INTAKE_S5A:
-                if (sensor[1] == true) {
-                  if (sensor[2] == false){
+                if (sensor[0] == true) {
+                  if (sensor[1] == false){
                     constantMotion(5);
                   } else {
                     constantMotion(2);
                   }
-                } else if (sensor[1] == false && sensor[2] == true) {
+                } else if (sensor[0] == false && sensor[1] == true) {
                         m_BeltState = BeltState.INTAKE_S5B;
                         ballPrediction = 5;
                     }
@@ -399,9 +403,9 @@ public class StorageSubsystem extends SubsystemBase {
     
                 case INTAKE_S5B:
                     if (armedSwitch == false) {
-                        if (sensor[1] == false) {
+                        if (sensor[0] == false) {
                             //do nothing
-                        } else if (sensor[1] == false && sensor[2] == true) {
+                        } else if (sensor[0] == false && sensor[1] == true) {
                             m_BeltState = BeltState.FULL;
                             ballPrediction = 5;
                         }
@@ -432,9 +436,9 @@ public class StorageSubsystem extends SubsystemBase {
 
                 case ARMED_S1:
                 if (armedSwitch){
-                  if (sensor[3] == true) {
+                  if (sensor[2] == true) {
                     //MOVE BELTS TO POSITION TO FIRE
-                    } else if (sensor[3] == false) {
+                    } else if (sensor[2] == false) {
                       constantMotion(5);
                     }
                     ballPrediction = 1;
@@ -447,9 +451,9 @@ public class StorageSubsystem extends SubsystemBase {
              
                 case ARMED_S2:
                 if (armedSwitch){
-                  if (sensor[3] == true) {
+                  if (sensor[2] == true) {
                     //MOVE BELTS TO POSITION TO FIRE
-                    } else if (sensor[3] == false) {
+                    } else if (sensor[2] == false) {
                       constantMotion(5);
                     }
                     ballPrediction = 2;
@@ -462,9 +466,9 @@ public class StorageSubsystem extends SubsystemBase {
 
                 case ARMED_S3:
                 if (armedSwitch){
-                  if (sensor[3] == true) {
+                  if (sensor[2] == true) {
                     //MOVE BELTS TO POSITION TO FIRE
-                    } else if (sensor[3] == false) {
+                    } else if (sensor[2] == false) {
                       constantMotion(5);
                     }
                   ballPrediction = 3;
@@ -477,9 +481,9 @@ public class StorageSubsystem extends SubsystemBase {
           
                 case ARMED_S4:
                 if (armedSwitch){
-                  if (sensor[3] == true) {
+                  if (sensor[2] == true) {
                     //MOVE BELTS TO POSITION TO FIRE
-                    } else if (sensor[3] == false) {
+                    } else if (sensor[2] == false) {
                       constantMotion(5);
                     }
                   ballPrediction = 4;
@@ -490,13 +494,18 @@ public class StorageSubsystem extends SubsystemBase {
                 break;
 
                 case ARMED_FULL:
-                if (sensor[3] == true) {
+                if (sensor[2] == true) {
                   //MOVE BELTS TO POSITION TO FIRE
-                } else if (sensor[3] == false) {
+                } else if (sensor[2] == false) {
                   constantMotion(5);
                 }
                 ballPrediction = 5;
                 SmartDashboard.putString("Belt State is:   ", "ARMED FULL");
+                break;
+
+
+                case RUNALL_OVERRIDE:
+                constantMotion(5);
                 break;
 
 

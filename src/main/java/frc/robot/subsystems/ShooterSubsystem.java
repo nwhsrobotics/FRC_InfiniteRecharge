@@ -115,6 +115,8 @@ public class ShooterSubsystem extends SubsystemBase {
     m_hoodPid.setOutputRange(kHoodMinOutput, kHoodMaxOutput);
     m_hoodPid.setReference(0.0, ControlType.kPosition);
     System.out.println("Hood Sparks Initialized.");
+    System.out.println("The Turret Temperature is:  " + m_turret.getMotorTemperature());
+    System.out.println("The Hood Temperature is:  " + m_hoodMotor.getMotorTemperature());
     
   }
 
