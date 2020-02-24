@@ -58,9 +58,6 @@ public class HangSubsystem extends SubsystemBase {
     m_hookPID.setOutputRange(kHookminOutput, kHookmaxOutput);
     System.out.println("Sparks Initialized");
 
-    System.out.println("The hook temp is:  " + m_hook.getMotorTemperature());
-    System.out.println("The Winch Temp is:  " + m_winch.getMotorTemperature());
-
   }
 
   @Override
