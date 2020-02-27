@@ -31,17 +31,15 @@ public final class Constants {
         public static final int CANID_INTAKE = 30;
     }
     
+    
 
     // TODO: Storage
-    public final class Storage{
-        public static final int CANID_motor1 = 14; 
-    } 
 
     // TODO: Shooter
     public final class Shooter {
-        public static final int CANID_FLYWHEEL1=1;
+        public static final int CANID_FLYWHEEL1=14;
         public static final int CANID_FLYWHEEL2=2;
-        public static final int CANID_TURRET=14; 
+        public static final int CANID_TURRET=1; 
         public static final int CANID_HOOD=13;
         public static final double TURRET_RAMP_RATE = 0.25;
     }

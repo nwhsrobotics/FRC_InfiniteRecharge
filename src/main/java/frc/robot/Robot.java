@@ -40,7 +40,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    
+    robotReady = true;
+    SmartDashboard.putBoolean("Robot is Ready for use is:   ", robotReady);
   }
 
   /**
@@ -65,12 +66,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-
+    robotReady = false;
+    SmartDashboard.putBoolean("Robot is Ready for use is:   ", robotReady);
   }
 
   @Override
   public void disabledPeriodic() {
-    
+    robotReady = false;
+    SmartDashboard.putBoolean("Robot is Ready for use is:   ", robotReady);
   }
 
   /**

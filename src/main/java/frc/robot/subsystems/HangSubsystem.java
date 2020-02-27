@@ -13,7 +13,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -29,57 +28,41 @@ public class HangSubsystem extends SubsystemBase {
 
   ///TODO: Add Hook
   private final CANSparkMax m_hook;
-  private CANPIDController m_hookPID;
+  private final CANPIDController m_hookPID;
   private CANEncoder m_hookEncoder;
   private double kHookP, kHookI, kHookD, kHookIz, kHookFF, kHookmaxOutput, kHookminOutput;
-  private boolean winchExist;
-  private boolean hookExist;
 
   public HangSubsystem() {
     ///TODO: Add Winch
     m_winch = new CANSparkMax(Constants.Hang.CANID_WINCH, MotorType.kBrushless);
-    if (m_winch.getMotorTemperature() > 32 || m_winch.getMotorTemperature() < 20){
-      winchExist = false;
-    } else {
-      winchExist = true;
-      m_winch.set(0.0);
-    }
+    m_winch.set(0.0);
     
     ///TODO: Add Hook
     m_hook = new CANSparkMax(Constants.Hang.CANID_HOOK, MotorType.kBrushless);
-    if (m_hook.getMotorTemperature() > 50 || m_hook.getMotorTemperature() < 20){
-      hookExist = false;
-    } else {
-      hookExist = true;
-    }
-    if (hookExist){
-      m_hookPID = m_hook.getPIDController();
-      m_hookEncoder = m_hook.getEncoder();
-      m_hookEncoder.setPosition(0); //Zero at initial position
-      kHookP = 0.05;
-      kHookI = 0;
-      kHookD = 0;
-      kHookIz = 0;
-      kHookFF = 0;
-      kHookmaxOutput = 1;
-      kHookminOutput = -1;
+    m_hookPID = m_hook.getPIDController();
+    m_hookEncoder = m_hook.getEncoder();
+    m_hookEncoder.setPosition(0); //Zero at initial position
+    kHookP = 0.05;
+    kHookI = 0;
+    kHookD = 0;
+    kHookIz = 0;
+    kHookFF = 0;
+    kHookmaxOutput = 1;
+    kHookminOutput = -1;
 
-      m_hookPID.setP(kHookP);
-      m_hookPID.setI(kHookI);
-      m_hookPID.setD(kHookD);
-      m_hookPID.setIZone(kHookIz);
-      m_hookPID.setFF(kHookFF);
-      m_hookPID.setOutputRange(kHookminOutput, kHookmaxOutput);
-      System.out.println("Sparks Initialized");
-    }
+    m_hookPID.setP(kHookP);
+    m_hookPID.setI(kHookI);
+    m_hookPID.setD(kHookD);
+    m_hookPID.setIZone(kHookIz);
+    m_hookPID.setFF(kHookFF);
+    m_hookPID.setOutputRange(kHookminOutput, kHookmaxOutput);
+    System.out.println("Sparks Initialized");
+
   }
 
   @Override
   public void periodic() {
-    if (winchExist){
-      m_winch.set(m_speed);
-    }
-    
+    m_winch.set(m_speed);
     // This method will be called once per scheduler run
   }
 
@@ -87,8 +70,6 @@ public class HangSubsystem extends SubsystemBase {
    m_speed= speed;
   }
   public void ExtendHook(double setPoint){
-    if (hookExist){
-      m_hookPID.setReference(setPoint, ControlType.kPosition);
-    }
+    m_hookPID.setReference(setPoint, ControlType.kPosition);
   }
 }

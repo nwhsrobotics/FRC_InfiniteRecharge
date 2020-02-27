@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.OIConstants;
 
 import java.util.EnumMap;
 
@@ -26,37 +24,28 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class StorageSubsystem extends SubsystemBase {
 
-    public enum IndexerState {
+    public enum BeltState {
         EMPTYBALLS,
-        INTAKE_S1,
-        INTAKE_S2,
-        INTAKE_S3,
-        INTAKE_S4,
-        FULL,
+        INTAKE_S1A,
+        INTAKE_S1B,
+        INTAKE_S2A,
+        INTAKE_S2B,
+        INTAKE_S3A,
+        INTAKE_S3B,
+        INTAKE_S4A,
+        INTAKE_S4B,
         ARMED_S1,
         ARMED_S2,
         ARMED_S3,
         ARMED_S4,
-        ARMED_FULL;
-        //RUNALL_OVERRIDE;
-  
+        FULL,
+        ARMED_FULL,
+        RUNALL_OVERRIDE;
+        //FIRED_ALL; CHECK IF WE NEED THIS
         
     }
 
-    public enum BeltState {
-      IDLE,
-      INTAKE_1,
-      INTAKE_2,
-      REVERSE,
-      ARMING,
-      SHOOTING_S1,
-      SHOOTING_S2;
-    }
-
-
-
-    public IndexerState m_IndexerState = IndexerState.EMPTYBALLS;
-    public BeltState m_beltState = BeltState.IDLE;
+    public BeltState m_BeltState = BeltState.EMPTYBALLS;
 
     // private static final EnumMap<BeltState, BeltState> nextStageMap = new EnumMap<>(BeltState.class);
     // private static final EnumMap<BeltState, BeltState> prevStageMap = new EnumMap<>(BeltState.class);
@@ -95,22 +84,14 @@ public class StorageSubsystem extends SubsystemBase {
     private static final double GEAR_CIRCUM = (30 * 5) / 25.4; //30 Tooth by 5mm
     public static final double ROTATIONS_PER_INCH = -GEAR_RATIO / GEAR_CIRCUM; // 2 inch pulley TODO: check this   
     public Boolean isFinished = false;
-    private boolean motor1Exist;
     private double positionSetter;
     private double ballPrediction;
     private int ballCounter;
-    private boolean m_doIntake;
-    private boolean m_doDisarm;
-    private boolean m_doArm;
-    private boolean m_doShoot;
-    private boolean m_shootButtonPressed;
-    private double m_belt_1Position;
-    private double m_belt_2Position;
-    private double BELT_INTAKESPEED = 0; //TODO: CHANGE
+    
 
 
     public StorageSubsystem() {
-  
+    
 
 
 
@@ -119,12 +100,13 @@ public class StorageSubsystem extends SubsystemBase {
       }
 
       
-        m_motor = new CANSparkMax(Constants.Storage.CANID_motor1, MotorType.kBrushless);
-        if (m_motor.getMotorTemperature() > 32 || m_motor.getMotorTemperature() < 20){
-          motor1Exist = false;
-        } else {
-          motor1Exist = true;
-        }
+
+     
+
+     
+
+        
+        m_motor = new CANSparkMax(deviceID_1, MotorType.kBrushless);
         //System.out.println(m_motor.getFirmwareVersion());
         //System.out.println("THE MOTOR IS:     " + motorHere);
         //m_motor2 = new CANSparkMax(deviceID_2, MotorType.kBrushless);
@@ -140,47 +122,42 @@ public class StorageSubsystem extends SubsystemBase {
          * in the SPARK MAX to their factory default state. If no argument is passed, these
          * parameters will not persist between power cycles
          */
-        if (motor1Exist == true){
-          m_motor.restoreFactoryDefaults();
+        m_motor.restoreFactoryDefaults();
 
 
-          // initialze PID controller and encoder objects
-          m_pidController = m_motor.getPIDController();
-          //m_pidController.setFeedbackDevice(m_encoder);
-          m_encoder = m_motor.getEncoder();
-          m_encoder.setPosition(0);
-
-          m_belt_1Position = 0;
+        // initialze PID controller and encoder objects
+        m_pidController = m_motor.getPIDController();
+        //m_pidController.setFeedbackDevice(m_encoder);
+        m_encoder = m_motor.getEncoder();
+        m_encoder.setPosition(0);
 
 
-          // PID coefficients
-          kP = 0.1;
-          kI = 0;
-          kD = 0;
-          kIz = 0;
-          kFF = 0;
-          kMaxOutput = 1;
-          kMinOutput = -1;
-          maxRPM = 250;
+        // PID coefficients
+        kP = 0.1;
+        kI = 0;
+        kD = 0;
+        kIz = 0;
+        kFF = 0;
+        kMaxOutput = 1;
+        kMinOutput = -1;
+        maxRPM = 250;
 
-          // Smart Motion Coefficients
-          // maxVel = 100; // rpm
-          // maxAcc = 50; 
+        // Smart Motion Coefficients
+        // maxVel = 100; // rpm
+        // maxAcc = 50; 
 
-          // set PID coefficients
-          m_pidController.setP(kP);
-          m_pidController.setI(kI);
-          m_pidController.setD(kD);
-          m_pidController.setIZone(kIz);
-          m_pidController.setFF(kFF);
-          m_pidController.setOutputRange(kMinOutput, kMaxOutput);
+        // set PID coefficients
+        m_pidController.setP(kP);
+        m_pidController.setI(kI);
+        m_pidController.setD(kD);
+        m_pidController.setIZone(kIz);
+        m_pidController.setFF(kFF);
+        m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
 
 
-          System.out.println("Initalize for Sparks Finished");
-        } else {
-          System.out.println("Communication with Motor for Storage is:   " + motor1Exist);
-        }
+        System.out.println("Initalize for Sparks Finished");
+
 
     }
 
@@ -190,11 +167,7 @@ public class StorageSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //System.out.println("Storage motor 1 temperature" + m_motor.getMotorTemperature());
-        if (motor1Exist == true){
-          SmartDashboard.putNumber("storageEncoderPos", m_encoder.getPosition());
-        }
-        SmartDashboard.putBoolean("Storage Subsystem and Motor are: ", motor1Exist);
+        SmartDashboard.putNumber("storageEncoderPos", m_encoder.getPosition());
         SmartDashboard.putBoolean("Sensor 1:  ", sensor[0]);
         SmartDashboard.putBoolean("Sensor 2:  ", sensor[1]);
         SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
@@ -204,238 +177,12 @@ public class StorageSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Ball 2 Sensor:  ", (m_Sensor2.get()));
         sensor[0] = m_Sensor1.get();
         sensor[1] = m_Sensor2.get();
-        //System.out.println("Communication with Motor for Storage is:   " + motor1Exist);
         //TODO: add 3rd sensor
-        getInputs();
-        if (m_beltState == BeltState.IDLE) {
-          runIndexerSm();
-        }
-        runBeltSm();
-        updateActuators();
-        //setActuators();
+        setActuators();
     }
 
-    
 
-  private void getInputs() {
-    m_doIntake = false; //TODO:
-    m_doDisarm = false; //TODO:
-    m_doArm = false; //TODO:
-    m_doShoot = false;
-    m_shootButtonPressed = false;
-  }
-
-  private void runBeltSm() {
-    switch (m_beltState) {
-
-      case IDLE:
-        if (m_doIntake) {
-          m_beltState = BeltState.INTAKE_1;
-          m_doIntake = false;
-        } else if (m_doDisarm) {
-          m_beltState = BeltState.REVERSE;
-          m_doDisarm = false;
-        } else if (m_doArm) {
-          m_beltState = BeltState.ARMING;
-          m_doArm = false;
-        } else if (m_doShoot) {
-          m_beltState = BeltState.SHOOTING_S1;
-          m_doShoot = false;
-        }
-      break;
-
-      case INTAKE_1:
-        if (sensor[1] == true) {
-          m_beltState = BeltState.INTAKE_2;
-        } 
-      break;
-
-      case INTAKE_2:
-        if (sensor[1] == false) {
-          m_beltState = BeltState.IDLE;
-        } 
-      break;
-
-      case REVERSE:
-        if (sensor[1] == true) {
-          m_beltState = BeltState.IDLE;
-        }
-      break;
-
-      case ARMING:
-        if (sensor[2] == true) {
-          m_beltState = BeltState.IDLE;
-        }
-      break;
-
-      case SHOOTING_S1:
-        if (sensor[2] == true) {
-          m_beltState = BeltState.SHOOTING_S2;
-        } 
-      break;
-
-      case SHOOTING_S2:
-        if (sensor[2] == false) {
-          m_beltState = BeltState.IDLE;
-        }
-      break;
-    }
-  }
-
-  private void updateActuators() {
-    switch (m_beltState) {
-      
-      case IDLE:
-      break;
-
-      case INTAKE_1:
-      m_belt_1Position += BELT_INTAKESPEED;
-      m_belt_2Position += 2*BELT_INTAKESPEED;
-      m_pidController.setReference(m_belt_1Position, ControlType.kPosition);
-      //TODO: ADD PIDCONTROLLER FOR MOTOR 2
-      break;
-
-      case INTAKE_2:
-      break;
-
-      case REVERSE:
-      break;
-
-      case ARMING:
-      break;
-
-      case SHOOTING_S1:
-      break;
-
-      case SHOOTING_S2:
-      break;
-
-      
-    }
-  }
-
-
-  private void runIndexerSm() {
-    switch (m_IndexerState) {
-
-      case EMPTYBALLS:
-        if (sensor[0] == true) {
-          m_IndexerState = IndexerState.INTAKE_S1;
-          m_doIntake = true;
-        }
-      break;
-
-      case INTAKE_S1:
-        if (armedSwitch) {
-          m_doArm = true;
-          m_IndexerState = IndexerState.ARMED_S1;
-        } 
-        else if (sensor[0] == true) {
-          m_IndexerState = IndexerState.INTAKE_S2;
-          m_doIntake = true;
-        }
-      break;
-
-      case INTAKE_S2:
-      if (armedSwitch) {
-        m_doArm = true;
-        m_IndexerState = IndexerState.ARMED_S2;
-      }
-      else if (sensor[0] == true) {
-        m_IndexerState = IndexerState.INTAKE_S3;
-        m_doIntake = true;
-      }
-      break;
-
-      case INTAKE_S3:
-        if (armedSwitch) {
-          m_doArm = true;
-          m_IndexerState = IndexerState.ARMED_S3;
-        }
-        else if (sensor[0] == true) {
-          m_IndexerState = IndexerState.INTAKE_S4;
-          m_doIntake = true;
-        }
-        break;
-
-      case INTAKE_S4:
-        if (armedSwitch) {
-          m_doArm = true;
-          m_IndexerState = IndexerState.ARMED_S4;
-        }
-        else if (sensor[0] == true) {
-          m_IndexerState = IndexerState.FULL;
-          m_doIntake = true;
-        }
-      break;
-
-      case FULL:
-        if (armedSwitch) {
-          m_doArm = true;
-          m_IndexerState = IndexerState.ARMED_FULL;
-        }
-        break;
-
-      case ARMED_S1:
-        if (armedSwitch == false) {
-          m_IndexerState = IndexerState.INTAKE_S1;
-          m_doDisarm = true;
-        }
-        else if (m_shootButtonPressed) {
-          m_doShoot = true;
-          m_IndexerState = IndexerState.EMPTYBALLS;
-        }
-      break;
-
-      case ARMED_S2:
-        if (armedSwitch == false) {
-          m_IndexerState = IndexerState.INTAKE_S2;
-          m_doDisarm = true;
-        }
-        else if (m_shootButtonPressed) {
-          m_doShoot = true;
-          m_IndexerState = IndexerState.ARMED_S1;
-        }
-      break;
-
-      case ARMED_S3:
-        if (armedSwitch == false) {
-          m_IndexerState = IndexerState.INTAKE_S3;
-          m_doDisarm = true;
-        }
-        else if (m_shootButtonPressed) {
-          m_doShoot = true;
-          m_IndexerState = IndexerState.ARMED_S2;
-        }
-      break;
-
-      case ARMED_S4:
-        if (armedSwitch == false) {
-          m_IndexerState = IndexerState.INTAKE_S4;
-          m_doDisarm = true;
-        }
-        else if (m_shootButtonPressed) {
-          m_doShoot = true;
-          m_IndexerState = IndexerState.ARMED_S3;
-        }
-      break;
-
-      case ARMED_FULL:
-        if (armedSwitch == false) {
-          m_IndexerState = IndexerState.FULL;
-          m_doDisarm = true;
-        }
-        else if (m_shootButtonPressed) {
-          m_doShoot = true;
-          m_IndexerState = IndexerState.ARMED_S4;
-        }
-      break;
-    }
-  }
-
- 
-
-  public void setPosition(double position) {
+    public void setPosition(double position) {
         if (isFinished == false) {
             m_pidController.setReference(position, ControlType.kPosition);
         }
@@ -490,7 +237,7 @@ public class StorageSubsystem extends SubsystemBase {
 
     public void RunBelts() {
 
-        m_IndexerState = IndexerState.INTAKE_S1;
+        m_BeltState = BeltState.INTAKE_S1A;
         setActuators();
     }
 
@@ -514,13 +261,13 @@ public class StorageSubsystem extends SubsystemBase {
 
 
     private void setActuators() {
-        switch (m_IndexerState) {
+        switch (m_BeltState) {
             //This case will run when there is nothing inside the storage
             case EMPTYBALLS:
                 if (sensor[0] == false && sensor[1] == false) {
                     //do nothing
                 } else if (sensor[0] == true) {
-                    m_IndexerState = IndexerState.INTAKE_S1;
+                    m_BeltState = BeltState.INTAKE_S1A;
                 }
                 SmartDashboard.putString("Belt State is:   ", "EmptyBalls");
                 break;
@@ -531,117 +278,115 @@ public class StorageSubsystem extends SubsystemBase {
 
 
 
-            case INTAKE_S1:
+            case INTAKE_S1A:
                 if (sensor[0] == true) {
                   if (sensor[1] == false){
                     constantMotion(3);
                   } 
                 } else if (sensor[0] == false) {
                   if(sensor[1] == true){
-                    //m_IndexerState = IndexerState.INTAKE_S1B;
+                    m_BeltState = BeltState.INTAKE_S1B;
                   }
                 }
                 SmartDashboard.putString("Belt State is:   ", "Stage 1A");
                 ballPrediction = 1;
                 break;
 
-            /*case INTAKE_S1B:
+            case INTAKE_S1B:
                 if (armedSwitch == false) {
                     if (sensor[0] == false) {
                         //do nothing
                     } else if (sensor[0] == true) {
-                        m_IndexerState = IndexerState.INTAKE_S2;
+                        m_BeltState = BeltState.INTAKE_S2A;
                         ballPrediction = 2;
                     }
                 } else if (armedSwitch == true) {
-                    m_IndexerState = IndexerState.ARMED_S1;
+                    m_BeltState = BeltState.ARMED_S1;
                 }
                 SmartDashboard.putString("Belt State is:   ", "Stage 1B");
                 break;
-                */
 
-            case INTAKE_S2:
+            case INTAKE_S2A:
               if (sensor[0] == true) {
                 if (sensor[1] == false){
                   constantMotion(3);
                 }
               } else if (sensor[0] == false) {
                 if(sensor[1] == true){
-                  //m_IndexerState = IndexerState.INTAKE_S2B;
+                  m_BeltState = BeltState.INTAKE_S2B;
                 }
               }
                 SmartDashboard.putString("Belt State is:   ", "Stage 2A");
                 break;
 
-            /*case INTAKE_S2B:
+            case INTAKE_S2B:
                 if (armedSwitch == false) {
                     if (sensor[0] == false) {
                         //do nothing
                     } else if (sensor[0] == true) {
-                        m_IndexerState = IndexerState.INTAKE_S3;
+                        m_BeltState = BeltState.INTAKE_S3A;
                         ballPrediction = 3;
                     }
                 } else if (armedSwitch == true) {
-                    m_IndexerState = IndexerState.ARMED_S2;
+                    m_BeltState = BeltState.ARMED_S2;
                 }
                 SmartDashboard.putString("Belt State is:   ", "Stage 2B");
                 break;
-                */
 
-            case INTAKE_S3:
+
+            case INTAKE_S3A:
                 if (sensor[0] == true) {
                   if (sensor[1] == false){
                     constantMotion(3);
                   } 
                 } else if (sensor[0] == false) {
                   if(sensor[1] == true){
-                    //m_IndexerState = IndexerState.INTAKE_S3B;
+                    m_BeltState = BeltState.INTAKE_S3B;
                   }
                 }
                 SmartDashboard.putString("Belt State is:   ", "Stage 3A");
                 break;
 
-           /* case INTAKE_S3B:
+            case INTAKE_S3B:
                 if (armedSwitch == false) {
                     if (sensor[0] == false) {
                         //do nothing
                     } else if (sensor[0] == true) {
-                        m_IndexerState = IndexerState.INTAKE_S4;
+                        m_BeltState = BeltState.INTAKE_S4A;
                         ballPrediction = 4;
                     }
                 } else if (armedSwitch == true) {
-                    m_IndexerState = IndexerState.ARMED_S3;
+                    m_BeltState = BeltState.ARMED_S3;
                 }
                 SmartDashboard.putString("Belt State is:   ", "Stage 3B");
                 break;
-                */
 
-            case INTAKE_S4:
+            case INTAKE_S4A:
             if (sensor[0] == true) {
               if (sensor[1] == false){
                 constantMotion(3);
               } 
             } else if (sensor[0] == false && sensor[1] == true) {
-                    //m_IndexerState = IndexerState.INTAKE_S4B;
+                    m_BeltState = BeltState.INTAKE_S4B;
                     ballPrediction = 4;
                 }
                 SmartDashboard.putString("Belt State is:   ", "Stage 4A");
                 break;
 
-            /*case INTAKE_S4B:
+            case INTAKE_S4B:
                 if (armedSwitch == false) {
                     if (sensor[0] == false) {
                         //do nothing
                     } else if (sensor[0] == true) {
-                        m_IndexerState = IndexerState.FULL;
+                        m_BeltState = BeltState.FULL;
                         ballPrediction = 5;
                     }
                 } else if (armedSwitch == true) {
-                    m_IndexerState = IndexerState.ARMED_S4;
+                    m_BeltState = BeltState.ARMED_S4;
                 }
                 SmartDashboard.putString("Belt State is:   ", "Stage 4B");
                 break;
-                */
+
                 /*case INTAKE_S5A:
                 if (sensor[0] == true) {
                   if (sensor[1] == false){
@@ -675,7 +420,7 @@ public class StorageSubsystem extends SubsystemBase {
             if (armedSwitch == false) {
                 //do nothing
             } else if (armedSwitch == true) {
-              m_IndexerState = IndexerState.ARMED_FULL;
+              m_BeltState = BeltState.ARMED_FULL;
             }
                 ballPrediction = 5;
                 SmartDashboard.putString("Belt State is:   ", "FULL");
@@ -699,7 +444,7 @@ public class StorageSubsystem extends SubsystemBase {
                     ballPrediction = 1;
                     SmartDashboard.putString("Belt State is:   ", "ARMED 1");
                 } else {
-                  //m_IndexerState = IndexerState.INTAKE_S1B;
+                  m_BeltState = BeltState.INTAKE_S1B;
                 }
                
                 break;
@@ -714,7 +459,7 @@ public class StorageSubsystem extends SubsystemBase {
                     ballPrediction = 2;
                   SmartDashboard.putString("Belt State is:   ", "ARMED 2");
                 } else {
-                  //m_IndexerState = IndexerState.INTAKE_S2B;
+                  m_BeltState = BeltState.INTAKE_S2B;
                 }
                 
                 break;
@@ -729,7 +474,7 @@ public class StorageSubsystem extends SubsystemBase {
                   ballPrediction = 3;
                   SmartDashboard.putString("Belt State is:   ", "ARMED 3");
                 } else {
-                  //m_IndexerState = IndexerState.INTAKE_S3B;
+                  m_BeltState = BeltState.INTAKE_S3B;
                 }
                 
                 break;
@@ -744,7 +489,7 @@ public class StorageSubsystem extends SubsystemBase {
                   ballPrediction = 4;
                   SmartDashboard.putString("Belt State is:   ", "ARMED 4");
                   } else {
-                    //m_IndexerState = IndexerState.INTAKE_S4B;
+                    m_BeltState = BeltState.INTAKE_S4B;
                   }
                 break;
 
@@ -759,10 +504,9 @@ public class StorageSubsystem extends SubsystemBase {
                 break;
 
 
-                /*case RUNALL_OVERRIDE:
+                case RUNALL_OVERRIDE:
                 constantMotion(5);
                 break;
-                */
 
 
                 //FIRED_ALL STATE
