@@ -87,13 +87,12 @@ public class StorageSubsystem extends SubsystemBase {
     private static final int deviceID_1 = 14;
     //private static final int deviceID_2 = 0; Assign value 
     private CANSparkMax m_motor;
-    //private CANSparkMax m_motor2;
+    private CANSparkMax m_motor2;
     private CANPIDController m_pidController;
+    private CANPIDController m_pidController2;
     private CANEncoder m_encoder;
+    private CANEncoder m_encoder2;
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
-    private static final double GEAR_RATIO = 50;
-    private static final double GEAR_CIRCUM = (30 * 5) / 25.4; //30 Tooth by 5mm
-    public static final double ROTATIONS_PER_INCH = -GEAR_RATIO / GEAR_CIRCUM; // 2 inch pulley TODO: check this   
     public Boolean isFinished = false;
     private boolean motor1Exist;
     private double positionSetter;
@@ -104,9 +103,17 @@ public class StorageSubsystem extends SubsystemBase {
     private boolean m_doArm;
     private boolean m_doShoot;
     private boolean m_shootButtonPressed;
-    private double m_belt_1Position;
-    private double m_belt_2Position;
-    private double BELT_INTAKESPEED = 0; //TODO: CHANGE
+    private double m_belt_1Position_in;
+    private double m_belt_2Position_in;
+    private static final double GEAR_RATIO = 21;
+    private static final double GEAR_CIRC = 1.75*Math.PI;
+    private static final double REVS_PER_INCH = GEAR_RATIO/GEAR_CIRC;
+    private static final double SECONDS_PER_TICK = 0.02;
+    private static final double BELT_INTAKESPEED = 7.0*SECONDS_PER_TICK;
+    private static final double BELT_ARMINGSPEED = 7.0*SECONDS_PER_TICK;
+    private static final double BELT_SHOOTINGSPEED = 7.0*SECONDS_PER_TICK;
+    private boolean OVERRIDE_SWITCH = false;
+    
 
 
     public StorageSubsystem() {
@@ -125,15 +132,14 @@ public class StorageSubsystem extends SubsystemBase {
         } else {
           motor1Exist = true;
         }
+        m_motor2 = new CANSparkMax(Constants.Storage.CANID_motor2, MotorType.kBrushless);
         //System.out.println(m_motor.getFirmwareVersion());
         //System.out.println("THE MOTOR IS:     " + motorHere);
         //m_motor2 = new CANSparkMax(deviceID_2, MotorType.kBrushless);
         System.out.println("Beginning to Initalize ");
 
-        //m_encoder.setPosition(0);
 
-        //m_motor2 = new CANSparkMax(deviceID_2, MotorType.kBrushless);
-        //m_motor2.follow(m_motor);
+
 
         /**
          * The RestoreFactoryDefaults method can be used to reset the configuration parameters
@@ -146,11 +152,15 @@ public class StorageSubsystem extends SubsystemBase {
 
           // initialze PID controller and encoder objects
           m_pidController = m_motor.getPIDController();
+          m_pidController2 = m_motor2.getPIDController();
           //m_pidController.setFeedbackDevice(m_encoder);
           m_encoder = m_motor.getEncoder();
           m_encoder.setPosition(0);
+          m_encoder2 = m_motor2.getEncoder();
+          m_encoder2.setPosition(0);
 
-          m_belt_1Position = 0;
+          m_belt_1Position_in = 0;
+          m_belt_2Position_in = 0;
 
 
           // PID coefficients
@@ -174,6 +184,13 @@ public class StorageSubsystem extends SubsystemBase {
           m_pidController.setIZone(kIz);
           m_pidController.setFF(kFF);
           m_pidController.setOutputRange(kMinOutput, kMaxOutput);
+
+          m_pidController2.setP(kP);
+          m_pidController2.setI(kI);
+          m_pidController2.setD(kD);
+          m_pidController2.setIZone(kIz);
+          m_pidController2.setFF(kFF);
+          m_pidController2.setOutputRange(kMinOutput, kMaxOutput);
 
 
 
@@ -289,29 +306,39 @@ public class StorageSubsystem extends SubsystemBase {
       break;
 
       case INTAKE_1:
-      m_belt_1Position += BELT_INTAKESPEED;
-      m_belt_2Position += 2*BELT_INTAKESPEED;
-      m_pidController.setReference(m_belt_1Position, ControlType.kPosition);
-      //TODO: ADD PIDCONTROLLER FOR MOTOR 2
+      m_belt_1Position_in += BELT_INTAKESPEED;
+      m_belt_2Position_in += 2*BELT_INTAKESPEED;
       break;
 
       case INTAKE_2:
+      m_belt_1Position_in += BELT_INTAKESPEED;
+      m_belt_2Position_in += 2*BELT_INTAKESPEED;
       break;
 
       case REVERSE:
+      m_belt_1Position_in += -BELT_INTAKESPEED;
+      m_belt_2Position_in += -2*BELT_INTAKESPEED;
       break;
 
       case ARMING:
+      m_belt_1Position_in += BELT_ARMINGSPEED;
+      m_belt_2Position_in += 2*BELT_ARMINGSPEED;
       break;
 
       case SHOOTING_S1:
+      m_belt_1Position_in += BELT_SHOOTINGSPEED;
+      m_belt_2Position_in += 2*BELT_SHOOTINGSPEED;
       break;
 
       case SHOOTING_S2:
+      m_belt_1Position_in += BELT_SHOOTINGSPEED;
+      m_belt_2Position_in += 2*BELT_SHOOTINGSPEED;
       break;
 
       
     }
+    m_pidController.setReference(m_belt_1Position_in*REVS_PER_INCH, ControlType.kPosition);
+    m_pidController2.setReference(m_belt_2Position_in*REVS_PER_INCH, ControlType.kPosition);
   }
 
 

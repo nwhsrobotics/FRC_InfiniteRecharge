@@ -9,7 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.StorageSubsystem;
-import frc.robot.subsystems.StorageSubsystem.BeltState;
+import frc.robot.subsystems.StorageSubsystem.IndexerState;
 
 public class BallOverrideCommand extends CommandBase {
   private final StorageSubsystem m_storageSubsystem;
@@ -30,7 +30,7 @@ public class BallOverrideCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_storageSubsystem.m_BeltState = BeltState.RUNALL_OVERRIDE;
+    //m_storageSubsystem.m_IndexerState = IndexerState.RUNALL_OVERRIDE;
   }
 
   // Called once the command ends or is interrupted.

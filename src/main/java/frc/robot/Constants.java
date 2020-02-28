@@ -34,7 +34,8 @@ public final class Constants {
 
     // TODO: Storage
     public final class Storage{
-        public static final int CANID_motor1 = 14; 
+        public static final int CANID_motor1 = 24; 
+        public static final int CANID_motor2 = 25; 
     } 
 
     // TODO: Shooter
