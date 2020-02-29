@@ -24,37 +24,48 @@ public class ShooterSubsystem extends SubsystemBase {
    */
   //TODO: Add Flywheel
   private final CANSparkMax m_flywheel;
-  private final CANPIDController m_flywheelPID;
+  private final CANSparkMax m_flywheel2;
+  private double m_flyWheelSpeed;
+  private CANPIDController m_flywheelPID;
+  private CANPIDController m_flywheel2PID;
+  private CANEncoder m_flyWheelEncoder;
   private double kflywheelP, kflywheelI, kflywheelD, kflywheelIz, kflywheelFF, kflywheelmaxOutput, kflywheelminOutput;
   //TODO: Add Turret
   private final CANSparkMax m_turret;
-  private final CANPIDController m_turretPID;
+  private  CANPIDController m_turretPID;
   private CANEncoder m_turretEncoder;
   private double kP, kI, kD, kIz, kFF, kmaxOutput, kminOutput; //maxRPM
+  private boolean turretExist;
 
   //TODO: Add Hood
   private final CANSparkMax m_hoodMotor;
   private double m_hoodPower=0.0;
-  private final CANPIDController m_hoodPid;
+  private  CANPIDController m_hoodPid;
   private CANEncoder m_hoodEncoder;
   private double kHoodP, kHoodI, kHoodD, kHoodIz, kHoodFF, kHoodMaxOutput, kHoodMinOutput;
   private VisionSubsystem m_visionSubsystem;
   private double m_x;
-  
+  private boolean hoodExist;
 
   public ShooterSubsystem(VisionSubsystem visionSubsystem) {
     m_visionSubsystem = visionSubsystem;
     //TODO: Add Flywheel
       //1621 rpm 5676: NEO max (28%)
-    m_flywheel = new CANSparkMax(13, MotorType.kBrushless);
+    m_flywheel = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL1, MotorType.kBrushless);
     m_flywheel.set(0.0);
+    m_flywheel2 = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL2, MotorType.kBrushless);
+    m_flywheel2.follow(m_flywheel, true);
+    m_flywheel2PID = m_flywheel2.getPIDController();
+    System.out.println(m_flywheel.getMotorTemperature());
+    //m_flywheel2.setInverted(true);
+    m_flyWheelEncoder = m_flywheel.getEncoder();
      m_flywheelPID = m_flywheel.getPIDController();
-     kflywheelP = 0.05;
+     kflywheelP = 0;
      kflywheelI = 0;
      kflywheelIz = 0;
-     kflywheelFF = 0;
-     kflywheelmaxOutput = 0;
-     kflywheelminOutput = 0;
+     kflywheelFF = 0.000178;
+     kflywheelmaxOutput = 1;
+     kflywheelminOutput = -1;
 
      m_flywheelPID.setP(kflywheelP);
      m_flywheelPID.setI(kflywheelI);
@@ -65,59 +76,82 @@ public class ShooterSubsystem extends SubsystemBase {
      m_flywheelPID.setReference(0.0, ControlType.kVelocity);
      System.out.println("Sparks Initialized. ");
 
+    
+     m_flywheel2PID.setP(kflywheelP);
+     m_flywheel2PID.setI(kflywheelI);
+     m_flywheel2PID.setD(kflywheelD);
+     m_flywheel2PID.setIZone(kflywheelIz);
+     m_flywheel2PID.setFF(kflywheelFF);
+     m_flywheel2PID.setOutputRange(kflywheelminOutput, kflywheelmaxOutput);
+     m_flywheel2PID.setReference(0.0, ControlType.kVelocity);
+
 
     //TODO: Add Turret
     m_turret = new CANSparkMax(Constants.Shooter.CANID_TURRET, MotorType.kBrushless);
+    if (m_turret.getMotorTemperature() > 50 || m_turret.getMotorTemperature() < 20){
+      turretExist = false;
+    } else {
+      turretExist = true;
+    }
 
-    m_turretPID = m_turret.getPIDController();
-    m_turretEncoder = m_turret.getEncoder();
-    m_turretEncoder.setPosition(0); //Zero at initial position
+    if (turretExist){
+      m_turretPID = m_turret.getPIDController();
+      m_turretEncoder = m_turret.getEncoder();
+      m_turretEncoder.setPosition(0); //Zero at initial position
 
-    kP = 0.05;
-    kI = 0;
-    kD = 0;
-    kIz = 0;
-    kFF = 0;
-    kmaxOutput = 1;
-    kminOutput = -1;
-    //maxRPM = 0;
+      kP = 0.05;
+      kI = 0;
+      kD = 0;
+      kIz = 0;
+      kFF = 0;
+      kmaxOutput = 1;
+      kminOutput = -1;
+      //maxRPM = 0;
 
-    m_turretPID.setP(kP);
-    m_turretPID.setI(kI);
-    m_turretPID.setD(kD);
-    m_turretPID.setIZone(kIz);
-    m_turretPID.setFF(kFF);
-    m_turretPID.setOutputRange(kminOutput, kmaxOutput);
-    System.out.println("Sparks Initialized.");
-    
-    m_turret.setClosedLoopRampRate(Constants.Shooter.TURRET_RAMP_RATE);
-
+      m_turretPID.setP(kP);
+      m_turretPID.setI(kI);
+      m_turretPID.setD(kD);
+      m_turretPID.setIZone(kIz);
+      m_turretPID.setFF(kFF);
+      m_turretPID.setOutputRange(kminOutput, kmaxOutput);
+      System.out.println("Sparks Initialized.");
+      
+      m_turret.setClosedLoopRampRate(Constants.Shooter.TURRET_RAMP_RATE);
+    }
 
     //TODO: Add Hood
     m_hoodMotor = new CANSparkMax(Constants.Shooter.CANID_HOOD, MotorType.kBrushless);
-    m_hoodPid = m_hoodMotor.getPIDController();
-    m_hoodEncoder = m_hoodMotor.getEncoder();
-    m_hoodEncoder.setPosition(0);
+    if (m_hoodMotor.getMotorTemperature() > 50 || m_hoodMotor.getMotorTemperature() < 20){
+      hoodExist = false;
+    } else {
+      hoodExist = true;
+    }
 
-    kHoodP = 0.05;
-    kHoodI = 0;
-    kHoodD = 0;
-    kHoodIz = 0;
-    kHoodFF = 0;
-    kHoodMaxOutput = 0;
-    kHoodMinOutput = 0;
+    if (hoodExist){
+      m_hoodPid = m_hoodMotor.getPIDController();
+      m_hoodEncoder = m_hoodMotor.getEncoder();
+      m_hoodEncoder.setPosition(0);
 
-    m_hoodPid.setP(kHoodP);
-    m_hoodPid.setI(kHoodI);
-    m_hoodPid.setD(kHoodD);
-    m_hoodPid.setIZone(kHoodIz);
-    m_hoodPid.setFF(kHoodFF);
-    m_hoodPid.setOutputRange(kHoodMinOutput, kHoodMaxOutput);
-    m_hoodPid.setReference(0.0, ControlType.kPosition);
-    System.out.println("Hood Sparks Initialized.");
-    System.out.println("The Turret Temperature is:  " + m_turret.getMotorTemperature());
-    System.out.println("The Hood Temperature is:  " + m_hoodMotor.getMotorTemperature());
-    
+      kHoodP = 0.05;
+      kHoodI = 0;
+      kHoodD = 0;
+      kHoodIz = 0;
+      kHoodFF = 0;
+      kHoodMaxOutput = 0;
+      kHoodMinOutput = 0;
+
+      m_hoodPid.setP(kHoodP);
+      m_hoodPid.setI(kHoodI);
+      m_hoodPid.setD(kHoodD);
+      m_hoodPid.setIZone(kHoodIz);
+      m_hoodPid.setFF(kHoodFF);
+      m_hoodPid.setOutputRange(kHoodMinOutput, kHoodMaxOutput);
+      m_hoodPid.setReference(0.0, ControlType.kPosition);
+      System.out.println("Hood Sparks Initialized.");
+      System.out.println("The Turret Temperature is:  " + m_turret.getMotorTemperature());
+      System.out.println("The Hood Temperature is:  " + m_hoodMotor.getMotorTemperature());
+      
+    }
   }
 
   @Override
@@ -125,27 +159,52 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //TODO: Add Flywheel
     //TODO: Add Turret
-    SmartDashboard.putNumber("Rotation Position", m_turretEncoder.getPosition());
-    m_x = m_visionSubsystem.getTargetX();
+    if (turretExist){
+      SmartDashboard.putNumber("Rotation Position", m_turretEncoder.getPosition());
+      m_x = m_visionSubsystem.getTargetX();
+    }
     //TODO: Add Hood
-    m_hoodMotor.set(m_hoodPower);
+    if (hoodExist){
+      m_hoodMotor.set(m_hoodPower);
+    }
+    SmartDashboard.putNumber("FlyWheel Power:  ", m_flyWheelSpeed);
+    SmartDashboard.putNumber("FlyWheel Velocity:  ", m_flyWheelEncoder.getVelocity());
   }
+  
 
   //TODO: Add Flywheel
   //TODO: Add Turret
-  public void MoveTurret(double setPoint){
-    double currentPos = m_turretEncoder.getPosition();
-    if(m_turretEncoder.getPosition() >= 128) {
-      m_turretPID.setReference( 127 , ControlType.kPosition);
-    } else if(m_turretEncoder.getPosition() <= -128){
-      m_turretPID.setReference( -127 , ControlType.kPosition);
-    } else {
-      m_turretPID.setReference( (currentPos + setPoint) , ControlType.kPosition);
+  public void setShooterPower(double speed){
+    if (speed > 0.05 || speed < -0.05){
+      m_flyWheelSpeed = speed;
+      m_flywheel.set(m_flyWheelSpeed);
     }
+    else {
+      m_flyWheelSpeed = 0.0;
+      m_flywheel.set(m_flyWheelSpeed);
+    }
+    //m_flywheelPID.setReference(speed*5600, ControlType.kVelocity);
+    //m_flywheel2PID.setReference(-speed*5600, ControlType.kVelocity); //5600 is 100% power
+  
+  }
+
+  public void MoveTurret(double setPoint){
+     if (turretExist){
+      double currentPos = m_turretEncoder.getPosition();
+      if(m_turretEncoder.getPosition() >= 128) {
+        m_turretPID.setReference( 127 , ControlType.kPosition);
+      } else if(m_turretEncoder.getPosition() <= -128){
+        m_turretPID.setReference( -127 , ControlType.kPosition);
+      } else {
+        m_turretPID.setReference( (currentPos + setPoint) , ControlType.kPosition);
+      }
+     }
   }
   
   public void CenterTurret(){
-    m_turretPID.setReference(0, ControlType.kPosition);
+    if (turretExist){
+      m_turretPID.setReference(0, ControlType.kPosition);
+    }
   }
   //TODO: Add Hood
   public void setHoodPower(double power){
@@ -164,8 +223,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     if (m_x != -1){
-      m_turretPID.setReference((currentPos + m_X), ControlType.kPosition);
-
+      if (turretExist){
+        m_turretPID.setReference((currentPos + m_X), ControlType.kPosition);
+      }
     }
     
   }

@@ -20,6 +20,7 @@ import frc.robot.commands.ToggleArmedCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 import frc.robot.commands.ExtendHookCommand;
+import frc.robot.commands.FlyWheelTestingCommand;
 import frc.robot.commands.ParkCommand;
 import frc.robot.commands.SwitchCameraCommand;
 import frc.robot.commands.MoveWinchCommand;
@@ -97,7 +98,7 @@ public class RobotContainer {
   private final MoveTurretCommand m_turretRightCommand = new MoveTurretCommand(m_shooterSubsystem, 20);
   private final MoveTurretCommand m_stopTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
   private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -20);
-
+  private final FlyWheelTestingCommand m_flyWheelTestCmd = new FlyWheelTestingCommand(m_shooterSubsystem, m_joy0);
 
 
 
@@ -156,7 +157,8 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_driveSubsystem.setDefaultCommand(m_teleopCommand);
+    //m_driveSubsystem.setDefaultCommand(m_teleopCommand);
+    m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd);
     
     // Configure the button bindings
     configureButtonBindings();
