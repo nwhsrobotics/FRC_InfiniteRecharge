@@ -12,21 +12,20 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
 
   // To do: Declare motor controllers (CANSparkMax)
-  private final CANSparkMax m_left1 = new CANSparkMax(Constants.Drive.CANID_LEFT1, MotorType.kBrushless);
-  private final CANSparkMax m_left2 = new CANSparkMax(Constants.Drive.CANID_LEFT2, MotorType.kBrushless);
-  private final CANSparkMax m_right1 = new CANSparkMax(Constants.Drive.CANID_RIGHT1, MotorType.kBrushless);
-  private final CANSparkMax m_right2 = new CANSparkMax(Constants.Drive.CANID_RIGHT2, MotorType.kBrushless);
-  //Declare motor groups 
-  SpeedControllerGroup left = new SpeedControllerGroup(m_left1, m_left2);
-  SpeedControllerGroup right = new SpeedControllerGroup(m_right1, m_right2);
-  //Declare ArcadeDrive 
-  DifferentialDrive m_drive = new DifferentialDrive(left, right);
+  private final CANSparkMax m_left1;
+  private final CANSparkMax m_left2;
+  private final CANSparkMax m_right1;
+  private final CANSparkMax m_right2;
+  private DifferentialDrive m_drive;
+  private boolean driveExist;
+  
 
 
   
@@ -36,18 +35,42 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     //Add motors to groups
     //Create ArcadeDrive
+    m_left1 = new CANSparkMax(Constants.Drive.CANID_LEFT1, MotorType.kBrushless);
+    m_left2 = new CANSparkMax(Constants.Drive.CANID_LEFT2, MotorType.kBrushless);
+    m_right1 = new CANSparkMax(Constants.Drive.CANID_RIGHT1, MotorType.kBrushless);
+    m_right2 = new CANSparkMax(Constants.Drive.CANID_RIGHT2, MotorType.kBrushless);
+    if (m_left1.getMotorTemperature() > 50 || m_left1.getMotorTemperature() < 20){
+      driveExist = false;
+    } else if (m_left2.getMotorTemperature() > 50 || m_left2.getMotorTemperature() < 20){
+      driveExist = false;
+    } else if (m_right1.getMotorTemperature() > 50 || m_right1.getMotorTemperature() < 20){
+      driveExist = false;
+    } else if (m_right2.getMotorTemperature() > 50 || m_right2.getMotorTemperature() < 20){
+      driveExist = false;
+    } else {
+      driveExist = true;
+    }
 
-
+    if (driveExist){
+      //Declare motor groups 
+      SpeedControllerGroup left = new SpeedControllerGroup(m_left1, m_left2);
+      SpeedControllerGroup right = new SpeedControllerGroup(m_right1, m_right2);
+      //Declare ArcadeDrive 
+      m_drive = new DifferentialDrive(left, right);
+    }
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Drive Susbsystem: ", driveExist);
   }
 
   public void setDrivePower(double power, double turn){
     //To do: Control motors
-    m_drive.arcadeDrive(power, turn);
+    if (driveExist){
+      m_drive.arcadeDrive(power, turn);
+    }
   }
 }
 

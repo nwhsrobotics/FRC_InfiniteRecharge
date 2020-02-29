@@ -109,9 +109,9 @@ public class StorageSubsystem extends SubsystemBase {
     private static final double GEAR_CIRC = 1.75*Math.PI;
     private static final double REVS_PER_INCH = GEAR_RATIO/GEAR_CIRC;
     private static final double SECONDS_PER_TICK = 0.02;
-    private static final double BELT_INTAKESPEED = 7.0*SECONDS_PER_TICK;
-    private static final double BELT_ARMINGSPEED = 7.0*SECONDS_PER_TICK;
-    private static final double BELT_SHOOTINGSPEED = 7.0*SECONDS_PER_TICK;
+    private static final double BELT_INTAKESPEED = 100.0*SECONDS_PER_TICK;
+    private static final double BELT_ARMINGSPEED = 100.0*SECONDS_PER_TICK;
+    private static final double BELT_SHOOTINGSPEED = 30.0*SECONDS_PER_TICK;
     private boolean OVERRIDE_SWITCH = false;
     
 
@@ -198,6 +198,8 @@ public class StorageSubsystem extends SubsystemBase {
         } else {
           System.out.println("Communication with Motor for Storage is:   " + motor1Exist);
         }
+        sensor[0] = false;
+        sensor[1] = false;
 
     }
 
@@ -217,10 +219,10 @@ public class StorageSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
         SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
         SmartDashboard.putNumber("Ball Prediction: ", ballPrediction);
-        SmartDashboard.putBoolean("Ball Sensor:  ", (m_Sensor1.get()));
-        SmartDashboard.putBoolean("Ball 2 Sensor:  ", (m_Sensor2.get()));
-        sensor[0] = m_Sensor1.get();
-        sensor[1] = m_Sensor2.get();
+        SmartDashboard.putBoolean("Ball Sensor:  ", sensor[1]);
+        SmartDashboard.putBoolean("Ball 2 Sensor:  ", sensor[2]);
+        //sensor[0] = m_Sensor1.get();
+        //sensor[1] = m_Sensor2.get();
         //System.out.println("Communication with Motor for Storage is:   " + motor1Exist);
         //TODO: add 3rd sensor
         getInputs();
@@ -262,13 +264,13 @@ public class StorageSubsystem extends SubsystemBase {
       break;
 
       case INTAKE_1:
-        if (sensor[1] == true) {
+        if (sensor[0] == true) {
           m_beltState = BeltState.INTAKE_2;
         } 
       break;
 
       case INTAKE_2:
-        if (sensor[1] == false) {
+        if (sensor[0] == false) {
           m_beltState = BeltState.IDLE;
         } 
       break;
@@ -337,7 +339,7 @@ public class StorageSubsystem extends SubsystemBase {
 
       
     }
-    m_pidController.setReference(m_belt_1Position_in*REVS_PER_INCH, ControlType.kPosition);
+    m_pidController.setReference(-m_belt_1Position_in*REVS_PER_INCH, ControlType.kPosition);
     m_pidController2.setReference(m_belt_2Position_in*REVS_PER_INCH, ControlType.kPosition);
   }
 

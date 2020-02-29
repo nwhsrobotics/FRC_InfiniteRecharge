@@ -110,9 +110,9 @@ public class RobotContainer {
 
   // TODO: Create commands for storage
   private final BallOverrideCommand m_overrideBall = new BallOverrideCommand(m_storageSubsystem);
-  private final ToggleSensorCommand m_sensor1Command = new ToggleSensorCommand(m_storageSubsystem, 1);
-  private final ToggleSensorCommand m_sensor2Command = new ToggleSensorCommand(m_storageSubsystem, 2);
-  private final ToggleSensorCommand m_Sensor3Command = new ToggleSensorCommand(m_storageSubsystem, 3);
+  private final ToggleSensorCommand m_sensor1Command = new ToggleSensorCommand(m_storageSubsystem, 0);
+  private final ToggleSensorCommand m_sensor2Command = new ToggleSensorCommand(m_storageSubsystem, 1);
+  private final ToggleSensorCommand m_Sensor3Command = new ToggleSensorCommand(m_storageSubsystem, 2);
   private final ToggleArmedCommand m_toggleArmedCommand = new ToggleArmedCommand(m_storageSubsystem);
   
 
@@ -159,7 +159,7 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd);
+    //m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd); ////--Undoing the setDefaultCommand to test storage
     
     // Configure the button bindings
     configureButtonBindings();
