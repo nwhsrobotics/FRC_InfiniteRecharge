@@ -180,10 +180,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }*/
 
   public void setShooterPower(double speed){
-    m_flyWheelSpeed = speed;
-    //m_flywheelPID.setReference(speed*5600, ControlType.kVelocity);
-    //m_flywheel2PID.setReference(-speed*5600, ControlType.kVelocity); //5600 is 100% power
-    m_flywheel.set(speed);
+    //m_flyWheelSpeed = speed;
+    m_flywheelPID.setReference(speed*5600, ControlType.kVelocity);
+    m_flywheel2PID.setReference(-speed*5600, ControlType.kVelocity); //5600 is 100% power
+    //m_flywheel.set(speed);
   }
 
   //TODO: Add Turret

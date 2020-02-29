@@ -53,6 +53,7 @@ public class RobotContainer {
   // TODO: Remove examples and things that depend on them.
   private final XboxController m_joy0 = new XboxController(0);
   private final XboxController m_joy1 = new XboxController(1);
+  
   private final JoystickButton joy0_a = new JoystickButton(m_joy0, 1);
   private final JoystickButton joy0_b = new JoystickButton(m_joy0, 2);
   private final JoystickButton joy0_x = new JoystickButton(m_joy0, 3);
@@ -170,6 +171,10 @@ public class RobotContainer {
 
   public void update(){
     //System.out.println(XboxController.Button.values());
+  }
+
+  public void teleopInit(){
+
   }
 
   /**
