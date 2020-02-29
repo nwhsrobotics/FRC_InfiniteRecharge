@@ -7,41 +7,45 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 
-public class ToggleArmedCommand extends CommandBase {
-  private final StorageSubsystem m_storageSubsystem;
+public class ToggleShootCommand extends CommandBase {
+  private StorageSubsystem m_storageSubsystem; 
   private boolean currentState;
   private boolean newState;
-
   /**
-   * Creates a new ToggleArmedCommand.
+   * Creates a new ToggleShootCommand.
    */
-  public ToggleArmedCommand(StorageSubsystem subsystem) {
+  public ToggleShootCommand(StorageSubsystem subsystem) {
     m_storageSubsystem = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    currentState = m_storageSubsystem.getArmed();
+    currentState = m_storageSubsystem.getShootState();
     if (currentState == true){
       newState = false;
-    } else if (currentState == false) {
+    } else if (currentState == false){
       newState = true;
     }
-    m_storageSubsystem.setArmed(newState);
-    System.out.println("Current State is: " + currentState);
-    System.out.println("New State is: " + newState);
+    SmartDashboard.putBoolean("Current State", currentState);
+    System.out.println("CurrentState: " + currentState);
+    SmartDashboard.putBoolean("New State: ", newState);
+    System.out.println("New State:  " + newState);
+
+    m_storageSubsystem.setShoot(newState);
+    
   }
 
   // Called once the command ends or is interrupted.

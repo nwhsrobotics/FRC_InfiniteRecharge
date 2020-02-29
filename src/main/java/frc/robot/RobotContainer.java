@@ -17,6 +17,7 @@ import frc.robot.commands.AutoCommand;
 import frc.robot.commands.BallOverrideCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ToggleSensorCommand;
+import frc.robot.commands.ToggleShootCommand;
 import frc.robot.commands.ToggleArmedCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
@@ -56,7 +57,7 @@ public class RobotContainer {
   private final JoystickButton joy0_b = new JoystickButton(m_joy0, 2);
   private final JoystickButton joy0_x = new JoystickButton(m_joy0, 3);
   private final JoystickButton joy0_y = new JoystickButton(m_joy0, 4);
-  private final JoystickButton joy0_startButton = new JoystickButton(m_joy1, 7);
+  private final JoystickButton joy0_startButton = new JoystickButton(m_joy0, 8);
   //private final JoystickButton joy0_
 
   private final JoystickButton joy1_a = new JoystickButton(m_joy1, 1);
@@ -114,6 +115,7 @@ public class RobotContainer {
   private final ToggleSensorCommand m_sensor2Command = new ToggleSensorCommand(m_storageSubsystem, 1);
   private final ToggleSensorCommand m_Sensor3Command = new ToggleSensorCommand(m_storageSubsystem, 2);
   private final ToggleArmedCommand m_toggleArmedCommand = new ToggleArmedCommand(m_storageSubsystem);
+  private final ToggleShootCommand m_toggleShootCommand = new ToggleShootCommand(m_storageSubsystem);
   
 
 
@@ -197,6 +199,7 @@ public class RobotContainer {
     joy0_b.whenPressed(m_sensor2Command); //sensor2 toggle 
     joy0_startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
     joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
+    joy0_x.whenPressed(m_toggleShootCommand);
     // TODO: Buttons for shooter
     joy1_a.whenPressed(m_turretRightCommand);
     joy1_a.whenReleased(m_stopTurretCommand);

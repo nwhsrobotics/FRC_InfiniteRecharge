@@ -109,10 +109,10 @@ public class StorageSubsystem extends SubsystemBase {
     private static final double GEAR_CIRC = 1.75*Math.PI;
     private static final double REVS_PER_INCH = GEAR_RATIO/GEAR_CIRC;
     private static final double SECONDS_PER_TICK = 0.02;
-    private static final double BELT_INTAKESPEED = 100.0*SECONDS_PER_TICK;
-    private static final double BELT_ARMINGSPEED = 100.0*SECONDS_PER_TICK;
-    private static final double BELT_SHOOTINGSPEED = 30.0*SECONDS_PER_TICK;
-    private boolean OVERRIDE_SWITCH = false;
+    private static final double BELT_INTAKESPEED =10.0*SECONDS_PER_TICK;
+    private static final double BELT_ARMINGSPEED = 10.0*SECONDS_PER_TICK;
+    private static final double BELT_SHOOTINGSPEED = 10.0*SECONDS_PER_TICK;
+    private boolean manual_switch = false;
     
 
 
@@ -218,9 +218,9 @@ public class StorageSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Sensor 2:  ", sensor[1]);
         SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
         SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
-        SmartDashboard.putNumber("Ball Prediction: ", ballPrediction);
-        SmartDashboard.putBoolean("Ball Sensor:  ", sensor[1]);
-        SmartDashboard.putBoolean("Ball 2 Sensor:  ", sensor[2]);
+        SmartDashboard.putNumber("Indexer Max Velocity", m_encoder.getVelocity());
+        
+            
         //sensor[0] = m_Sensor1.get();
         //sensor[1] = m_Sensor2.get();
         //System.out.println("Communication with Motor for Storage is:   " + motor1Exist);
@@ -241,7 +241,7 @@ public class StorageSubsystem extends SubsystemBase {
     m_doDisarm = false; //TODO:
     m_doArm = false; //TODO:
     m_doShoot = false;
-    m_shootButtonPressed = false;
+    //m_shootButtonPressed = false;
   }
 
   private void runBeltSm() {
@@ -309,33 +309,34 @@ public class StorageSubsystem extends SubsystemBase {
 
       case INTAKE_1:
       m_belt_1Position_in += BELT_INTAKESPEED;
-      m_belt_2Position_in += 2*BELT_INTAKESPEED;
+      m_belt_2Position_in += 3*BELT_INTAKESPEED;
       break;
 
       case INTAKE_2:
       m_belt_1Position_in += BELT_INTAKESPEED;
-      m_belt_2Position_in += 2*BELT_INTAKESPEED;
+      m_belt_2Position_in += 3*BELT_INTAKESPEED;
       break;
 
       case REVERSE:
       m_belt_1Position_in += -BELT_INTAKESPEED;
-      m_belt_2Position_in += -2*BELT_INTAKESPEED;
+      m_belt_2Position_in += -3*BELT_INTAKESPEED;
       break;
 
       case ARMING:
       m_belt_1Position_in += BELT_ARMINGSPEED;
-      m_belt_2Position_in += 2*BELT_ARMINGSPEED;
+      m_belt_2Position_in += 3*BELT_ARMINGSPEED;
       break;
 
       case SHOOTING_S1:
       m_belt_1Position_in += BELT_SHOOTINGSPEED;
-      m_belt_2Position_in += 2*BELT_SHOOTINGSPEED;
+      m_belt_2Position_in += 3*BELT_SHOOTINGSPEED;
       break;
 
       case SHOOTING_S2:
       m_belt_1Position_in += BELT_SHOOTINGSPEED;
-      m_belt_2Position_in += 2*BELT_SHOOTINGSPEED;
+      m_belt_2Position_in += 3*BELT_SHOOTINGSPEED;
       break;
+
 
       
     }
@@ -413,6 +414,7 @@ public class StorageSubsystem extends SubsystemBase {
         else if (m_shootButtonPressed) {
           m_doShoot = true;
           m_IndexerState = IndexerState.EMPTYBALLS;
+          m_shootButtonPressed = false;
         }
       break;
 
@@ -424,6 +426,7 @@ public class StorageSubsystem extends SubsystemBase {
         else if (m_shootButtonPressed) {
           m_doShoot = true;
           m_IndexerState = IndexerState.ARMED_S1;
+          m_shootButtonPressed = false;
         }
       break;
 
@@ -435,6 +438,7 @@ public class StorageSubsystem extends SubsystemBase {
         else if (m_shootButtonPressed) {
           m_doShoot = true;
           m_IndexerState = IndexerState.ARMED_S2;
+          m_shootButtonPressed = false;
         }
       break;
 
@@ -446,6 +450,7 @@ public class StorageSubsystem extends SubsystemBase {
         else if (m_shootButtonPressed) {
           m_doShoot = true;
           m_IndexerState = IndexerState.ARMED_S3;
+          m_shootButtonPressed = false;
         }
       break;
 
@@ -453,10 +458,12 @@ public class StorageSubsystem extends SubsystemBase {
         if (armedSwitch == false) {
           m_IndexerState = IndexerState.FULL;
           m_doDisarm = true;
+          m_shootButtonPressed = false;
         }
         else if (m_shootButtonPressed) {
           m_doShoot = true;
           m_IndexerState = IndexerState.ARMED_S4;
+          m_shootButtonPressed = false;
         }
       break;
     }
@@ -493,12 +500,29 @@ public class StorageSubsystem extends SubsystemBase {
 
     public void setArmed(boolean armedState) {
       armedSwitch = armedState;
+      System.out.println("Armed Switch is set to:  " + armedSwitch);
     }
 
     public boolean getArmed() {
       return armedSwitch;
     }
 
+    public boolean getManual(){
+      return manual_switch;
+    }
+
+    public void setManual(boolean manualState){
+      manual_switch = manualState;
+    }
+
+    public boolean getShootState(){
+      return m_shootButtonPressed;
+    }
+
+    public void setShoot(boolean shoot){
+      m_shootButtonPressed = shoot;
+      System.out.println("m_shootButtonPressed:  " + m_shootButtonPressed); 
+    }
 
 
     public void constantMotion(double increment) {
@@ -536,6 +560,58 @@ public class StorageSubsystem extends SubsystemBase {
       setActuators();
       
     } */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
