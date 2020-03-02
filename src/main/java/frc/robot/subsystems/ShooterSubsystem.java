@@ -30,6 +30,9 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANPIDController m_flywheel2PID;
   private CANEncoder m_flyWheelEncoder;
   private double kflywheelP, kflywheelI, kflywheelD, kflywheelIz, kflywheelFF, kflywheelmaxOutput, kflywheelminOutput;
+  private double targetVelocity, differenceVelocity;
+  private double flyWheelVoltage;
+  private boolean armedState = false;
   //TODO: Add Turret
   private final CANSparkMax m_turret;
   private  CANPIDController m_turretPID;
@@ -169,6 +172,14 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     SmartDashboard.putNumber("FlyWheel Power:  ", m_flyWheelSpeed);
     SmartDashboard.putNumber("FlyWheel Velocity:  ", m_flyWheelEncoder.getVelocity());
+    /*
+    if (armedState == true) {
+      manualClosedLoopFlywheel(1000);
+    }
+    else {
+      manualClosedLoopFlywheel(0);
+    }
+    */
   }
   
 
@@ -176,16 +187,51 @@ public class ShooterSubsystem extends SubsystemBase {
   //TODO: Add Turret
   public void setShooterPower(double speed){
     if (speed > 0.05 || speed < -0.05){
-      m_flyWheelSpeed = speed;
-      m_flywheel.set(m_flyWheelSpeed);
+      m_flyWheelSpeed = .2;
+      //m_flywheel.set(m_flyWheelSpeed);
     }
     else {
       m_flyWheelSpeed = 0.0;
-      m_flywheel.set(m_flyWheelSpeed);
-    }
-    //m_flywheelPID.setReference(speed*5600, ControlType.kVelocity);
-    //m_flywheel2PID.setReference(-speed*5600, ControlType.kVelocity); //5600 is 100% power
+      //m_flywheel.set(m_flyWheelSpeed);
+    } 
+    
+    m_flywheelPID.setReference(m_flyWheelSpeed*5600, ControlType.kVelocity);
+    m_flywheel2PID.setReference(-m_flyWheelSpeed*5600, ControlType.kVelocity); //5600 is 100% power
   
+  }
+
+  public void manualClosedLoopFlywheel(double speed){
+    targetVelocity = speed;
+    differenceVelocity = targetVelocity - m_flyWheelEncoder.getVelocity();
+    if (differenceVelocity >= 1500){
+      flyWheelVoltage += 0.1;
+    } else if (differenceVelocity >= 500){
+      flyWheelVoltage += 0.05;
+    } else if (differenceVelocity >= 200){
+      flyWheelVoltage += 0.02;
+    } else if (differenceVelocity >= 50){
+      flyWheelVoltage += 0.01;
+    }
+
+    if (differenceVelocity <= -1500){
+      flyWheelVoltage -= 0.1;
+    } else if (differenceVelocity <= -500){
+      flyWheelVoltage -= 0.05;
+    } else if (differenceVelocity <= -200){
+      flyWheelVoltage -= 0.02;
+    } else if (differenceVelocity <= -50){
+      flyWheelVoltage -= 0.01;
+    }
+    m_flywheelPID.setReference(flyWheelVoltage, ControlType.kVoltage);
+    m_flywheel2PID.setReference(-flyWheelVoltage, ControlType.kVoltage);
+
+  }
+
+  public void switcharmedState(){
+    armedState = !armedState;
+  }
+  public boolean getarmedState(){
+    return armedState;
   }
 
   public void MoveTurret(double setPoint){

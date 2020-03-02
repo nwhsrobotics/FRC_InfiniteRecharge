@@ -98,7 +98,7 @@ public class RobotContainer {
   private final MoveTurretCommand m_turretRightCommand = new MoveTurretCommand(m_shooterSubsystem, 20);
   private final MoveTurretCommand m_stopTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
   private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -20);
-  private final FlyWheelTestingCommand m_flyWheelTestCmd = new FlyWheelTestingCommand(m_shooterSubsystem, m_joy0);
+  private final FlyWheelTestingCommand m_flyWheelTestCommand = new FlyWheelTestingCommand(m_shooterSubsystem, m_joy0);
 
 
 
@@ -158,7 +158,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     //m_driveSubsystem.setDefaultCommand(m_teleopCommand);
-    m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd);
+    //m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCommand);
     
     // Configure the button bindings
     configureButtonBindings();
@@ -197,8 +197,8 @@ public class RobotContainer {
     joy0_startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
     joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
     // TODO: Buttons for shooter
-    joy1_a.whenPressed(m_turretRightCommand);
-    joy1_a.whenReleased(m_stopTurretCommand);
+    joy1_a.toggleWhenActive(m_flyWheelTestCommand);
+    //joy1_a.whenReleased(m_stopTurretCommand);
     joy1_b.whenPressed(m_turretLeftCommand);
     joy1_b.whenReleased(m_stopTurretCommand);
     joy1_x.toggleWhenPressed(m_trackTargetCommand);

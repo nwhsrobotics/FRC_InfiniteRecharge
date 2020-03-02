@@ -14,6 +14,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class FlyWheelTestingCommand extends CommandBase {
   private final ShooterSubsystem m_ShooterSubsystem;
   private final XboxController m_joy;
+  private boolean armed;
   /**
    * Creates a new FlyWheelTestingCommand.
  * 
@@ -29,17 +30,25 @@ public class FlyWheelTestingCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //m_ShooterSubsystem.switcharmedState();
+    //armed = m_ShooterSubsystem.getarmedState();
+    System.out.println("flywheel command initializd");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ShooterSubsystem.setShooterPower(m_joy.getRawAxis(1));
+
+    
+    m_ShooterSubsystem.manualClosedLoopFlywheel(1000);
+    //TODO - Make it turn off when released
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+  
   }
 
   // Returns true when the command should end.
