@@ -25,7 +25,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private double m_intakeSpeed = 0.0;
   //private CANEncoder m_intakeEncoder;
   
-  private final int deviceId = 14;
+  
   
   
   //intake position control constants.
@@ -44,22 +44,25 @@ public class IntakeSubsystem extends SubsystemBase {
   private double m_armPos = 0;
 
   public IntakeSubsystem() {
-    m_intake = new CANSparkMax(deviceId, MotorType.kBrushless);
+    m_intake = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE, MotorType.kBrushless);
     
-    kIntakeP = 1.0;
-    kIntakeI = 0;
-    kIntakeD = 0;
-    kIntakeIz = 0;
-    kIntakeFF = 0;
-    kIntakeMaxOutput = 0;
-    kIntakeMinOutput = 0;
-
-    //1st intake Arm motor
-    m_intakeArmMotor1 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE1, MotorType.kBrushless);
+    //2nd intake motor
+    m_intakeArmMotor1 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKEARM1, MotorType.kBrushless);
     if(m_intakeArmMotor1 != null){
       m_intakePid1 = m_intakeArmMotor1.getPIDController();
       m_intakeEncoder1 = m_intakeArmMotor1.getEncoder();
       m_intakeEncoder1.setPosition(0);
+
+      
+      kIntakeP = 1.0;
+      kIntakeI = 0;
+      kIntakeD = 0;
+      kIntakeIz = 0;
+      kIntakeFF = 0;
+      kIntakeMaxOutput = 0;
+      kIntakeMinOutput = 0;
+
+    
   
       m_intakePid1.setP(kIntakeP);
       m_intakePid1.setI(kIntakeI);
@@ -72,7 +75,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     //2nd intake arm motor
-    m_intakeArmMotor2 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE2, MotorType.kBrushless);
+    m_intakeArmMotor2 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE, MotorType.kBrushless);
     if(m_intakeArmMotor2 != null){
       m_intakePid2 = m_intakeArmMotor2.getPIDController();
       m_intakeEncoder2 = m_intakeArmMotor2.getEncoder();

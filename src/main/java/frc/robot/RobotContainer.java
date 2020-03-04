@@ -23,6 +23,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 import frc.robot.commands.ExtendHookCommand;
 import frc.robot.commands.FlyWheelTestingCommand;
+import frc.robot.commands.IndexerManualCommand;
 import frc.robot.commands.ParkCommand;
 import frc.robot.commands.SwitchCameraCommand;
 import frc.robot.commands.MoveWinchCommand;
@@ -34,6 +35,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HangSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.StorageSubsystem.BeltState;
+import frc.robot.subsystems.StorageSubsystem.IndexerState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -111,6 +114,7 @@ public class RobotContainer {
   private final StorageSubsystem m_storageSubsystem = new StorageSubsystem();
 
   // TODO: Create commands for storage
+  private final IndexerManualCommand m_indexerManual = new IndexerManualCommand(m_storageSubsystem, m_joy0);
   private final BallOverrideCommand m_overrideBall = new BallOverrideCommand(m_storageSubsystem);
   private final ToggleSensorCommand m_sensor1Command = new ToggleSensorCommand(m_storageSubsystem, 0);
   private final ToggleSensorCommand m_sensor2Command = new ToggleSensorCommand(m_storageSubsystem, 1);
@@ -162,21 +166,28 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    //m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd); ////--Undoing the setDefaultCommand to test storage
+    m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd); ////--Undoing the setDefaultCommand to test storage
+    //m_storageSubsystem.setDefaultCommand(m_indexerManual);
     
     // Configure the button bindings
     configureButtonBindings();
     
   }
 
+
   public void update(){
     //System.out.println(XboxController.Button.values());
   }
 
   public void teleopInit(){
-
+    m_storageSubsystem.m_encoder.setPosition(0);
+    m_storageSubsystem.m_encoder2.setPosition(0);
   }
 
+  public void autoInit() {
+    m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
+  }
+  
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
