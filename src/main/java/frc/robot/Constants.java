@@ -24,7 +24,9 @@ public final class Constants {
     }
     
     public final class IntakeArm{
-        public static final int CANID_INTAKE = 14;
+        public static final int CANID_INTAKE1 = 14;
+        public static final int CANID_INTAKE2 = 15;
+
     }
     
     

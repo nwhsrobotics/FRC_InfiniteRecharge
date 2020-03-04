@@ -67,6 +67,7 @@ public class RobotContainer {
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
 
   // Create m_intakeSubsystem
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   // Create commands for intake
 
   private final IntakePosCommand m_intakePosUp = new IntakePosCommand(m_intakeSubsystem, false);
