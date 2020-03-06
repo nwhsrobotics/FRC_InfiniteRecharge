@@ -37,11 +37,13 @@ public class IntakeSubsystem extends SubsystemBase {
   private CANPIDController m_intakePid2 = null;
   private CANEncoder m_intakeEncoder2;
   private double kIntakeP, kIntakeI, kIntakeD, kIntakeIz, kIntakeFF, kIntakeMaxOutput, kIntakeMinOutput;
-  private static final double DOWNPOS = 100.0;
+  private static final double DOWNPOS = 53.0;
   private static final double UPPOS = 0.0;
   private static final double TICKS_PER_SECOND = 50.0;
-  private static final double SPEED_ROT_PER_TICK = ((DOWNPOS - UPPOS)/ (2.0 * TICKS_PER_SECOND)); //2 seconds to move
+  private static final double SECONDS_TO_MOVE = 2.0;
+  private static final double SPEED_ROT_PER_TICK = ((DOWNPOS - UPPOS)/ (SECONDS_TO_MOVE * TICKS_PER_SECOND)); 
   private double m_armPos = 0;
+  private boolean m_intaketoggle;
 
   public IntakeSubsystem() {
     m_intake = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE, MotorType.kBrushless);
@@ -54,13 +56,13 @@ public class IntakeSubsystem extends SubsystemBase {
       m_intakeEncoder1.setPosition(0);
 
       
-      kIntakeP = 1.0;
+      kIntakeP = 0.05;
       kIntakeI = 0;
       kIntakeD = 0;
       kIntakeIz = 0;
       kIntakeFF = 0;
-      kIntakeMaxOutput = 0;
-      kIntakeMinOutput = 0;
+      kIntakeMaxOutput = 1;
+      kIntakeMinOutput = -1;
 
     
   
@@ -75,7 +77,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     //2nd intake arm motor
-    m_intakeArmMotor2 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE, MotorType.kBrushless);
+    m_intakeArmMotor2 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKEARM2, MotorType.kBrushless);
     if(m_intakeArmMotor2 != null){
       m_intakePid2 = m_intakeArmMotor2.getPIDController();
       m_intakeEncoder2 = m_intakeArmMotor2.getEncoder();
@@ -130,7 +132,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
   //intake motor
   public void intakeMotor(double speed){
-    m_intakeSpeed = speed;
+    if (m_intaketoggle){
+      m_intakeSpeed = speed;
+    }
   }
 
 
@@ -159,6 +163,14 @@ public boolean isArmDown() {
 public boolean isArmUp() {
 
 	return (m_armPos == UPPOS);
+}
+
+public boolean getIntakeStatus(){
+  return m_intaketoggle;
+}
+
+public void setIntakeStatus(boolean intake){
+  m_intaketoggle = intake;
 }
 
 }

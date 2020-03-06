@@ -93,6 +93,8 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   // Create commands for intake
+  private final IntakeCommand m_intakecommand = new IntakeCommand(m_intakeSubsystem, 0.9);
+  private final IntakeCommand m_intakeOffcommand = new IntakeCommand(m_intakeSubsystem, 0.0);
   private final IntakePosCommand m_intakePosUp = new IntakePosCommand(m_intakeSubsystem, false);
   private final IntakePosCommand m_intakePosDown = new IntakePosCommand(m_intakeSubsystem, true);
 
@@ -166,8 +168,9 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd); ////--Undoing the setDefaultCommand to test storage
+    //m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd); ////--Undoing the setDefaultCommand to test storage
     //m_storageSubsystem.setDefaultCommand(m_indexerManual);
+    m_driveSubsystem.setDefaultCommand(m_teleopCommand);
     
     // Configure the button bindings
     configureButtonBindings();
@@ -211,17 +214,21 @@ public class RobotContainer {
     //a.toggleWhenActive(m_StorageCommand); //sensor2 toggle
     //x.toggleWhenActive(m_NextStageCommand); //sensor1 toggle
     //y.whenPressed(m_deleteCommand); //sensor2 false
-    joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
+    //joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
     joy0_b.whenPressed(m_sensor2Command); //sensor2 toggle 
     joy0_startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
     joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
     joy0_x.whenPressed(m_toggleShootCommand);
+    joy0_a.whenPressed(m_intakecommand);
+    joy0_a.whenReleased(m_intakeOffcommand);
     // TODO: Buttons for shooter
     joy1_a.whenPressed(m_turretRightCommand);
     joy1_a.whenReleased(m_stopTurretCommand);
-    joy1_b.whenPressed(m_turretLeftCommand);
-    joy1_b.whenReleased(m_stopTurretCommand);
+    //joy1_b.whenPressed(m_turretLeftCommand);
+    //joy1_b.whenReleased(m_stopTurretCommand);
     joy1_x.toggleWhenPressed(m_trackTargetCommand);
+    joy1_y.whenPressed(m_intakePosUp);
+    joy1_b.whenPressed(m_intakePosDown);
     // TODO: Buttons for hang
 
     //joy0_a.whenPressed(m_moveWinch);
