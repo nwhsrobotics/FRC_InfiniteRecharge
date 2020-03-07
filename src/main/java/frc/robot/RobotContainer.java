@@ -9,12 +9,15 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoCommand;
 import frc.robot.commands.AutoCommandGroup;
+import frc.robot.commands.AutoCommandGroup2;
 import frc.robot.commands.BallOverrideCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ToggleSensorCommand;
@@ -39,6 +42,8 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.StorageSubsystem.BeltState;
 import frc.robot.subsystems.StorageSubsystem.IndexerState;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandGroupBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 
@@ -49,6 +54,9 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  private SendableChooser <SequentialCommandGroup> autoChooser;
+  private SequentialCommandGroup m_autoChooser;
+  
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
  
@@ -172,8 +180,9 @@ public class RobotContainer {
 
 
   //AUTOCOMMAND
-  //private final AutoCommand m_autoCommand = new AutoCommand(m_storageSubsystem, m_shooterSubsystem, 0, 0, 0);
+  
   private final AutoCommandGroup m_autoCommand = new AutoCommandGroup(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
+  private final AutoCommandGroup2 m_autoCommand2 = new AutoCommandGroup2(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
 
 
   /**
@@ -192,7 +201,8 @@ public class RobotContainer {
 
 
   public void update(){
-    //System.out.println(m_joy1.getPOV());
+    //this will update periodically
+
   }
 
   public void teleopInit(){
@@ -200,10 +210,12 @@ public class RobotContainer {
     //m_storageSubsystem.m_encoder2.setPosition(0);
     m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
     m_intakeOffcommand.schedule(true);
+    m_intakeSubsystem.resetPos();
   }
 
   public void autoInit() {
     m_storageSubsystem.m_IndexerState = IndexerState.INTAKE_S3;
+    m_intakeSubsystem.resetPos();
     //m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
   }
   
@@ -265,8 +277,20 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public SequentialCommandGroup getAutonomousCommand() {
+    m_autoChooser = autoChooser.getSelected();
+
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return m_autoChooser;
   }
+
+
+public void robotInit() {
+  autoChooser = new SendableChooser<SequentialCommandGroup>();
+  autoChooser.addDefault("Auto Mode A", m_autoCommand);
+  autoChooser.addObject("Auto Mode B", m_autoCommand2);
+  
+  SmartDashboard.putData("Auto Mode", autoChooser);
+ 
+}
 }

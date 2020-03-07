@@ -95,6 +95,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   }
 
+  public void resetPos(){
+    m_intakeEncoder1.setPosition(m_armPos);
+    m_intakeEncoder2.setPosition(-m_armPos);
+
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
