@@ -30,7 +30,7 @@ public final class Constants {
     public final class IntakeArm{
         public static final int CANID_INTAKE = 10;
         public static final int CANID_INTAKEARM1 = 4;
-        public static final int CANID_INTAKEARM2 = 9;
+        public static final int CANID_INTAKEARM2 = 9; 
     }
     
 
