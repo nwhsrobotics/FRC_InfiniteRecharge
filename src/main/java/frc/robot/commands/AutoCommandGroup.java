@@ -8,8 +8,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
+import frc.robot.subsystems.StorageSubsystem.IndexerState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,9 +22,26 @@ public class AutoCommandGroup extends SequentialCommandGroup {
   /**
    * Creates a new AutoCommandGroup.
    */
-  public AutoCommandGroup(StorageSubsystem storage, ShooterSubsystem shooter, double time) { // ADD REST OF SUBSYSTEMS
+  public AutoCommandGroup(StorageSubsystem storage, ShooterSubsystem shooter, IntakeSubsystem intake, DriveSubsystem drive) { // ADD REST OF SUBSYSTEMS
+
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super();
+    super(new IntakePosCommand(intake, true),
+    new IntakeCommand(intake, 0.2).withTimeout(2),
+    new IntakeCommand(intake, 0.0).withTimeout(0),
+    new ToggleArmedCommand(storage),      //TIMING IS OFF
+    new WaitCommand(0.01),
+    new ToggleSensorCommand(storage, 2),
+    new WaitCommand(2),
+    new ToggleShootCommand(storage).withTimeout(2),
+    new ToggleSensorCommand(storage, 2),
+    new ToggleSensorCommand(storage, 2),
+    new ToggleShootCommand(storage).withTimeout(2),
+    new ToggleSensorCommand(storage, 2),
+    new ToggleSensorCommand(storage, 2),
+    new ToggleShootCommand(storage).withTimeout(2),
+    new ToggleSensorCommand(storage, 2),
+    new WaitCommand(1)); 
+    storage.m_IndexerState = IndexerState.EMPTYBALLS;
   }
 }

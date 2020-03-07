@@ -13,13 +13,13 @@ import frc.robot.subsystems.StorageSubsystem;
 
 public class IndexerManualCommand extends CommandBase {
   private final StorageSubsystem m_storageSubsystem;
-  private final XboxController m_joy;
+  private final boolean m_state;
   /**
    * Creates a new IndexerManualCommand.
    */
-  public IndexerManualCommand(StorageSubsystem subsystem, XboxController joy) {
+  public IndexerManualCommand(StorageSubsystem subsystem, boolean state) {
     m_storageSubsystem = subsystem;
-    m_joy = joy;
+    m_state = state;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -27,12 +27,13 @@ public class IndexerManualCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_storageSubsystem.RunIndexer_PT(m_joy.getRawAxis(1));
+    m_storageSubsystem.setManual(m_state);
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +44,6 @@ public class IndexerManualCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

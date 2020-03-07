@@ -45,12 +45,14 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANEncoder m_hoodEncoder;
   private double kHoodP, kHoodI, kHoodD, kHoodIz, kHoodFF, kHoodMaxOutput, kHoodMinOutput;
   private VisionSubsystem m_visionSubsystem;
+  private StorageSubsystem m_storageSubsystem;
   private double m_x;
   private boolean hoodExist;
   
 
-  public ShooterSubsystem(VisionSubsystem visionSubsystem) {
+  public ShooterSubsystem(VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem) {
     m_visionSubsystem = visionSubsystem;
+    m_storageSubsystem = storageSubsystem;
     //TODO: Add Flywheel
       //1621 rpm 5676: NEO max (28%)
     m_flywheel = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL1, MotorType.kBrushless);
@@ -161,6 +163,13 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //TODO: Add Flywheel
     //TODO: Add Turret
+    if (m_storageSubsystem.getShootState()) {
+      setShooterPower(-0.60);
+    } else if (m_storageSubsystem.getArmed()){
+      setShooterPower(-0.60);
+    } else {
+      setShooterPower(0);
+    }
     if (turretExist){
       SmartDashboard.putNumber("Rotation Position", m_turretEncoder.getPosition());
       m_x = m_visionSubsystem.getTargetX();

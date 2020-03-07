@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoCommand;
+import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.BallOverrideCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ToggleSensorCommand;
@@ -39,6 +40,7 @@ import frc.robot.subsystems.StorageSubsystem.BeltState;
 import frc.robot.subsystems.StorageSubsystem.IndexerState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -68,7 +70,13 @@ public class RobotContainer {
   private final JoystickButton joy1_b = new JoystickButton(m_joy1, 2);
   private final JoystickButton joy1_x = new JoystickButton(m_joy1, 3);
   private final JoystickButton joy1_y = new JoystickButton(m_joy1, 4);
+  private final JoystickButton joy1_b5 = new JoystickButton(m_joy1, 5);
+  private final JoystickButton joy1_b6 = new JoystickButton(m_joy1, 6);
+  private final JoystickButton joy1_b7 = new JoystickButton(m_joy1, 7);
+  private final JoystickButton joy1_b8 = new JoystickButton(m_joy1, 8);
 
+  private final POVButton joy1_upButton = new POVButton(m_joy1, 0);
+  private final POVButton joy1_downButton = new POVButton(m_joy1, 180);
 
   //private final JoystickButton intakeButtonOn = new JoystickButton(m_joy1, 1); //a
   //private final JoystickButton intakeButtonOff = new JoystickButton(m_joy1, 2); //b
@@ -84,9 +92,14 @@ public class RobotContainer {
   // 
 
   
-  
+
   //VISION Subsystem
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+
+
+  // TODO: Create m_storageSubsystem
+  private final StorageSubsystem m_storageSubsystem = new StorageSubsystem(m_joy1, 1);
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_visionSubsystem, m_storageSubsystem);
 
 
   // Create m_intakeSubsystem
@@ -100,23 +113,21 @@ public class RobotContainer {
 
 
   // TODO: Create m_shooterSubsystem
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_visionSubsystem);
+ 
 
   // TODO: create commands for shooter
   private final MoveTurretCommand m_turretRightCommand = new MoveTurretCommand(m_shooterSubsystem, 20);
   private final MoveTurretCommand m_stopTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
   private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -20);
-  private final FlyWheelTestingCommand m_flyWheelTestCmd = new FlyWheelTestingCommand(m_shooterSubsystem, m_joy0);
+  private final FlyWheelTestingCommand m_flyWheelTestCmd = new FlyWheelTestingCommand(m_shooterSubsystem, m_joy1);
 
 
 
 
-
-  // TODO: Create m_storageSubsystem
-  private final StorageSubsystem m_storageSubsystem = new StorageSubsystem();
 
   // TODO: Create commands for storage
-  private final IndexerManualCommand m_indexerManual = new IndexerManualCommand(m_storageSubsystem, m_joy0);
+  private final IndexerManualCommand m_indexerManual = new IndexerManualCommand(m_storageSubsystem, true);
+  private final IndexerManualCommand m_indexerAuto = new IndexerManualCommand(m_storageSubsystem, false);
   private final BallOverrideCommand m_overrideBall = new BallOverrideCommand(m_storageSubsystem);
   private final ToggleSensorCommand m_sensor1Command = new ToggleSensorCommand(m_storageSubsystem, 0);
   private final ToggleSensorCommand m_sensor2Command = new ToggleSensorCommand(m_storageSubsystem, 1);
@@ -161,16 +172,18 @@ public class RobotContainer {
 
 
   //AUTOCOMMAND
-  private final AutoCommand m_autoCommand = new AutoCommand(m_storageSubsystem, m_shooterSubsystem, 0, 0, 0);
+  //private final AutoCommand m_autoCommand = new AutoCommand(m_storageSubsystem, m_shooterSubsystem, 0, 0, 0);
+  private final AutoCommandGroup m_autoCommand = new AutoCommandGroup(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
 
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    
     //m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd); ////--Undoing the setDefaultCommand to test storage
     //m_storageSubsystem.setDefaultCommand(m_indexerManual);
-    m_driveSubsystem.setDefaultCommand(m_teleopCommand);
+    //m_driveSubsystem.setDefaultCommand(m_teleopCommand);
     
     // Configure the button bindings
     configureButtonBindings();
@@ -179,16 +192,19 @@ public class RobotContainer {
 
 
   public void update(){
-    //System.out.println(XboxController.Button.values());
+    //System.out.println(m_joy1.getPOV());
   }
 
   public void teleopInit(){
-    m_storageSubsystem.m_encoder.setPosition(0);
-    m_storageSubsystem.m_encoder2.setPosition(0);
+    //m_storageSubsystem.m_encoder.setPosition(0);
+    //m_storageSubsystem.m_encoder2.setPosition(0);
+    m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
+    m_intakeOffcommand.schedule(true);
   }
 
   public void autoInit() {
-    m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
+    m_storageSubsystem.m_IndexerState = IndexerState.INTAKE_S3;
+    //m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
   }
   
   /**
@@ -199,10 +215,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // TODO: Buttons for intake
-    //intakeButtonOn.whenPressed(m_intakeOnCommand);
-    //intakeButtonOff.whenPressed(m_intakeOffCommand);
-    //intakeButtonUp.whenPressed(m_intakePosUp);
-    //intakeButtonDown.whenPressed(m_intakePosDown);
+    
 
     // TODO: Buttons for storage
     // TODO: Buttons for shooter
@@ -211,24 +224,28 @@ public class RobotContainer {
     //b.whenPressed(m_turretLeftCommand);
     //b.whenReleased(m_stopTurretCommand);
     // TODO: Buttons for storage
-    //a.toggleWhenActive(m_StorageCommand); //sensor2 toggle
-    //x.toggleWhenActive(m_NextStageCommand); //sensor1 toggle
-    //y.whenPressed(m_deleteCommand); //sensor2 false
-    //joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
+    
+    joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
     joy0_b.whenPressed(m_sensor2Command); //sensor2 toggle 
     joy0_startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
     joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
     joy0_x.whenPressed(m_toggleShootCommand);
-    joy0_a.whenPressed(m_intakecommand);
-    joy0_a.whenReleased(m_intakeOffcommand);
+    //joy0_y.whenPressed(m_intakePosUp);
+    //joy0_b.whenPressed(m_intakePosDown);
+    //joy0_a.whenPressed(m_intakecommand);
+    //joy0_a.whenReleased(m_intakeOffcommand);
     // TODO: Buttons for shooter
-    joy1_a.whenPressed(m_turretRightCommand);
-    joy1_a.whenReleased(m_stopTurretCommand);
-    //joy1_b.whenPressed(m_turretLeftCommand);
-    //joy1_b.whenReleased(m_stopTurretCommand);
-    joy1_x.toggleWhenPressed(m_trackTargetCommand);
+    //joy1_b5.whenPressed(m_turretRightCommand);
+    //joy1_b5.whenReleased(m_stopTurretCommand);
+    //joy1_startButton.whenPressed(m_turretLeftCommand);
+    //joy1_startButton.whenReleased(m_stopTurretCommand);
     joy1_y.whenPressed(m_intakePosUp);
     joy1_b.whenPressed(m_intakePosDown);
+    joy1_a.whenPressed(m_intakecommand);
+    joy1_a.whenReleased(m_intakeOffcommand);
+    joy1_x.toggleWhenPressed(m_trackTargetCommand);
+    joy1_b7.whenPressed(m_indexerAuto);
+    joy1_b8.whenPressed(m_indexerManual);
     // TODO: Buttons for hang
 
     //joy0_a.whenPressed(m_moveWinch);

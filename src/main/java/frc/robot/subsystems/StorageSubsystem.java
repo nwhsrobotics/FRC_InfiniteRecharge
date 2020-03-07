@@ -8,6 +8,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,7 +52,8 @@ public class StorageSubsystem extends SubsystemBase {
       REVERSE,
       ARMING,
       SHOOTING_S1,
-      SHOOTING_S2;
+      SHOOTING_S2,
+      SHOOTING_ALL;
     }
 
 
@@ -67,7 +70,7 @@ public class StorageSubsystem extends SubsystemBase {
     public boolean sensor[] = new boolean[3];         //TODO: CHECK HOW MANY SENSORS
     private static final DigitalInput m_Sensor1 = new DigitalInput(0);
     private static final DigitalInput m_Sensor2 = new DigitalInput(1);
-    //private static final DigitalInput m_Sensor3 = new DigitalInput(2);
+    private static final DigitalInput m_Sensor3 = new DigitalInput(2);
     
 
 
@@ -109,14 +112,18 @@ public class StorageSubsystem extends SubsystemBase {
     private static final double SECONDS_PER_TICK = 0.02;
     private static final double BELT_INTAKESPEED =10.0*SECONDS_PER_TICK;
     private static final double BELT_ARMINGSPEED = 10.0*SECONDS_PER_TICK;
-    private static final double BELT_SHOOTINGSPEED = 10.0*SECONDS_PER_TICK;
+    private static final double BELT_SHOOTINGSPEED = 20.0*SECONDS_PER_TICK;
     private boolean manual_switch = false;
+    private final int m_axis;
+    private final XboxController m_joy;
+    private static final double M2_FACTOR = 3.0;
     
 
 
-    public StorageSubsystem() {
-  
-
+    public StorageSubsystem(XboxController joy, int axis) {
+      
+      m_joy = joy;
+      m_axis = axis;
 
 
       for(int n = 0; n < 3; n += 1) {
@@ -209,6 +216,7 @@ public class StorageSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
       SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
       SmartDashboard.putNumber("The Ball Prediction is: ", ballPrediction);
+      SmartDashboard.putBoolean("manualIndexer", manual_switch);
         getInputs();
         if (m_beltState == BeltState.IDLE) {
           runIndexerSm();
@@ -289,10 +297,15 @@ public class StorageSubsystem extends SubsystemBase {
         }
         SmartDashboard.putString("Belt State is:   ", "Stage SHOOTING_2");
       break;
+
+      case SHOOTING_ALL:
+      SmartDashboard.putString("Belt State is:   ", "Stage SHOOTING_ALL");
+      break;
     }
   }
 
   private void updateActuators() {
+    
     switch (m_beltState) {
       
       case IDLE:
@@ -300,39 +313,54 @@ public class StorageSubsystem extends SubsystemBase {
 
       case INTAKE_1:
       m_belt_1Position_in += BELT_INTAKESPEED;
-      m_belt_2Position_in += 3*BELT_INTAKESPEED;
+      m_belt_2Position_in += M2_FACTOR*BELT_INTAKESPEED;
       break;
 
       case INTAKE_2:
       m_belt_1Position_in += BELT_INTAKESPEED;
-      m_belt_2Position_in += 3*BELT_INTAKESPEED;
+      m_belt_2Position_in += M2_FACTOR*BELT_INTAKESPEED;
       break;
 
       case REVERSE:
       m_belt_1Position_in += -BELT_INTAKESPEED;
-      m_belt_2Position_in += -3*BELT_INTAKESPEED;
+      m_belt_2Position_in += -M2_FACTOR*BELT_INTAKESPEED;
       break;
 
       case ARMING:
       m_belt_1Position_in += BELT_ARMINGSPEED;
-      m_belt_2Position_in += 3*BELT_ARMINGSPEED;
+      m_belt_2Position_in += M2_FACTOR*BELT_ARMINGSPEED;
       break;
 
       case SHOOTING_S1:
       m_belt_1Position_in += BELT_SHOOTINGSPEED;
-      m_belt_2Position_in += 3*BELT_SHOOTINGSPEED;
+      m_belt_2Position_in += M2_FACTOR*BELT_SHOOTINGSPEED;
       break;
 
       case SHOOTING_S2:
       m_belt_1Position_in += BELT_SHOOTINGSPEED;
-      m_belt_2Position_in += 3*BELT_SHOOTINGSPEED;
+      m_belt_2Position_in += M2_FACTOR*BELT_SHOOTINGSPEED;
       break;
 
 
       
     }
-    m_pidController.setReference(-m_belt_1Position_in*REVS_PER_INCH, ControlType.kPosition);
-    m_pidController2.setReference(m_belt_2Position_in*REVS_PER_INCH, ControlType.kPosition);
+    if (manual_switch) {
+      //set power manually
+      double speed = -m_joy.getRawAxis(m_axis);
+      if (speed > 0.05 || speed < -0.05) { 
+      //m_motor.set(speed/M2_FACTOR);
+      //m_motor2.set(speed);
+      m_pidController.setReference(-speed/M2_FACTOR, ControlType.kDutyCycle);
+      m_pidController2.setReference(speed, ControlType.kDutyCycle);
+      } else {
+        m_pidController.setReference(0, ControlType.kDutyCycle);
+        m_pidController2.setReference(0, ControlType.kDutyCycle);
+      }
+    } else {
+      m_pidController.setReference(-m_belt_1Position_in*REVS_PER_INCH, ControlType.kPosition);
+      m_pidController2.setReference(m_belt_2Position_in*REVS_PER_INCH, ControlType.kPosition);  
+    }
+  
   }
 
 
@@ -482,25 +510,18 @@ public class StorageSubsystem extends SubsystemBase {
     }
   }
 
- 
 
-  public void setPosition(double position) {
-        if (isFinished == false) {
-            m_pidController.setReference(position, ControlType.kPosition);
-        }
-        double difference_position = m_encoder.getPosition() - position;
-        difference_position = Math.abs(difference_position);
-        if (difference_position < 2) {
-            isFinished = true;
-        } else {
-            isFinished = false;
-        }
-    }
-
-    public void RunIndexer_PT(double speed) {
-      m_Indexer_PTSpeed = speed;
-      m_motor.set(speed);
-      m_motor2.set(-3*speed);
+    public void setManual(boolean state) {
+      manual_switch = state;
+      m_IndexerState = IndexerState.EMPTYBALLS;
+      m_belt_1Position_in = 0;
+      m_belt_2Position_in = 0;
+      m_encoder.setPosition(0);
+      m_encoder2.setPosition(0);
+      m_pidController.setReference(0, ControlType.kPosition);
+      m_pidController2.setReference(0, ControlType.kPosition);
+      //m_motor.set(speed);
+      //m_motor2.set(-3*speed);
     }
 
    /* public void autoStorage() {
@@ -530,9 +551,9 @@ public class StorageSubsystem extends SubsystemBase {
       return manual_switch;
     }
 
-    public void setManual(boolean manualState){
+    /*public void setManual(boolean manualState){
       manual_switch = manualState;
-    }
+    } */
 
     public boolean getShootState(){
       return m_shootButtonPressed;
