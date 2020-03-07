@@ -182,6 +182,7 @@ public class RobotContainer {
   public void teleopInit(){
     m_storageSubsystem.m_encoder.setPosition(0);
     m_storageSubsystem.m_encoder2.setPosition(0);
+    m_intakeSubsystem.resetPos();
   }
 
   public void autoInit() {

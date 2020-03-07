@@ -41,7 +41,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private static final double UPPOS = 0.0;
   private static final double TICKS_PER_SECOND = 50.0;
   private static final double SPEED_ROT_PER_TICK = ((DOWNPOS - UPPOS)/ (2.0 * TICKS_PER_SECOND)); //2 seconds to move
-  private double m_armPos = 0;
+  private double m_armPos = 0.0;
 
   public IntakeSubsystem() {
     m_intake = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE, MotorType.kBrushless);
@@ -90,6 +90,12 @@ public class IntakeSubsystem extends SubsystemBase {
       m_intakePid2.setReference(0.0, ControlType.kPosition);
       System.out.println("Intake Arm Sparks 2 Initialized.");
     }
+
+  }
+
+  public void resetPos(){
+    m_intakeEncoder1.setPosition(m_armPos);
+    m_intakeEncoder2.setPosition(-m_armPos);
 
   }
 
