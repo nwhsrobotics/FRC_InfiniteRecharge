@@ -39,25 +39,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_left2 = new CANSparkMax(Constants.Drive.CANID_LEFT2, MotorType.kBrushless);
     m_right1 = new CANSparkMax(Constants.Drive.CANID_RIGHT1, MotorType.kBrushless);
     m_right2 = new CANSparkMax(Constants.Drive.CANID_RIGHT2, MotorType.kBrushless);
-    if (m_left1.getMotorTemperature() > 50 || m_left1.getMotorTemperature() < 20){
-      driveExist = false;
-    } else if (m_left2.getMotorTemperature() > 50 || m_left2.getMotorTemperature() < 20){
-      driveExist = false;
-    } else if (m_right1.getMotorTemperature() > 50 || m_right1.getMotorTemperature() < 20){
-      driveExist = false;
-    } else if (m_right2.getMotorTemperature() > 50 || m_right2.getMotorTemperature() < 20){
-      driveExist = false;
-    } else {
-      driveExist = true;
-    }
+    
 
-    if (driveExist){
       //Declare motor groups 
       SpeedControllerGroup left = new SpeedControllerGroup(m_left1, m_left2);
       SpeedControllerGroup right = new SpeedControllerGroup(m_right1, m_right2);
       //Declare ArcadeDrive 
       m_drive = new DifferentialDrive(left, right);
-    }
   }
 
   @Override
@@ -68,9 +56,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setDrivePower(double power, double turn){
     //To do: Control motors
-    if (driveExist){
       m_drive.arcadeDrive(power, turn);
-    }
   }
 }
 

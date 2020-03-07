@@ -28,11 +28,8 @@ public final class Constants {
     }
     
     public final class IntakeArm{
-        public static final int CANID_INTAKE1 = 14;
-        public static final int CANID_INTAKE2 = 15;
-        //public static final int CANID_INTAKE = 30;
-        public static final int CANID_INTAKE = 7;
-        public static final int CANID_INTAKEARM1 = 8;
+        public static final int CANID_INTAKE = 10;
+        public static final int CANID_INTAKEARM1 = 4;
         public static final int CANID_INTAKEARM2 = 9;
     }
     
@@ -65,10 +62,10 @@ public final class Constants {
     // TODO: Drive
 
     public final class Drive {
-        public static final int CANID_LEFT1 = 3;  // For example
-        public static final int CANID_LEFT2 = 4;
-        public static final int CANID_RIGHT1 = 5;
-        public static final int CANID_RIGHT2 = 6;
+        public static final int CANID_LEFT1 = 11;  // For example
+        public static final int CANID_LEFT2 = 12;
+        public static final int CANID_RIGHT1 = 7;
+        public static final int CANID_RIGHT2 = 8;
     }
 
     // OICONSTANTS

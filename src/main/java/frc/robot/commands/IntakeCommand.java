@@ -39,6 +39,7 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+      m_intakeSubsystem.setIntakeStatus(!m_intakeSubsystem.getIntakeStatus());
       m_intakeSubsystem.intakeMotor(m_speed);
   }
 
