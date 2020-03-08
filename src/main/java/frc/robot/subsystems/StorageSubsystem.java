@@ -117,6 +117,7 @@ public class StorageSubsystem extends SubsystemBase {
     private final int m_axis;
     private final XboxController m_joy;
     private static final double M2_FACTOR = 3.0;
+    public boolean storageExist = true;
     
 
 
@@ -133,7 +134,10 @@ public class StorageSubsystem extends SubsystemBase {
         //motor check for existence
       m_motor = new CANSparkMax(Constants.Storage.CANID_motor1, MotorType.kBrushless);
 
-
+      if (Constants.Storage.CANID_motor1 == 0){
+        m_motor = null;
+        storageExist = false;
+      }
         //motor2 check for existence
 
 
@@ -143,7 +147,10 @@ public class StorageSubsystem extends SubsystemBase {
         //m_motor2 = new CANSparkMax(deviceID_2, MotorType.kBrushless);
         System.out.println("Beginning to Initalize ");
 
-
+      if (Constants.Storage.CANID_motor2 == 0){
+        m_motor2 = null;
+        storageExist = false;
+      }
 
 
         /**

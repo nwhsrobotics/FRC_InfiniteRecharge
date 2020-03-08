@@ -24,7 +24,7 @@ public class HangSubsystem extends SubsystemBase {
   ///TODO: Add Winch
   private CANSparkMax m_winch = null;
   private double m_speed=0;
-  
+  public boolean winchExist = true;
 
 
   ///TODO: Add Hook
@@ -32,16 +32,25 @@ public class HangSubsystem extends SubsystemBase {
   private CANPIDController m_hookPID = null;
   private CANEncoder m_hookEncoder;
   private double kHookP, kHookI, kHookD, kHookIz, kHookFF, kHookmaxOutput, kHookminOutput;
+  public boolean hookExist = true;
 
   public HangSubsystem() {
     ///TODO: Add Winch
     m_winch = new CANSparkMax(Constants.Hang.CANID_WINCH, MotorType.kBrushless);
+    if (Constants.Hang.CANID_WINCH == 0){
+      winchExist = false;
+      m_winch = null;
+    }
     if (m_winch != null){
       m_winch.set(0.0);
     }
     
     ///TODO: Add Hook
     m_hook = new CANSparkMax(Constants.Hang.CANID_HOOK, MotorType.kBrushless);
+    if (Constants.Hang.CANID_HOOK == 0){
+      winchExist = false;
+      m_hook = null;
+    }
     if (m_hook != null){
       m_hookPID = m_hook.getPIDController();
       m_hookEncoder = m_hook.getEncoder();

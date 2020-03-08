@@ -24,7 +24,7 @@ public class DriveSubsystem extends SubsystemBase {
   private CANSparkMax m_right1 = null;
   private CANSparkMax m_right2 = null;
   private DifferentialDrive m_drive;
-  private boolean driveExist;
+  public boolean driveExist = true;
   
 
 
@@ -40,6 +40,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_right1 = new CANSparkMax(Constants.Drive.CANID_RIGHT1, MotorType.kBrushless);
     m_right2 = new CANSparkMax(Constants.Drive.CANID_RIGHT2, MotorType.kBrushless);
     
+    if (Constants.Drive.CANID_LEFT1 == 0 || Constants.Drive.CANID_LEFT2 == 0 || Constants.Drive.CANID_RIGHT1 == 0 || Constants.Drive.CANID_RIGHT2 == 0){
+      m_left1 = null;
+      driveExist = false;
+    }
     if (m_left1 != null || m_left2 != null || m_right1 != null || m_right2 != null){
       //Declare motor groups 
       SpeedControllerGroup left = new SpeedControllerGroup(m_left1, m_left2);
