@@ -21,6 +21,7 @@ public class VisionSubsystem extends SubsystemBase {
   NetworkTableEntry xEntryT;
   NetworkTableEntry yEntryT;
   NetworkTableEntry distanceEntryT;
+  NetworkTableEntry angleEntryT;
 
   NetworkTableEntry xEntryB;
   NetworkTableEntry yEntryB;
@@ -40,6 +41,7 @@ public class VisionSubsystem extends SubsystemBase {
     xEntryT = table.getEntry("Center X Green");
     yEntryT = table.getEntry("Center Y Green");
     distanceEntryT =  table.getEntry("Green Distance");
+    angleEntryT = table.getEntry("Green Angle");
 
     xEntryB = table.getEntry("Center X Yellow");
     yEntryB = table.getEntry("Center Y Yellow");
@@ -80,37 +82,42 @@ public class VisionSubsystem extends SubsystemBase {
 
   public double getTargetX() {
 
-    double x = xEntryT.getDouble(0);
+    double x = xEntryT.getDouble(-1);
     return x;
   }
 
   public double getTargetY() {
 
-    double y = yEntryT.getDouble(0);
+    double y = yEntryT.getDouble(-1);
     return y;
   }
 
   public double getTargetdistance() {
 
-    double d = distanceEntryT.getDouble(0);
+    double d = distanceEntryT.getDouble(-1);
     return d;
+  }
+  public double getTargetAngle() {
+
+    double a = angleEntryT.getDouble(-1);
+    return a;
   }
 
   public double getBallX() {
 
-    double x = xEntryB.getDouble(0);
+    double x = xEntryB.getDouble(-1);
     return x;
   }
 
   public double getBallY() {
 
-    double y = yEntryB.getDouble(0);
+    double y = yEntryB.getDouble(-1);
     return y;
   }
 
   public double getBalldistance() {
 
-    double d = distanceEntryB.getDouble(0);
+    double d = distanceEntryB.getDouble(-1);
     return d;
   }
 
