@@ -31,7 +31,6 @@ public class IntakeSubsystem extends SubsystemBase {
   //intake position control constants.
   private CANSparkMax m_intakeArmMotor1 = null;
   private CANSparkMax m_intakeArmMotor2 = null;
-  private boolean intakeArmMotorExist2 = false;
   private double m_intakePower=0.0;
   private CANPIDController m_intakePid1 = null;
   private CANEncoder m_intakeEncoder1;
@@ -92,7 +91,6 @@ public class IntakeSubsystem extends SubsystemBase {
       m_intakePid2.setOutputRange(kIntakeMinOutput, kIntakeMaxOutput);
       m_intakePid2.setReference(0.0, ControlType.kPosition);
       System.out.println("Intake Arm Sparks 2 Initialized.");
-
     }
 
   }
@@ -106,6 +104,7 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
     //intake motor
     if(m_intake != null){
       m_intake.set(m_intakeSpeed);
@@ -116,7 +115,7 @@ public class IntakeSubsystem extends SubsystemBase {
     if(m_intakePid1 != null){
       if (isArmDown()){
         m_intakeArmMotor1.set(0);
-        //System.out.println("Arm is down.");
+        System.out.println("Arm is down.");
       }
       else {
         m_intakePid1.setReference(m_armPos, ControlType.kPosition);
@@ -126,7 +125,7 @@ public class IntakeSubsystem extends SubsystemBase {
     if(m_intakePid2 != null){
       if (isArmDown()){
         m_intakeArmMotor2.set(0);
-        //System.out.println("Arm is down.");
+        System.out.println("Arm is down.");
       }
       else {
         m_intakePid2.setReference(-m_armPos, ControlType.kPosition);

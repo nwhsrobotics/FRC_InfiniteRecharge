@@ -88,10 +88,10 @@ public class StorageSubsystem extends SubsystemBase {
      * Creates a new ExampleSubsystem.
      */
     //private static final int deviceID_2 = 0; Assign value 
-    private CANSparkMax m_motor = null;
-    private CANSparkMax m_motor2 = null;
-    private CANPIDController m_pidController = null;
-    private CANPIDController m_pidController2 = null;
+    private CANSparkMax m_motor;
+    private CANSparkMax m_motor2;
+    private CANPIDController m_pidController;
+    private CANPIDController m_pidController2;
     public CANEncoder m_encoder;    //TODO: MAKE A FUNCTION
     public CANEncoder m_encoder2;
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
@@ -131,13 +131,13 @@ public class StorageSubsystem extends SubsystemBase {
       }
 
         //motor check for existence
-      m_motor = new CANSparkMax(Constants.Storage.CANID_motor1, MotorType.kBrushless);
+        m_motor = new CANSparkMax(Constants.Storage.CANID_motor1, MotorType.kBrushless);
 
 
         //motor2 check for existence
 
 
-      m_motor2 = new CANSparkMax(Constants.Storage.CANID_motor2, MotorType.kBrushless);
+        m_motor2 = new CANSparkMax(Constants.Storage.CANID_motor2, MotorType.kBrushless);
         //System.out.println(m_motor.getFirmwareVersion());
         //System.out.println("THE MOTOR IS:     " + motorHere);
         //m_motor2 = new CANSparkMax(deviceID_2, MotorType.kBrushless);
@@ -151,7 +151,6 @@ public class StorageSubsystem extends SubsystemBase {
          * in the SPARK MAX to their factory default state. If no argument is passed, these
          * parameters will not persist between power cycles
          */
-        if (m_motor != null && m_motor2 != null){
           m_motor.restoreFactoryDefaults();
 
 
@@ -202,7 +201,7 @@ public class StorageSubsystem extends SubsystemBase {
           System.out.println("Initalize for Sparks Finished");
           sensor[0] = false;
           sensor[1] = false;
-        }
+
     }
 
     public void initialize() {
@@ -212,21 +211,19 @@ public class StorageSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //System.out.println("Storage motor 1 temperature" + m_motor.getMotorTemperature());
-      if (m_motor != null && m_motor2 != null){
-        SmartDashboard.putBoolean("Sensor 1:  ", sensor[0]);
-        SmartDashboard.putBoolean("Sensor 2:  ", sensor[1]);
-        SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
-        SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
-        SmartDashboard.putNumber("The Ball Prediction is: ", ballPrediction);
-        SmartDashboard.putBoolean("manualIndexer", manual_switch);
-          getInputs();
-          if (m_beltState == BeltState.IDLE) {
-            runIndexerSm();
-          }
-          runBeltSm();
-          updateActuators();
-          //setActuators();
-      }
+      SmartDashboard.putBoolean("Sensor 1:  ", sensor[0]);
+      SmartDashboard.putBoolean("Sensor 2:  ", sensor[1]);
+      SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
+      SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
+      SmartDashboard.putNumber("The Ball Prediction is: ", ballPrediction);
+      SmartDashboard.putBoolean("manualIndexer", manual_switch);
+        getInputs();
+        if (m_beltState == BeltState.IDLE) {
+          runIndexerSm();
+        }
+        runBeltSm();
+        updateActuators();
+        //setActuators();
     }
 
     

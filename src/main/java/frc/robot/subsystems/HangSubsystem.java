@@ -22,27 +22,37 @@ public class HangSubsystem extends SubsystemBase {
    * Creates a new HangSubsystem.
    */
   ///TODO: Add Winch
-  private CANSparkMax m_winch = null;
+  private final CANSparkMax m_winch;
   private double m_speed=0;
   
 
 
   ///TODO: Add Hook
-  private CANSparkMax m_hook = null;
-  private CANPIDController m_hookPID = null;
+  private final CANSparkMax m_hook;
+  private CANPIDController m_hookPID;
   private CANEncoder m_hookEncoder;
   private double kHookP, kHookI, kHookD, kHookIz, kHookFF, kHookmaxOutput, kHookminOutput;
+  private boolean winchExist;
+  private boolean hookExist;
 
   public HangSubsystem() {
     ///TODO: Add Winch
     m_winch = new CANSparkMax(Constants.Hang.CANID_WINCH, MotorType.kBrushless);
-    if (m_winch != null){
+    if (m_winch.getMotorTemperature() > 32 || m_winch.getMotorTemperature() < 20){
+      winchExist = false;
+    } else {
+      winchExist = true;
       m_winch.set(0.0);
     }
     
     ///TODO: Add Hook
     m_hook = new CANSparkMax(Constants.Hang.CANID_HOOK, MotorType.kBrushless);
-    if (m_hook != null){
+    if (m_hook.getMotorTemperature() > 50 || m_hook.getMotorTemperature() < 20){
+      hookExist = false;
+    } else {
+      hookExist = true;
+    }
+    if (hookExist){
       m_hookPID = m_hook.getPIDController();
       m_hookEncoder = m_hook.getEncoder();
       m_hookEncoder.setPosition(0); //Zero at initial position
@@ -66,7 +76,7 @@ public class HangSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (m_winch != null){
+    if (winchExist){
       m_winch.set(m_speed);
     }
     
@@ -74,12 +84,10 @@ public class HangSubsystem extends SubsystemBase {
   }
 
   public void MoveWinch(double speed){
-    if (m_winch != null){
-      m_speed= speed;
-    }
+   m_speed= speed;
   }
   public void ExtendHook(double setPoint){
-    if (m_hook != null){
+    if (hookExist){
       m_hookPID.setReference(setPoint, ControlType.kPosition);
     }
   }
