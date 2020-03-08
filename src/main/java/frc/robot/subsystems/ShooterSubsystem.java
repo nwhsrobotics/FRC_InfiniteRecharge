@@ -32,13 +32,13 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANEncoder m_flyWheelEncoder;
   private CANEncoder m_flyWheelEncoder2;
   private double kflywheelP, kflywheelI, kflywheelD, kflywheelIz, kflywheelFF, kflywheelmaxOutput, kflywheelminOutput;
-  public boolean flyWheelExist = true;
+  private boolean flyWheelExist = true;
   //TODO: Add Turret
   private CANSparkMax m_turret = null;
   private CANPIDController m_turretPID = null;
   private CANEncoder m_turretEncoder;
   private double kP, kI, kD, kIz, kFF, kmaxOutput, kminOutput; //maxRPM
-  public boolean turretExist = true;
+  private boolean turretExist = true;
 
   //TODO: Add Hood
   private CANSparkMax m_hoodMotor = null;
@@ -49,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private VisionSubsystem m_visionSubsystem;
   private StorageSubsystem m_storageSubsystem;
   private double m_x;
-  public boolean hoodExist = true;
+  private boolean hoodExist = true;
 
   private CANSparkMaxLowLevel.MotorType flyWheelMT;
   private CANSparkMaxLowLevel.MotorType flyWheelMT2;
@@ -64,14 +64,8 @@ public class ShooterSubsystem extends SubsystemBase {
     m_storageSubsystem = storageSubsystem;
     //TODO: Add Flywheel
       //1621 rpm 5676: NEO max (28%)
-      m_flywheel = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL1, MotorType.kBrushless);
-      m_flywheel2 = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL2, MotorType.kBrushless);
-    if (Constants.Shooter.CANID_FLYWHEEL1 == 0 || Constants.Shooter.CANID_FLYWHEEL2 == 0){
-      m_flywheel = null;
-      m_flywheel2 = null;
-      flyWheelExist = false;
-    }
-
+    m_flywheel = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL1, MotorType.kBrushless);
+    m_flywheel2 = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL2, MotorType.kBrushless);
 
     if (m_flywheel != null || m_flywheel2 != null){
       flyWheelExist = true;
@@ -109,10 +103,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_turret = new CANSparkMax(Constants.Shooter.CANID_TURRET, MotorType.kBrushless);
   
     //turretMT = m_turret.getMotorType();
-    if (Constants.Shooter.CANID_TURRET == 0){
-      m_turret = null;
-      turretExist = false;
-    }
+    
 
     if (m_turret != null){
       turretExist = true;
@@ -144,10 +135,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_hoodMotor = new CANSparkMax(Constants.Shooter.CANID_HOOD, MotorType.kBrushless);
     //hoodMT = m_hoodMotor.getMotorType();
     
-    if (Constants.Shooter.CANID_HOOD == 0){
-      m_hoodMotor = null;
-      hoodExist = false;
-    }
+
     if (m_hoodMotor != null){
       hoodExist = true;
       m_hoodPid = m_hoodMotor.getPIDController();
@@ -170,7 +158,6 @@ public class ShooterSubsystem extends SubsystemBase {
       m_hoodPid.setOutputRange(kHoodMinOutput, kHoodMaxOutput);
       m_hoodPid.setReference(0.0, ControlType.kPosition);
       System.out.println("Hood Sparks Initialized.");
-
       
     }
   }

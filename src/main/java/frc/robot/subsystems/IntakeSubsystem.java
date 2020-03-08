@@ -45,21 +45,12 @@ public class IntakeSubsystem extends SubsystemBase {
   private static final double SPEED_ROT_PER_TICK = ((DOWNPOS - UPPOS)/ (SECONDS_TO_MOVE * TICKS_PER_SECOND)); 
   private double m_armPos = 0;
   private boolean m_intaketoggle;
-  public boolean intakeExist = true;
-  public boolean intakeArmExist = true;
 
   public IntakeSubsystem() {
     m_intake = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE, MotorType.kBrushless);
-    if (Constants.IntakeArm.CANID_INTAKE == 0){
-      m_intake = null;
-      intakeExist = false;
-    }
+    
     //2nd intake motor
     m_intakeArmMotor1 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKEARM1, MotorType.kBrushless);
-    if (Constants.IntakeArm.CANID_INTAKEARM1 == 0){
-      intakeArmExist = false;
-      m_intakeArmMotor1 = null;
-    }
     if(m_intakeArmMotor1 != null){
       m_intakePid1 = m_intakeArmMotor1.getPIDController();
       m_intakeEncoder1 = m_intakeArmMotor1.getEncoder();
@@ -88,10 +79,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     //2nd intake arm motor
     m_intakeArmMotor2 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKEARM2, MotorType.kBrushless);
-    if (Constants.IntakeArm.CANID_INTAKEARM2 == 0){
-      m_intakeArmMotor2 = null;
-      intakeArmExist = false;
-    }
     if(m_intakeArmMotor2 != null){
       m_intakePid2 = m_intakeArmMotor2.getPIDController();
       m_intakeEncoder2 = m_intakeArmMotor2.getEncoder();

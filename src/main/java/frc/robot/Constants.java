@@ -36,23 +36,23 @@ public final class Constants {
 
     // TODO: Storage
     public final class Storage{
-        public static final int CANID_motor1 = 15; //15
-        public static final int CANID_motor2 = 16; //16
+        public static final int CANID_motor1 = 15; 
+        public static final int CANID_motor2 = 16; 
     } 
 
     // TODO: Shooter
     public final class Shooter {
-        public static final int CANID_FLYWHEEL1=1;  //1
-        public static final int CANID_FLYWHEEL2=2; //2
-        public static final int CANID_TURRET= 14; //14
+        public static final int CANID_FLYWHEEL1=1;
+        public static final int CANID_FLYWHEEL2=2;
+        public static final int CANID_TURRET=14; 
         public static final int CANID_HOOD=0;
         public static final double TURRET_RAMP_RATE = 0.25;
     }
 
     // TODO: Hang
     public final class Hang{ 
-        public static final int CANID_WINCH = 3; //0
-        public static final int CANID_HOOK = 5; //0
+        public static final int CANID_WINCH=0;
+        public static final int CANID_HOOK=0;
     }
     
     // TODO: Control Panel (wheel)
@@ -62,7 +62,7 @@ public final class Constants {
     // TODO: Drive
 
     public final class Drive {
-        public static final int CANID_LEFT1 = 11; //11 // For example
+        public static final int CANID_LEFT1 = 11;  // For example
         public static final int CANID_LEFT2 = 12;
         public static final int CANID_RIGHT1 = 7;
         public static final int CANID_RIGHT2 = 8;

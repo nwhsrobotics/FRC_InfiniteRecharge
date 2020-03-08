@@ -7,15 +7,11 @@
 
 package frc.robot;
 
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
@@ -60,7 +56,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 public class RobotContainer {
   private SendableChooser <SequentialCommandGroup> autoChooser;
   private SequentialCommandGroup m_autoChooser;
-  private boolean robotReady = true;
   
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
@@ -207,7 +202,6 @@ public class RobotContainer {
 
   public void update(){
     //this will update periodically
-    
 
   }
 
@@ -295,28 +289,8 @@ public void robotInit() {
   autoChooser = new SendableChooser<SequentialCommandGroup>();
   autoChooser.addDefault("Auto Mode A", m_autoCommand);
   autoChooser.addObject("Auto Mode B", m_autoCommand2);
+  
   SmartDashboard.putData("Auto Mode", autoChooser);
-
-  if (m_driveSubsystem.driveExist == false){
-    robotReady = false;
-  } else if (m_hangSubsystem.hookExist == false){
-    robotReady = false;
-  } else if (m_hangSubsystem.winchExist == false){
-    robotReady = false;
-  } else if (m_storageSubsystem.storageExist == false){
-    robotReady = false;
-  } else if (m_shooterSubsystem.turretExist == false){
-    robotReady = false;
-  } else if (m_shooterSubsystem.flyWheelExist == false){
-    robotReady = false;
-  } else if (m_intakeSubsystem.intakeExist == false){
-    robotReady = false;
-  }
-  SmartDashboard.putBoolean("Robot Ready", robotReady);
-  Shuffleboard.getTab("SmartDashboard")
-  .add("DiffDrive", 0.5)
-  .withWidget(BuiltInWidgets.kDifferentialDrive)
-  .withProperties(Map.of("drive", 0.5));
-
-  }
+ 
+}
 }
