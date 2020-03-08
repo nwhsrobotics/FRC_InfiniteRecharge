@@ -65,10 +65,10 @@ public class ShooterSubsystem extends SubsystemBase {
     m_flywheelPID = m_flywheel.getPIDController();
     m_flywheel2PID = m_flywheel2.getPIDController();
      
-     kflywheelP = 0;
+     kflywheelP = 0.0002;
      kflywheelI = 0;
      kflywheelIz = 0;
-     kflywheelFF = 0.000178; //Based on 2800 at 50%      TODO: (VOLTAGE/MAXR RPM) X SETPOINT
+     kflywheelFF = 0.00017065; //Based on 2800 at 50%   was 0.000178      TODO: (VOLTAGE/MAXR RPM) X SETPOINT
      kflywheelmaxOutput = 1;
      kflywheelminOutput = -1;
 
@@ -88,6 +88,9 @@ public class ShooterSubsystem extends SubsystemBase {
      m_flywheel2PID.setFF(kflywheelFF);
      m_flywheel2PID.setOutputRange(kflywheelminOutput, kflywheelmaxOutput);
      m_flywheel2PID.setReference(0.0, ControlType.kVelocity);
+
+     m_flywheel.setClosedLoopRampRate(Constants.Shooter.FLYWHEEL_RAMP_RATE);
+     m_flywheel2.setClosedLoopRampRate(Constants.Shooter.FLYWHEEL_RAMP_RATE);
     
 
     //TODO: Add Turret
@@ -164,9 +167,9 @@ public class ShooterSubsystem extends SubsystemBase {
     //TODO: Add Flywheel
     //TODO: Add Turret
     if (m_storageSubsystem.getShootState()) {
-      setShooterPower(-0.60);
+      setShooterPower(-0.8);
     } else if (m_storageSubsystem.getArmed()){
-      setShooterPower(-0.60);
+      setShooterPower(-0.8);
     } else {
       setShooterPower(0);
     }

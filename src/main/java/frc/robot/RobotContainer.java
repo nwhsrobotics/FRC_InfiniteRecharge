@@ -86,6 +86,10 @@ public class RobotContainer {
   private final POVButton joy1_upButton = new POVButton(m_joy1, 0);
   private final POVButton joy1_downButton = new POVButton(m_joy1, 180);
 
+  private final POVButton joy0_upButton = new POVButton(m_joy0, 0);
+  private final POVButton joy0_rightButton = new POVButton(m_joy0, 90);
+  private final POVButton joy0_downButton = new POVButton(m_joy0, 180);
+
   //private final JoystickButton intakeButtonOn = new JoystickButton(m_joy1, 1); //a
   //private final JoystickButton intakeButtonOff = new JoystickButton(m_joy1, 2); //b
   //private final JoystickButton intakeButtonUp = new JoystickButton(m_joy1, 1); //a
@@ -165,9 +169,9 @@ public class RobotContainer {
   private TrackTargetCommand m_trackTargetCommand = new TrackTargetCommand(m_shooterSubsystem);//m_visionSubsystem.getTargetX());
 
   // TODO: Create commands for vision
-  private final SwitchCameraCommand m_switchCameraCommand = new SwitchCameraCommand(m_visionSubsystem);
-
-
+  private final SwitchCameraCommand m_switchCameraCommand1 = new SwitchCameraCommand(m_visionSubsystem, 1);
+  private final SwitchCameraCommand m_switchCameraCommand2 = new SwitchCameraCommand(m_visionSubsystem, 2);
+  private final SwitchCameraCommand m_switchCameraCommand3 = new SwitchCameraCommand(m_visionSubsystem, 3);
 
   // TODO: Create m_driveSubsystem
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
@@ -202,7 +206,7 @@ public class RobotContainer {
 
   public void update(){
     //this will update periodically
-
+    
   }
 
   public void teleopInit(){
@@ -267,7 +271,9 @@ public class RobotContainer {
 
      // TODO: Buttons for drive
     // TODO: Buttons for vision
-    joy1_y.whenPressed(m_switchCameraCommand);
+    joy0_upButton.whenPressed(m_switchCameraCommand1);
+    joy0_rightButton.whenPressed(m_switchCameraCommand2);
+    joy0_downButton.whenPressed(m_switchCameraCommand3);
     // TODO: Buttons for control panel
   }
 
@@ -287,8 +293,8 @@ public class RobotContainer {
 
 public void robotInit() {
   autoChooser = new SendableChooser<SequentialCommandGroup>();
-  autoChooser.addDefault("Auto Mode A", m_autoCommand);
-  autoChooser.addObject("Auto Mode B", m_autoCommand2);
+  autoChooser.addDefault("Auto Mode Null", m_autoCommand);
+  autoChooser.addObject("Auto Mode A", m_autoCommand2);
   
   SmartDashboard.putData("Auto Mode", autoChooser);
  

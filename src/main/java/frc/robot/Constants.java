@@ -47,6 +47,7 @@ public final class Constants {
         public static final int CANID_TURRET=14; 
         public static final int CANID_HOOD=0;
         public static final double TURRET_RAMP_RATE = 0.25;
+        public static final double FLYWHEEL_RAMP_RATE = 1.0;
     }
 
     // TODO: Hang

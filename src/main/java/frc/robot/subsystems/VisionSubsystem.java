@@ -27,7 +27,7 @@ public class VisionSubsystem extends SubsystemBase {
   NetworkTableEntry yEntryB;
   NetworkTableEntry distanceEntryB;
 
-  private double m_chooseCamera;
+  private int m_chooseCamera;
 
 
   public VisionSubsystem() {
@@ -59,18 +59,15 @@ public class VisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void switchCamera() {
-    
+  public void switchCamera(int cameraChooser) {
+    m_chooseCamera = cameraChooser;
     System.out.println(m_chooseCamera);
     if (m_chooseCamera == 1 ) {
-      SmartDashboard.putNumber("Camera chooser", 2);
-      m_chooseCamera = 2;
-    } else if (m_chooseCamera == 2) {
-      SmartDashboard.putNumber("Camera chooser", 3);
-      m_chooseCamera = 3;
-    } else if (m_chooseCamera == 3) {
       SmartDashboard.putNumber("Camera chooser", 1);
-      m_chooseCamera = 1;
+    } else if (m_chooseCamera == 2) {
+      SmartDashboard.putNumber("Camera chooser", 2);
+    } else if (m_chooseCamera == 3) {
+      SmartDashboard.putNumber("Camera chooser", 3);
     } else {
       SmartDashboard.putNumber("Camera chooser", 1);
       m_chooseCamera = 1;
