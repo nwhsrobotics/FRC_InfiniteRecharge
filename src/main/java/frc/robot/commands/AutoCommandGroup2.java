@@ -37,7 +37,9 @@ public class AutoCommandGroup2 extends SequentialCommandGroup {
     new ToggleSensorCommand(storage, 2),
     new ToggleShootCommand(storage).withTimeout(2),
     new ToggleSensorCommand(storage, 2),
-    new WaitCommand(1)); 
+    new WaitCommand(1),
+    new AutoDriveCommand(drive, 0, 0.5),
+    new AutoDriveCommand(drive, 0.5, 0));
     storage.m_IndexerState = IndexerState.EMPTYBALLS;
   }
   
