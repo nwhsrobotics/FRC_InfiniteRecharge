@@ -25,22 +25,28 @@ public class AutoCommandGroup2 extends SequentialCommandGroup {
   public AutoCommandGroup2(StorageSubsystem storage, ShooterSubsystem shooter, IntakeSubsystem intake, DriveSubsystem drive) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new ToggleArmedCommand(storage),      //TIMING IS OFF
+    super(new ToggleArmedCommand(storage), //TODO: TrackTargetCommand At the beginning of every auto
     new WaitCommand(0.01),
     new ToggleSensorCommand(storage, 2),
     new WaitCommand(2),
-    new ToggleShootCommand(storage).withTimeout(2),
+    new ToggleShootCommand(storage).withTimeout(1),
+    new ToggleShootCommand(storage).withTimeout(1),
     new ToggleSensorCommand(storage, 2),
+    new WaitCommand(0.2),
     new ToggleSensorCommand(storage, 2),
-    new ToggleShootCommand(storage).withTimeout(2),
+    new WaitCommand(2),
+    new ToggleShootCommand(storage).withTimeout(1),
+    new ToggleShootCommand(storage).withTimeout(1),
     new ToggleSensorCommand(storage, 2),
+    new WaitCommand(0.2),
     new ToggleSensorCommand(storage, 2),
-    new ToggleShootCommand(storage).withTimeout(2),
+    new WaitCommand(2),
+    new ToggleShootCommand(storage).withTimeout(1),
+    new ToggleShootCommand(storage).withTimeout(1),
     new ToggleSensorCommand(storage, 2),
-    new WaitCommand(1),
-    new AutoDriveCommand(drive, 0, 0.5),
-    new AutoDriveCommand(drive, 0.5, 0));
-    storage.m_IndexerState = IndexerState.EMPTYBALLS;
+    new WaitCommand(0.5),
+    new ToggleArmedCommand(storage),
+    new WaitCommand(0.3),
+    new AutoDriveCommand(drive, 0.3, 0).withTimeout(2));
   }
-  
 }

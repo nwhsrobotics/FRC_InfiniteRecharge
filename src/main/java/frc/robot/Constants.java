@@ -28,32 +28,31 @@ public final class Constants {
     }
     
     public final class IntakeArm{
-        public static final int CANID_INTAKE = 10;
+        public static final int CANID_INTAKE = 7;
         public static final int CANID_INTAKEARM1 = 4;
-        public static final int CANID_INTAKEARM2 = 9;
+        public static final int CANID_INTAKEARM2 = 14; 
     }
     
 
     // TODO: Storage
     public final class Storage{
-        public static final int CANID_motor1 = 15; 
-        public static final int CANID_motor2 = 16; 
+        public static final int CANID_motor1 = 15; //15
+        public static final int CANID_motor2 = 16; //16
     } 
 
     // TODO: Shooter
     public final class Shooter {
-        public static final int CANID_FLYWHEEL1=1;
-        public static final int CANID_FLYWHEEL2=2;
-        public static final int CANID_TURRET=14; 
+        public static final int CANID_FLYWHEEL1=1;  //1
+        public static final int CANID_FLYWHEEL2=2; //2
+        public static final int CANID_TURRET= 5; 
         public static final int CANID_HOOD=0;
         public static final double TURRET_RAMP_RATE = 0.25;
-        public static final double FLYWHEEL_RAMP_RATE = 1.0;
     }
 
     // TODO: Hang
     public final class Hang{ 
-        public static final int CANID_WINCH=0;
-        public static final int CANID_HOOK=0;
+        public static final int CANID_WINCH = 3; //0
+        public static final int CANID_HOOK = 12; //0
     }
     
     // TODO: Control Panel (wheel)
@@ -63,10 +62,10 @@ public final class Constants {
     // TODO: Drive
 
     public final class Drive {
-        public static final int CANID_LEFT1 = 11;  // For example
-        public static final int CANID_LEFT2 = 12;
-        public static final int CANID_RIGHT1 = 7;
-        public static final int CANID_RIGHT2 = 8;
+        public static final int CANID_LEFT1 = 8; //11 // For example
+        public static final int CANID_LEFT2 = 9;
+        public static final int CANID_RIGHT1 = 11;
+        public static final int CANID_RIGHT2 = 10;
     }
 
     // OICONSTANTS
