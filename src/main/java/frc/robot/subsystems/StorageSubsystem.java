@@ -116,7 +116,7 @@ public class StorageSubsystem extends SubsystemBase {
     private boolean manual_switch = false;
     private final int m_axis;
     private final XboxController m_joy;
-    private static final double M2_FACTOR = 3.0;
+    private static final double M2_FACTOR = 3.0; //speeding up second belts by this value to prevent jamming 
     
 
 
@@ -257,14 +257,21 @@ public class StorageSubsystem extends SubsystemBase {
       break;
 
       case INTAKE_1:
-        if (sensor[0] == true) {
+        
+        if (sensor[2] == true){ 
+          //yikes ball is by the shooter!
+          m_beltState = BeltState.IDLE; 
+        } else if (sensor[1] == true) {
           m_beltState = BeltState.INTAKE_2;
         } 
         SmartDashboard.putString("Belt State is:   ", "Stage INTAKE_1");
       break;
 
       case INTAKE_2:
-        if (sensor[0] == false) {
+        if (sensor[2] == true){
+          //yikes ball is by the shooter!
+          m_beltState = BeltState.IDLE;
+        } else if (sensor[1] == false) {
           m_beltState = BeltState.IDLE;
         } 
         SmartDashboard.putString("Belt State is:   ", "Stage INTAKE_2");
