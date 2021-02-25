@@ -25,7 +25,12 @@ public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax m_right2;
   private DifferentialDrive m_drive;
   private boolean driveExist;
-  
+  //todo: add PID control objects
+  //todo: add trajectory objects
+  //private CANPIDController m_pidController;
+  //private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
+
+
 
 
   
@@ -40,7 +45,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_right1 = new CANSparkMax(Constants.Drive.CANID_RIGHT1, MotorType.kBrushless);
     m_right2 = new CANSparkMax(Constants.Drive.CANID_RIGHT2, MotorType.kBrushless);
     
-
+      // todo: get PID controllers
+      // todo: add PID parameters
       //Declare motor groups 
       SpeedControllerGroup left = new SpeedControllerGroup(m_left1, m_left2);
       SpeedControllerGroup right = new SpeedControllerGroup(m_right1, m_right2);
@@ -48,12 +54,27 @@ public class DriveSubsystem extends SubsystemBase {
       m_drive = new DifferentialDrive(left, right);
   }
 
-  @Override
+ /* @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Drive Susbsystem: ", driveExist);
   }
+  
+  @Override
+  public void autonomousInit(){
+    // todo:
+  }
 
+  @Override
+  public void autonomousPeriodic(){
+
+  }
+
+  @Override
+  public void teleopInit(){
+
+  }
+*/
   public void setDrivePower(double power, double turn){
     //To do: Control motors
       m_drive.arcadeDrive(power, turn);
