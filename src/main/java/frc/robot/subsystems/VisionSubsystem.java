@@ -27,8 +27,7 @@ public class VisionSubsystem extends SubsystemBase {
   NetworkTableEntry yEntryB;
   NetworkTableEntry distanceEntryB;
 
-  private int m_chooseCamera;
-
+  private int m_chooseCamera = 1;
 
   public VisionSubsystem() {
 
@@ -47,7 +46,6 @@ public class VisionSubsystem extends SubsystemBase {
     yEntryB = table.getEntry("Center Y Yellow");
     distanceEntryB = table.getEntry("Yellow Entry");
 
-    m_chooseCamera = 1;
     SmartDashboard.putNumber("Camera chooser", m_chooseCamera);
     //cameraChooserEntry = table.getEntry("Camera chooser");
     System.out.println(m_chooseCamera);
@@ -59,22 +57,20 @@ public class VisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void switchCamera(int cameraChooser) {
-    m_chooseCamera = cameraChooser;
+  public void switchCamera() {
+    
     System.out.println(m_chooseCamera);
-    if (m_chooseCamera == 1 ) {
-      SmartDashboard.putNumber("Camera chooser", 1);
-    } else if (m_chooseCamera == 2) {
-      SmartDashboard.putNumber("Camera chooser", 2);
-    } else if (m_chooseCamera == 3) {
-      SmartDashboard.putNumber("Camera chooser", 3);
-    } else {
-      SmartDashboard.putNumber("Camera chooser", 1);
+    m_chooseCamera += 1;
+    if(m_chooseCamera > 3){
       m_chooseCamera = 1;
     }
-     
+    setCamera(m_chooseCamera);
+  }
+  public void setCamera(int cam){
 
-    
+    SmartDashboard.putNumber("Camera chooser", cam); //TODO: String that says camera
+    m_chooseCamera = cam;
+
   }
 
   public double getTargetX() {

@@ -8,8 +8,6 @@
 package frc.robot;
 
 import edu.wpi.first.hal.DIOJNI;
-import edu.wpi.first.hal.sim.DIOSim;
-import edu.wpi.first.hal.sim.mockdata.DIODataJNI;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PWM;
@@ -40,7 +38,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    
+    m_robotContainer.robotInit();
   }
 
   /**

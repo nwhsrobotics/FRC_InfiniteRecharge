@@ -12,16 +12,14 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class SwitchCameraCommand extends CommandBase {
   private VisionSubsystem m_visionSubsystem;
-  int m_cameraChooser;
 
   /**
    * Creates a new SwitchCameraCommand.
    */
 
-public SwitchCameraCommand(VisionSubsystem visionSubsystem, int cameraChooser) {
+public SwitchCameraCommand(VisionSubsystem visionSubsystem) {
   // Use addRequirements() here to declare subsystem dependencies.
   m_visionSubsystem = visionSubsystem;
-  m_cameraChooser = cameraChooser;
   addRequirements(m_visionSubsystem);
 }
 
@@ -34,7 +32,7 @@ public SwitchCameraCommand(VisionSubsystem visionSubsystem, int cameraChooser) {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_visionSubsystem.switchCamera(m_cameraChooser);
+    m_visionSubsystem.switchCamera();
   }
 
   // Called once the command ends or is interrupted.
