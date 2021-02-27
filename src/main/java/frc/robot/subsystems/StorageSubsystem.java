@@ -286,7 +286,7 @@ public class StorageSubsystem extends SubsystemBase {
         if (sensor[2] == true){
           //yikes ball is by the shooter!
           m_beltState = BeltState.IDLE;
-        } else if (sensor[1] == false) {
+        } else if (sensor[0] == false) {
           m_beltState = BeltState.IDLE;
         } 
         SmartDashboard.putString("Belt State is:   ", "Stage INTAKE_2");
@@ -456,7 +456,7 @@ public class StorageSubsystem extends SubsystemBase {
           m_IndexerState = IndexerState.ARMED_FULL;
         }
         SmartDashboard.putString("Indexer State is:   ", "Stage FULL");
-        ballPrediction = 5;
+        ballPrediction = 3;
         break;
 
       case ARMED_S1:
@@ -523,9 +523,9 @@ public class StorageSubsystem extends SubsystemBase {
         }
         else if (m_shootButtonPressed) {
           m_doShoot = true;
-          m_IndexerState = IndexerState.ARMED_S4;
+          m_IndexerState = IndexerState.ARMED_S2;
           m_shootButtonPressed = false;
-          ballPrediction = 4;
+          ballPrediction = 2;
         }
         SmartDashboard.putString("Indexer State is:   ", "Stage ARMED_FULL");
       break;

@@ -183,9 +183,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     if (m_flywheel != null || m_flywheel2 != null){
       if (m_storageSubsystem.getShootState()) {
-        setShooterPower(-0.80);
+        setShooterPower(-0.50);
       } else if (m_storageSubsystem.getArmed()){
-        setShooterPower(-0.80);
+        setShooterPower(-0.50);
       } else {
         setShooterPower(0);
       }
