@@ -247,24 +247,24 @@ public class RobotContainer {
     
     //joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
     //joy0_b.whenPressed(m_sensor2Command); //sensor2 toggle 
-    joy1_x.whenPressed(m_toggleArmedCommand); //armedstate toggle
+    joy0_startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
     //joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
-    joy1_b6.whenPressed(m_toggleShootCommand);
+    //joy0_x.whenPressed(m_toggleShootCommand);
     joy0_a.whenPressed(m_reverseCommand); //TODO: TEST
     //joy0_y.whenPressed(m_intakePosUp);
     //joy0_b.whenPressed(m_intakePosDown);
     //joy0_a.whenPressed(m_intakecommand);
     //joy0_a.whenReleased(m_intakeOffcommand);
     // TODO: Buttons for shooter
-    //joy1_b6.whenPressed(m_turretRightCommand);
-    //joy1_b6.whenReleased(m_stopTurretCommand);
-    //joy1_b5.whenPressed(m_turretLeftCommand);
-    //joy1_b5.whenReleased(m_stopTurretCommand);
+    joy1_b6.whenPressed(m_turretRightCommand);
+    joy1_b6.whenReleased(m_stopTurretCommand);
+    joy1_b5.whenPressed(m_turretLeftCommand);
+    joy1_b5.whenReleased(m_stopTurretCommand);
     joy1_y.whenPressed(m_intakePosUp);
     joy1_b.whenPressed(m_intakePosDown);
     joy1_a.whenPressed(m_intakecommand);
     joy1_a.whenReleased(m_intakeOffcommand);
-    //joy1_x.toggleWhenPressed(m_trackTargetCommand);
+    joy1_x.toggleWhenPressed(m_trackTargetCommand);
     joy1_b7.whenPressed(m_indexerAuto);
     joy1_b8.whenPressed(m_indexerManual);
     // TODO: Buttons for hang
