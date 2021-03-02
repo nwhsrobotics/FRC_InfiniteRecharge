@@ -31,6 +31,7 @@ public class IntakeSubsystem extends SubsystemBase {
   //intake position control constants.
   private CANSparkMax m_intakeArmMotor1 = null;
   private CANSparkMax m_intakeArmMotor2 = null;
+  private boolean intakeArmMotorExist2 = false;
   private double m_intakePower=0.0;
   private CANPIDController m_intakePid1 = null;
   private CANEncoder m_intakeEncoder1;
@@ -44,12 +45,21 @@ public class IntakeSubsystem extends SubsystemBase {
   private static final double SPEED_ROT_PER_TICK = ((DOWNPOS - UPPOS)/ (SECONDS_TO_MOVE * TICKS_PER_SECOND)); 
   private double m_armPos = 0;
   private boolean m_intaketoggle;
+  public boolean intakeExist = true;
+  public boolean intakeArmExist = true;
 
   public IntakeSubsystem() {
     m_intake = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE, MotorType.kBrushless);
-    
+    if (Constants.IntakeArm.CANID_INTAKE == 0){
+      m_intake = null;
+      intakeExist = false;
+    }
     //2nd intake motor
     m_intakeArmMotor1 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKEARM1, MotorType.kBrushless);
+    if (Constants.IntakeArm.CANID_INTAKEARM1 == 0){
+      intakeArmExist = false;
+      m_intakeArmMotor1 = null;
+    }
     if(m_intakeArmMotor1 != null){
       m_intakePid1 = m_intakeArmMotor1.getPIDController();
       m_intakeEncoder1 = m_intakeArmMotor1.getEncoder();
@@ -78,6 +88,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
     //2nd intake arm motor
     m_intakeArmMotor2 = new CANSparkMax(Constants.IntakeArm.CANID_INTAKEARM2, MotorType.kBrushless);
+    if (Constants.IntakeArm.CANID_INTAKEARM2 == 0){
+      m_intakeArmMotor2 = null;
+      intakeArmExist = false;
+    }
     if(m_intakeArmMotor2 != null){
       m_intakePid2 = m_intakeArmMotor2.getPIDController();
       m_intakeEncoder2 = m_intakeArmMotor2.getEncoder();
@@ -91,6 +105,7 @@ public class IntakeSubsystem extends SubsystemBase {
       m_intakePid2.setOutputRange(kIntakeMinOutput, kIntakeMaxOutput);
       m_intakePid2.setReference(0.0, ControlType.kPosition);
       System.out.println("Intake Arm Sparks 2 Initialized.");
+
     }
 
   }
@@ -104,7 +119,6 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
     //intake motor
     if(m_intake != null){
       m_intake.set(m_intakeSpeed);
@@ -115,7 +129,7 @@ public class IntakeSubsystem extends SubsystemBase {
     if(m_intakePid1 != null){
       if (isArmDown()){
         m_intakeArmMotor1.set(0);
-        System.out.println("Arm is down.");
+        //System.out.println("Arm is down.");
       }
       else {
         m_intakePid1.setReference(m_armPos, ControlType.kPosition);
@@ -125,7 +139,7 @@ public class IntakeSubsystem extends SubsystemBase {
     if(m_intakePid2 != null){
       if (isArmDown()){
         m_intakeArmMotor2.set(0);
-        System.out.println("Arm is down.");
+        //System.out.println("Arm is down.");
       }
       else {
         m_intakePid2.setReference(-m_armPos, ControlType.kPosition);

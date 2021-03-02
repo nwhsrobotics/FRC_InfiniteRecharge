@@ -7,11 +7,15 @@
 
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
@@ -29,6 +33,7 @@ import frc.robot.commands.ExtendHookCommand;
 import frc.robot.commands.FlyWheelTestingCommand;
 import frc.robot.commands.IndexerManualCommand;
 import frc.robot.commands.ParkCommand;
+import frc.robot.commands.ReverseCommand;
 import frc.robot.commands.SwitchCameraCommand;
 import frc.robot.commands.MoveWinchCommand;
 import frc.robot.commands.TeleopCommand;
@@ -56,6 +61,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 public class RobotContainer {
   private SendableChooser <SequentialCommandGroup> autoChooser;
   private SequentialCommandGroup m_autoChooser;
+  private boolean robotReady = true;
   
   // The robot's subsystems and commands are defined here...
   // TODO: Remove examples and things that depend on them.
@@ -85,10 +91,6 @@ public class RobotContainer {
 
   private final POVButton joy1_upButton = new POVButton(m_joy1, 0);
   private final POVButton joy1_downButton = new POVButton(m_joy1, 180);
-
-  private final POVButton joy0_upButton = new POVButton(m_joy0, 0);
-  private final POVButton joy0_rightButton = new POVButton(m_joy0, 90);
-  private final POVButton joy0_downButton = new POVButton(m_joy0, 180);
 
   //private final JoystickButton intakeButtonOn = new JoystickButton(m_joy1, 1); //a
   //private final JoystickButton intakeButtonOff = new JoystickButton(m_joy1, 2); //b
@@ -169,15 +171,16 @@ public class RobotContainer {
   private TrackTargetCommand m_trackTargetCommand = new TrackTargetCommand(m_shooterSubsystem);//m_visionSubsystem.getTargetX());
 
   // TODO: Create commands for vision
-  private final SwitchCameraCommand m_switchCameraCommand1 = new SwitchCameraCommand(m_visionSubsystem, 1);
-  private final SwitchCameraCommand m_switchCameraCommand2 = new SwitchCameraCommand(m_visionSubsystem, 2);
-  private final SwitchCameraCommand m_switchCameraCommand3 = new SwitchCameraCommand(m_visionSubsystem, 3);
+  private final SwitchCameraCommand m_switchCameraCommand = new SwitchCameraCommand(m_visionSubsystem);
+
+
 
   // TODO: Create m_driveSubsystem
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
   // TODO: Create commands for drive 
   private final TeleopCommand m_teleopCommand = new TeleopCommand(m_driveSubsystem,m_joy0);
+  private final ReverseCommand m_reverseCommand = new ReverseCommand(m_driveSubsystem, m_visionSubsystem);
 
   
 
@@ -196,7 +199,7 @@ public class RobotContainer {
     
     //m_shooterSubsystem.setDefaultCommand(m_flyWheelTestCmd); ////--Undoing the setDefaultCommand to test storage
     //m_storageSubsystem.setDefaultCommand(m_indexerManual);
-    //m_driveSubsystem.setDefaultCommand(m_teleopCommand);
+    m_driveSubsystem.setDefaultCommand(m_teleopCommand);
     
     // Configure the button bindings
     configureButtonBindings();
@@ -207,6 +210,7 @@ public class RobotContainer {
   public void update(){
     //this will update periodically
     
+
   }
 
   public void teleopInit(){
@@ -241,25 +245,26 @@ public class RobotContainer {
     //b.whenReleased(m_stopTurretCommand);
     // TODO: Buttons for storage
     
-    joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
-    joy0_b.whenPressed(m_sensor2Command); //sensor2 toggle 
-    joy0_startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
-    joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
-    joy0_x.whenPressed(m_toggleShootCommand);
+    //joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
+    //joy0_b.whenPressed(m_sensor2Command); //sensor2 toggle 
+    joy1_x.whenPressed(m_toggleArmedCommand); //armedstate toggle
+    //joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
+    joy1_b6.whenPressed(m_toggleShootCommand);
+    joy0_a.whenPressed(m_reverseCommand); //TODO: TEST
     //joy0_y.whenPressed(m_intakePosUp);
     //joy0_b.whenPressed(m_intakePosDown);
     //joy0_a.whenPressed(m_intakecommand);
     //joy0_a.whenReleased(m_intakeOffcommand);
     // TODO: Buttons for shooter
-    //joy1_b5.whenPressed(m_turretRightCommand);
+    //joy1_b6.whenPressed(m_turretRightCommand);
+    //joy1_b6.whenReleased(m_stopTurretCommand);
+    //joy1_b5.whenPressed(m_turretLeftCommand);
     //joy1_b5.whenReleased(m_stopTurretCommand);
-    //joy1_startButton.whenPressed(m_turretLeftCommand);
-    //joy1_startButton.whenReleased(m_stopTurretCommand);
     joy1_y.whenPressed(m_intakePosUp);
     joy1_b.whenPressed(m_intakePosDown);
     joy1_a.whenPressed(m_intakecommand);
     joy1_a.whenReleased(m_intakeOffcommand);
-    joy1_x.toggleWhenPressed(m_trackTargetCommand);
+    //joy1_x.toggleWhenPressed(m_trackTargetCommand);
     joy1_b7.whenPressed(m_indexerAuto);
     joy1_b8.whenPressed(m_indexerManual);
     // TODO: Buttons for hang
@@ -271,9 +276,7 @@ public class RobotContainer {
 
      // TODO: Buttons for drive
     // TODO: Buttons for vision
-    joy0_upButton.whenPressed(m_switchCameraCommand1);
-    joy0_rightButton.whenPressed(m_switchCameraCommand2);
-    joy0_downButton.whenPressed(m_switchCameraCommand3);
+    joy0_y.whenPressed(m_switchCameraCommand);
     // TODO: Buttons for control panel
   }
 
@@ -293,10 +296,30 @@ public class RobotContainer {
 
 public void robotInit() {
   autoChooser = new SendableChooser<SequentialCommandGroup>();
-  autoChooser.addDefault("Auto Mode Null", m_autoCommand);
-  autoChooser.addObject("Auto Mode A", m_autoCommand2);
-  
+  autoChooser.addDefault("Auto Mode A", m_autoCommand);
+  autoChooser.addObject("Auto Mode B", m_autoCommand2);
   SmartDashboard.putData("Auto Mode", autoChooser);
- 
-}
+
+  if (m_driveSubsystem.driveExist == false){
+    robotReady = false;
+  } else if (m_hangSubsystem.hookExist == false){
+    robotReady = false;
+  } else if (m_hangSubsystem.winchExist == false){
+    robotReady = false;
+  } else if (m_storageSubsystem.storageExist == false){
+    robotReady = false;
+  } else if (m_shooterSubsystem.turretExist == false){
+    robotReady = false;
+  } else if (m_shooterSubsystem.flyWheelExist == false){
+    robotReady = false;
+  } else if (m_intakeSubsystem.intakeExist == false){
+    robotReady = false;
+  }
+  SmartDashboard.putBoolean("Robot Ready", robotReady);
+  Shuffleboard.getTab("SmartDashboard")
+  .add("DiffDrive", 0.5)
+  .withWidget(BuiltInWidgets.kDifferentialDrive)
+  .withProperties(Map.of("drive", 0.5));
+
+  }
 }

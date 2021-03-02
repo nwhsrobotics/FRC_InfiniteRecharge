@@ -33,15 +33,24 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     new WaitCommand(0.01),
     new ToggleSensorCommand(storage, 2),
     new WaitCommand(2),
-    new ToggleShootCommand(storage).withTimeout(2),
+    new ToggleShootCommand(storage).withTimeout(1),
+    new ToggleShootCommand(storage).withTimeout(1),
     new ToggleSensorCommand(storage, 2),
+    new WaitCommand(0.2),
     new ToggleSensorCommand(storage, 2),
-    new ToggleShootCommand(storage).withTimeout(2),
+    new WaitCommand(2),
+    new ToggleShootCommand(storage).withTimeout(1),
+    new ToggleShootCommand(storage).withTimeout(1),
     new ToggleSensorCommand(storage, 2),
+    new WaitCommand(0.2),
     new ToggleSensorCommand(storage, 2),
-    new ToggleShootCommand(storage).withTimeout(2),
+    new WaitCommand(2),
+    new ToggleShootCommand(storage).withTimeout(1),
+    new ToggleShootCommand(storage).withTimeout(1),
     new ToggleSensorCommand(storage, 2),
-    new WaitCommand(1)); 
+    new WaitCommand(0.5),
+    new ToggleArmedCommand(storage));
+    new WaitCommand(0.3);
     storage.m_IndexerState = IndexerState.EMPTYBALLS;
   }
 }

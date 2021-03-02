@@ -7,46 +7,52 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
-public class AutoDriveCommand extends CommandBase {
+public class ReverseCommand extends CommandBase {
+  /**
+   * Creates a new ReverseCommand.
+   */
 
   private DriveSubsystem m_driveSubsystem;
-  private double m_turn;
-  private double m_speed;
-  /**
-   * Creates a new Drive3FeetCommand.
-   */
-  public AutoDriveCommand(DriveSubsystem drive, double speed, double turn) {
+  private VisionSubsystem m_visionSubsystem;
+
+  public ReverseCommand(DriveSubsystem drive, VisionSubsystem vision) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_turn = turn;
-    m_speed = speed;
     m_driveSubsystem = drive;
+    m_visionSubsystem = vision;
     addRequirements(m_driveSubsystem);
+    addRequirements(m_visionSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveSubsystem.setDrivePower(m_speed, m_turn);
+    boolean reverse = m_driveSubsystem.Reverse();
+    if(reverse){
+      m_visionSubsystem.setCamera(3);
+    }
+    else{
+      m_visionSubsystem.setCamera(1);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

@@ -68,9 +68,9 @@ public class StorageSubsystem extends SubsystemBase {
     //private final boolean m_closedloop = true; // True = Position Control, Flase = PT
 
     public boolean sensor[] = new boolean[3];         //TODO: CHECK HOW MANY SENSORS
-    private static final DigitalInput m_Sensor1 = new DigitalInput(0);
-    private static final DigitalInput m_Sensor2 = new DigitalInput(1);
-    private static final DigitalInput m_Sensor3 = new DigitalInput(2);
+    private static final DigitalInput m_Sensor1 = new DigitalInput(10);
+    private static final DigitalInput m_Sensor2 = new DigitalInput(11);
+    private static final DigitalInput m_Sensor3 = new DigitalInput(12);
     
 
 
@@ -88,10 +88,10 @@ public class StorageSubsystem extends SubsystemBase {
      * Creates a new ExampleSubsystem.
      */
     //private static final int deviceID_2 = 0; Assign value 
-    private CANSparkMax m_motor;
-    private CANSparkMax m_motor2;
-    private CANPIDController m_pidController;
-    private CANPIDController m_pidController2;
+    private CANSparkMax m_motor = null;
+    private CANSparkMax m_motor2 = null;
+    private CANPIDController m_pidController = null;
+    private CANPIDController m_pidController2 = null;
     public CANEncoder m_encoder;    //TODO: MAKE A FUNCTION
     public CANEncoder m_encoder2;
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM, maxVel, minVel, maxAcc, allowedErr;
@@ -117,6 +117,7 @@ public class StorageSubsystem extends SubsystemBase {
     private final int m_axis;
     private final XboxController m_joy;
     private static final double M2_FACTOR = 3.0;
+    public boolean storageExist = true;
     
 
 
@@ -131,19 +132,25 @@ public class StorageSubsystem extends SubsystemBase {
       }
 
         //motor check for existence
-        m_motor = new CANSparkMax(Constants.Storage.CANID_motor1, MotorType.kBrushless);
+      m_motor = new CANSparkMax(Constants.Storage.CANID_motor1, MotorType.kBrushless);
 
-
+      if (Constants.Storage.CANID_motor1 == 0){
+        m_motor = null;
+        storageExist = false;
+      }
         //motor2 check for existence
 
 
-        m_motor2 = new CANSparkMax(Constants.Storage.CANID_motor2, MotorType.kBrushless);
+      m_motor2 = new CANSparkMax(Constants.Storage.CANID_motor2, MotorType.kBrushless);
         //System.out.println(m_motor.getFirmwareVersion());
         //System.out.println("THE MOTOR IS:     " + motorHere);
         //m_motor2 = new CANSparkMax(deviceID_2, MotorType.kBrushless);
         System.out.println("Beginning to Initalize ");
 
-
+      if (Constants.Storage.CANID_motor2 == 0){
+        m_motor2 = null;
+        storageExist = false;
+      }
 
 
         /**
@@ -151,6 +158,7 @@ public class StorageSubsystem extends SubsystemBase {
          * in the SPARK MAX to their factory default state. If no argument is passed, these
          * parameters will not persist between power cycles
          */
+        if (m_motor != null && m_motor2 != null){
           m_motor.restoreFactoryDefaults();
 
 
@@ -201,7 +209,7 @@ public class StorageSubsystem extends SubsystemBase {
           System.out.println("Initalize for Sparks Finished");
           sensor[0] = false;
           sensor[1] = false;
-
+        }
     }
 
     public void initialize() {
@@ -211,19 +219,21 @@ public class StorageSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         //System.out.println("Storage motor 1 temperature" + m_motor.getMotorTemperature());
-      SmartDashboard.putBoolean("Sensor 1:  ", sensor[0]);
-      SmartDashboard.putBoolean("Sensor 2:  ", sensor[1]);
-      SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
-      SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
-      SmartDashboard.putNumber("The Ball Prediction is: ", ballPrediction);
-      SmartDashboard.putBoolean("manualIndexer", manual_switch);
+      if (m_motor != null && m_motor2 != null){
+        SmartDashboard.putBoolean("Sensor 1:  ", sensor[0]);
+        SmartDashboard.putBoolean("Sensor 2:  ", sensor[1]);
+        SmartDashboard.putBoolean("Sensor 3:  ", sensor[2]);
+        SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
+        SmartDashboard.putNumber("The Ball Prediction is: ", ballPrediction);
+        SmartDashboard.putBoolean("manualIndexer", manual_switch);
         getInputs();
-        if (m_beltState == BeltState.IDLE) {
-          runIndexerSm();
-        }
-        runBeltSm();
-        updateActuators();
-        //setActuators();
+          if (m_beltState == BeltState.IDLE) {
+            runIndexerSm();
+          }
+          runBeltSm();
+          updateActuators();
+          //setActuators();
+      }
     }
 
     
@@ -234,6 +244,11 @@ public class StorageSubsystem extends SubsystemBase {
     m_doArm = false; //TODO:
     m_doShoot = false;
     //m_shootButtonPressed = false;
+    sensor[0] = !m_Sensor1.get();
+    sensor[1] = !m_Sensor2.get();
+    sensor[2] = !m_Sensor3.get();
+    
+    //System.out.printf("got %b\n", sensor[0]);
   }
 
   private void runBeltSm() {
@@ -257,14 +272,21 @@ public class StorageSubsystem extends SubsystemBase {
       break;
 
       case INTAKE_1:
-        if (sensor[0] == true) {
+        
+        if (sensor[2] == true){ 
+          //yikes ball is by the shooter!
+          m_beltState = BeltState.IDLE; 
+        } else if (sensor[1] == true) {
           m_beltState = BeltState.INTAKE_2;
         } 
         SmartDashboard.putString("Belt State is:   ", "Stage INTAKE_1");
       break;
 
       case INTAKE_2:
-        if (sensor[0] == false) {
+        if (sensor[2] == true){
+          //yikes ball is by the shooter!
+          m_beltState = BeltState.IDLE;
+        } else if (sensor[0] == false) {
           m_beltState = BeltState.IDLE;
         } 
         SmartDashboard.putString("Belt State is:   ", "Stage INTAKE_2");
@@ -434,7 +456,7 @@ public class StorageSubsystem extends SubsystemBase {
           m_IndexerState = IndexerState.ARMED_FULL;
         }
         SmartDashboard.putString("Indexer State is:   ", "Stage FULL");
-        ballPrediction = 5;
+        ballPrediction = 3;
         break;
 
       case ARMED_S1:
@@ -501,9 +523,9 @@ public class StorageSubsystem extends SubsystemBase {
         }
         else if (m_shootButtonPressed) {
           m_doShoot = true;
-          m_IndexerState = IndexerState.ARMED_S4;
+          m_IndexerState = IndexerState.ARMED_S2;
           m_shootButtonPressed = false;
-          ballPrediction = 4;
+          ballPrediction = 2;
         }
         SmartDashboard.putString("Indexer State is:   ", "Stage ARMED_FULL");
       break;
