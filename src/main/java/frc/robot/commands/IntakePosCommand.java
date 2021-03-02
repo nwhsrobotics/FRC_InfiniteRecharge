@@ -18,6 +18,7 @@ public class IntakePosCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSubsystem m_intakeSubsystem;
   private final boolean m_down;
+  private boolean armDown;
  
   /**
    * Creates a new ExampleCommand.
@@ -56,10 +57,22 @@ public class IntakePosCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     if (m_down){
-        return (m_intakeSubsystem.isArmDown());
+      if(m_intakeSubsystem.isArmDown()){
+        m_intakeSubsystem.resetPos();
+        return true;
+      } else{
+        return false;
+      }
+
     }
     else{
-        return (m_intakeSubsystem.isArmUp());
+      if(m_intakeSubsystem.isArmUp()){
+        m_intakeSubsystem.resetPos();
+        return true;
+      } else{
+        return false;
+      }
+        
     }
   }
 }

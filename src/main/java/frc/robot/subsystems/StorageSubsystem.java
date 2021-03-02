@@ -118,6 +118,7 @@ public class StorageSubsystem extends SubsystemBase {
     private final XboxController m_joy;
     private static final double M2_FACTOR = 3.0;
     public boolean storageExist = true;
+    private boolean beltStatus = false;
     
 
 
@@ -517,7 +518,7 @@ public class StorageSubsystem extends SubsystemBase {
 
       case ARMED_FULL:
         if (armedSwitch == false) {
-          m_IndexerState = IndexerState.FULL;
+          m_IndexerState = IndexerState.INTAKE_S2;
           m_doDisarm = true;
           m_shootButtonPressed = false;
         }
@@ -584,6 +585,10 @@ public class StorageSubsystem extends SubsystemBase {
     public void setShoot(boolean shoot){
       m_shootButtonPressed = shoot;
       System.out.println("m_shootButtonPressed:  " + m_shootButtonPressed); 
+    }
+
+    public boolean getIntakeStatus(){
+      return beltStatus;
     }
 
 

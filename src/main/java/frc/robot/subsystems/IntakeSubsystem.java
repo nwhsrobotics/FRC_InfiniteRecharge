@@ -47,6 +47,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private boolean m_intaketoggle;
   public boolean intakeExist = true;
   public boolean intakeArmExist = true;
+  public boolean armDown = true;
 
   public IntakeSubsystem() {
     m_intake = new CANSparkMax(Constants.IntakeArm.CANID_INTAKE, MotorType.kBrushless);
