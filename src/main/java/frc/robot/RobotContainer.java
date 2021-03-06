@@ -216,6 +216,7 @@ public class RobotContainer {
   public void teleopInit(){
     //m_storageSubsystem.m_encoder.setPosition(0);
     //m_storageSubsystem.m_encoder2.setPosition(0);
+    m_storageSubsystem.m_isEnabled = true;
     m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
     m_intakeOffcommand.schedule(true);
     m_intakeSubsystem.resetPos();
@@ -223,6 +224,7 @@ public class RobotContainer {
 
   public void autoInit() {
     m_storageSubsystem.m_IndexerState = IndexerState.INTAKE_S3;
+    m_storageSubsystem.m_isEnabled = true;
     m_intakeSubsystem.resetPos();
     //m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
   }
@@ -247,24 +249,24 @@ public class RobotContainer {
     
     //joy0_a.whenPressed(m_sensor1Command); //sensor1 toggle
     //joy0_b.whenPressed(m_sensor2Command); //sensor2 toggle 
-    joy0_startButton.whenPressed(m_toggleArmedCommand); //armedstate toggle
+    joy1_b.whenPressed(m_toggleArmedCommand); //armedstate toggle
     //joy0_y.whenPressed(m_Sensor3Command); //sensor3 toggle
-    //joy0_x.whenPressed(m_toggleShootCommand);
+    joy1_a.whenPressed(m_toggleShootCommand);
     joy0_a.whenPressed(m_reverseCommand); //TODO: TEST
     //joy0_y.whenPressed(m_intakePosUp);
     //joy0_b.whenPressed(m_intakePosDown);
     //joy0_a.whenPressed(m_intakecommand);
     //joy0_a.whenReleased(m_intakeOffcommand);
     // TODO: Buttons for shooter
-    joy1_b6.whenPressed(m_turretRightCommand);
-    joy1_b6.whenReleased(m_stopTurretCommand);
-    joy1_b5.whenPressed(m_turretLeftCommand);
-    joy1_b5.whenReleased(m_stopTurretCommand);
-    joy1_y.whenPressed(m_intakePosUp);
-    joy1_b.whenPressed(m_intakePosDown);
-    joy1_a.whenPressed(m_intakecommand);
-    joy1_a.whenReleased(m_intakeOffcommand);
-    joy1_x.toggleWhenPressed(m_trackTargetCommand);
+    joy1_y.whenPressed(m_turretRightCommand);
+    joy1_y.whenReleased(m_stopTurretCommand);
+    joy1_x.whenPressed(m_turretLeftCommand);
+    joy1_x.whenReleased(m_stopTurretCommand);
+    joy0_y.whenPressed(m_intakePosUp);
+    joy0_b.whenPressed(m_intakePosDown);
+    joy0_x.whenPressed(m_intakecommand);
+    joy0_x.whenReleased(m_intakeOffcommand);
+    joy1_b6.toggleWhenPressed(m_trackTargetCommand);
     joy1_b7.whenPressed(m_indexerAuto);
     joy1_b8.whenPressed(m_indexerManual);
     // TODO: Buttons for hang
@@ -276,7 +278,7 @@ public class RobotContainer {
 
      // TODO: Buttons for drive
     // TODO: Buttons for vision
-    joy0_y.whenPressed(m_switchCameraCommand);
+    joy0_startButton.whenPressed(m_switchCameraCommand);
     // TODO: Buttons for control panel
   }
 
@@ -321,5 +323,10 @@ public void robotInit() {
   .withWidget(BuiltInWidgets.kDifferentialDrive)
   .withProperties(Map.of("drive", 0.5));
 
+  }
+
+
+  public void disabledInit() {
+    m_storageSubsystem.m_isEnabled = false;
   }
 }

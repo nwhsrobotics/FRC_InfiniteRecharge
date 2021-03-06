@@ -38,7 +38,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private CANPIDController m_intakePid2 = null;
   private CANEncoder m_intakeEncoder2;
   private double kIntakeP, kIntakeI, kIntakeD, kIntakeIz, kIntakeFF, kIntakeMaxOutput, kIntakeMinOutput;
-  private static final double DOWNPOS = 53.0;
+  private static final double DOWNPOS = 60.0;
   private static final double UPPOS = 0.0;
   private static final double TICKS_PER_SECOND = 50.0;
   private static final double SECONDS_TO_MOVE = 2.0;

@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 
+import java.time.chrono.IsoEra;
 import java.util.EnumMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -119,11 +121,13 @@ public class StorageSubsystem extends SubsystemBase {
     private static final double M2_FACTOR = 3.0;
     public boolean storageExist = true;
     private boolean beltStatus = false;
+    public boolean m_isEnabled = false;
     
 
 
     public StorageSubsystem(XboxController joy, int axis) {
       
+
       m_joy = joy;
       m_axis = axis;
 
@@ -227,13 +231,15 @@ public class StorageSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("armedSwitch:  ", armedSwitch);
         SmartDashboard.putNumber("The Ball Prediction is: ", ballPrediction);
         SmartDashboard.putBoolean("manualIndexer", manual_switch);
-        getInputs();
+        if(m_isEnabled){
+          getInputs();
           if (m_beltState == BeltState.IDLE) {
             runIndexerSm();
           }
           runBeltSm();
           updateActuators();
           //setActuators();
+        }  
       }
     }
 
