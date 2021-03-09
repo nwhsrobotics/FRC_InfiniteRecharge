@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoCaptureBallCommand;
+import frc.robot.commands.AutoCaptureGroup;
 import frc.robot.commands.AutoCommand;
 import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.AutoCommandGroup2;
@@ -181,6 +183,7 @@ public class RobotContainer {
   // TODO: Create commands for drive 
   private final TeleopCommand m_teleopCommand = new TeleopCommand(m_driveSubsystem,m_joy0);
   private final ReverseCommand m_reverseCommand = new ReverseCommand(m_driveSubsystem, m_visionSubsystem);
+  private final AutoCaptureBallCommand m_acbCommand = new AutoCaptureBallCommand(m_driveSubsystem, m_visionSubsystem);
 
   
 
@@ -190,7 +193,7 @@ public class RobotContainer {
   
   private final AutoCommandGroup m_autoCommand = new AutoCommandGroup(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
   private final AutoCommandGroup2 m_autoCommand2 = new AutoCommandGroup2(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
-
+  private final AutoCaptureGroup m_autoCaptureGroup = new AutoCaptureGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -287,10 +290,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
+    return m_autoCaptureGroup;
+    /*
     m_autoChooser = autoChooser.getSelected();
 
     // An ExampleCommand will run in autonomous
     return m_autoChooser;
+    */
   }
 
 
