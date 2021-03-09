@@ -24,6 +24,10 @@ public class AutoCaptureGroup extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new IntakePosCommand(intakeSubsystem, true),
-                new AutoCaptureBallCommand(driveSubsystem, visionSubsystem));
+                new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+                new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem),
+                new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+                new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem)
+                );
   }
 }

@@ -16,7 +16,7 @@ public class AutoCaptureBallCommand extends CommandBase {
   private static final double CENTER_X = 160.0; //center of camera view in pixels
   private static final double TURN_FACTOR =  0.75 / CENTER_X; //turning power per pixel
   private static final double SPEED_FACTOR = 1.0 / 100.0;
-  private static final double TERMINAL_DISTANCE = 55.0;
+  private static final double TERMINAL_DISTANCE = 60.0;
   private static final double BASE_DISTANCE = 20.0; //distance where power equals 0
   private DriveSubsystem m_drive;
   private boolean m_terminalStage;
