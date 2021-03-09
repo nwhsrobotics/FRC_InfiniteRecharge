@@ -56,23 +56,22 @@ public class IntakePosCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    boolean finish = false;
+
     if (m_down){
       if(m_intakeSubsystem.isArmDown()){
         m_intakeSubsystem.resetPos();
-        return true;
-      } else{
-        return false;
-      }
+        finish = true;
+      } 
 
     }
     else{
       if(m_intakeSubsystem.isArmUp()){
         m_intakeSubsystem.resetPos();
-        return true;
-      } else{
-        return false;
-      }
+        finish = true;
+      } 
         
     }
+    return finish;
   }
 }

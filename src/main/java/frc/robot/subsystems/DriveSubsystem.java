@@ -24,9 +24,16 @@ public class DriveSubsystem extends SubsystemBase {
   private CANSparkMax m_right1 = null;
   private CANSparkMax m_right2 = null;
   private DifferentialDrive m_drive;
-  public boolean driveExist = true;
+
+  public boolean driveExist;
+  //todo: add PID control objects
+  //todo: add trajectory objects
+  //private CANPIDController m_pidController;
+  //private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
   private boolean reverseDrive = false;
-  
+  private double m_turn = 0.0;
+  private double m_power = 0.0;
+
 
 
   
@@ -41,6 +48,8 @@ public class DriveSubsystem extends SubsystemBase {
     m_right1 = new CANSparkMax(Constants.Drive.CANID_RIGHT1, MotorType.kBrushless);
     m_right2 = new CANSparkMax(Constants.Drive.CANID_RIGHT2, MotorType.kBrushless);
     
+    // todo: get PID controllers
+    // todo: add PID parameters
     if (Constants.Drive.CANID_LEFT1 == 0 || Constants.Drive.CANID_LEFT2 == 0 || Constants.Drive.CANID_RIGHT1 == 0 || Constants.Drive.CANID_RIGHT2 == 0){
       m_left1 = null;
       driveExist = false;
@@ -56,18 +65,45 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    m_drive.arcadeDrive(m_power, m_turn);
     
   }
+  /*
+  @Override
+  public void autonomousInit(){
+    // todo:
+  }
+  
+  @Override
+  public void autonomousPeriodic(){
+    m_drive.arcadeDrive(m_power, m_turn);
+  }
+  */
+  /*
+  @Override
+  public void teleopInit(){
+
+  }
+  
+  
+  @Override
+  public void teleopPeriodic(){
+    m_drive.arcadeDrive(m_power, m_turn);
+  }
+ */
 
   public void setDrivePower(double power, double turn){
     //To do: Control motors
     if (m_left1 != null || m_left2 != null || m_right1 != null || m_right2 != null){
       //If reversedrive is true, put drive train in reverse
       if(reverseDrive){
-        m_drive.arcadeDrive(-power, turn);
+        m_power = -power;
+        m_turn = turn;
       }
       else{
-        m_drive.arcadeDrive(power, turn);
+        m_power = power;
+        m_turn = turn;
       }
     }
   }

@@ -44,7 +44,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     xEntryB = table.getEntry("Center X Yellow");
     yEntryB = table.getEntry("Center Y Yellow");
-    distanceEntryB = table.getEntry("Yellow Entry");
+    distanceEntryB = table.getEntry("Yellow Distance");
 
     SmartDashboard.putNumber("Camera chooser", m_chooseCamera);
     //cameraChooserEntry = table.getEntry("Camera chooser");
