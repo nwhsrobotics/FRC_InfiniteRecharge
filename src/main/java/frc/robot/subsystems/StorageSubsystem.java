@@ -593,8 +593,8 @@ public class StorageSubsystem extends SubsystemBase {
       System.out.println("m_shootButtonPressed:  " + m_shootButtonPressed); 
     }
 
-    public boolean getIntakeStatus(){
-      return beltStatus;
+    public boolean isStorageRunning(){
+      return (m_beltState == BeltState.INTAKE_1) || (m_beltState == BeltState.INTAKE_2);
     }
 
 

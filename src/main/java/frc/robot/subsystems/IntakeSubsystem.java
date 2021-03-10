@@ -192,6 +192,6 @@ public boolean getIntakeStatus(){
 
 public void setIntakeStatus(boolean intake){
   m_intaketoggle = intake;
-}
+} 
 
-}
+} 

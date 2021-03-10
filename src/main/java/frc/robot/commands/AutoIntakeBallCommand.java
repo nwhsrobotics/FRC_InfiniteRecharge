@@ -10,22 +10,27 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.StorageSubsystem;
 
 public class AutoIntakeBallCommand extends CommandBase {
   private static final double DRIVE_POWER = 0.2; //Drive power during autoIntake
   private static final double AUTOINTAKETIME1 = 0.50; //Time that drive power is on
-  private static final double AUTOINTAKETIME2 = 3.0; //Time that intake runs
+  private static final double AUTOINTAKETIME2 = 5.0; //Time that intake runs
   private static final double INTAKE_POWER = 0.9; //Power that intake arm uses
   private DriveSubsystem m_drive;
   private IntakeSubsystem m_intake;
   private double m_elapsed;
+  private StorageSubsystem m_storageSubsystem;
+  private boolean m_finished;
+  private boolean m_intook;
 
   /**
    * Creates a new AutoIntakeBallCommand.
    */
-  public AutoIntakeBallCommand(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem) {
+  public AutoIntakeBallCommand(DriveSubsystem driveSubsystem, IntakeSubsystem intakeSubsystem, StorageSubsystem storageSubsystem) {
     m_drive = driveSubsystem;
     m_intake = intakeSubsystem;
+    m_storageSubsystem = storageSubsystem;
     m_elapsed = 0.0;
     addRequirements(m_drive);
     addRequirements(m_intake);
@@ -37,6 +42,8 @@ public class AutoIntakeBallCommand extends CommandBase {
   public void initialize() {
     System.out.println("AutoIntake Started\n");
     m_elapsed = 0.0;
+    m_finished = false;
+    m_intook = false;
     m_drive.setDrivePower(DRIVE_POWER, 0.0);
     m_intake.setIntakeStatus(true);
     m_intake.intakeMotor(INTAKE_POWER);
@@ -46,14 +53,17 @@ public class AutoIntakeBallCommand extends CommandBase {
   @Override
   public void execute() {
     m_elapsed += 0.020;
+    System.out.printf("AutoIntakeBallCommand %f\n", m_elapsed);
     if(m_elapsed >= AUTOINTAKETIME1){
       m_drive.setDrivePower(0.0, 0.0);
     }
-    if(m_elapsed >= AUTOINTAKETIME2){
+    if(m_storageSubsystem.isStorageRunning()){
       m_intake.intakeMotor(0.0);
       m_intake.setIntakeStatus(false);
-      
-      
+      m_intook = true;
+    }
+    if((!m_storageSubsystem.isStorageRunning() && m_intook) || (m_elapsed >= AUTOINTAKETIME2)){
+      m_finished = true; 
     }
   }
 
@@ -70,6 +80,6 @@ public class AutoIntakeBallCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_elapsed >= AUTOINTAKETIME2;
+    return m_finished;
   }
 }

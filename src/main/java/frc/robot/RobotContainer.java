@@ -193,7 +193,7 @@ public class RobotContainer {
   
   private final AutoCommandGroup m_autoCommand = new AutoCommandGroup(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
   private final AutoCommandGroup2 m_autoCommand2 = new AutoCommandGroup2(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
-  private final AutoCaptureGroup m_autoCaptureGroup = new AutoCaptureGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem);
+  private final AutoCaptureGroup m_autoCaptureGroup = new AutoCaptureGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem, m_storageSubsystem);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
