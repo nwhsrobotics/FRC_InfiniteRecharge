@@ -64,6 +64,7 @@ public class AutoIntakeBallCommand extends CommandBase {
     }
     if((!m_storageSubsystem.isStorageRunning() && m_intook) || (m_elapsed >= AUTOINTAKETIME2)){
       m_finished = true; 
+      System.out.println("AutoIntakeCommand Finished\n");
     }
   }
 

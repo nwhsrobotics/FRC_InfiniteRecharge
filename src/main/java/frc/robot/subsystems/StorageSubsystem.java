@@ -293,7 +293,7 @@ public class StorageSubsystem extends SubsystemBase {
         if (sensor[2] == true){
           //yikes ball is by the shooter!
           m_beltState = BeltState.IDLE;
-        } else if (sensor[0] == false) {
+        } else if (sensor[1] == false) {
           m_beltState = BeltState.IDLE;
         } 
         SmartDashboard.putString("Belt State is:   ", "Stage INTAKE_2");

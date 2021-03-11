@@ -28,6 +28,8 @@ public class AutoCaptureGroup extends SequentialCommandGroup {
                 new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
                 new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem),
                 new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+                new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem),
+                new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
                 new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem)
                 );
   }

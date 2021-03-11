@@ -25,6 +25,8 @@ import frc.robot.commands.AutoCommand;
 import frc.robot.commands.AutoCommandGroup;
 import frc.robot.commands.AutoCommandGroup2;
 import frc.robot.commands.BallOverrideCommand;
+import frc.robot.commands.BluePathCommand;
+import frc.robot.commands.DecideRedBlueCommand;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ToggleSensorCommand;
 import frc.robot.commands.ToggleShootCommand;
@@ -35,6 +37,7 @@ import frc.robot.commands.ExtendHookCommand;
 import frc.robot.commands.FlyWheelTestingCommand;
 import frc.robot.commands.IndexerManualCommand;
 import frc.robot.commands.ParkCommand;
+import frc.robot.commands.RedPathCommand;
 import frc.robot.commands.ReverseCommand;
 import frc.robot.commands.SwitchCameraCommand;
 import frc.robot.commands.MoveWinchCommand;
@@ -194,7 +197,10 @@ public class RobotContainer {
   private final AutoCommandGroup m_autoCommand = new AutoCommandGroup(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
   private final AutoCommandGroup2 m_autoCommand2 = new AutoCommandGroup2(m_storageSubsystem, m_shooterSubsystem, m_intakeSubsystem, m_driveSubsystem);
   private final AutoCaptureGroup m_autoCaptureGroup = new AutoCaptureGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem, m_storageSubsystem);
-
+  private final SequentialCommandGroup m_blue = new SequentialCommandGroup(new BluePathCommand());
+  private final SequentialCommandGroup m_red = new SequentialCommandGroup(new RedPathCommand());
+  private final DecideRedBlueCommand m_decide = new DecideRedBlueCommand(m_blue, m_red, m_visionSubsystem);
+  private final SequentialCommandGroup m_decideGroup = new SequentialCommandGroup(m_intakePosDown,m_decide);
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -226,7 +232,7 @@ public class RobotContainer {
   }
 
   public void autoInit() {
-    m_storageSubsystem.m_IndexerState = IndexerState.INTAKE_S3;
+    m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
     m_storageSubsystem.m_isEnabled = true;
     m_intakeSubsystem.resetPos();
     //m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
@@ -292,7 +298,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
-    return m_autoCaptureGroup;
+    return m_decideGroup;
     /*
     m_autoChooser = autoChooser.getSelected();
 
