@@ -13,7 +13,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 
 public class AutoIntakeBallCommand extends CommandBase {
-  private static final double DRIVE_POWER = 0.2; //Drive power during autoIntake
+  private static final double DRIVE_POWER = 0.4; //Drive power during autoIntake
   private static final double AUTOINTAKETIME1 = 0.50; //Time that drive power is on
   private static final double AUTOINTAKETIME2 = 5.0; //Time that intake runs
   private static final double INTAKE_POWER = 0.9; //Power that intake arm uses

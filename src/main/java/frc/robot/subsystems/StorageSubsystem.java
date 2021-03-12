@@ -594,7 +594,7 @@ public class StorageSubsystem extends SubsystemBase {
     }
 
     public boolean isStorageRunning(){
-      return (m_beltState == BeltState.INTAKE_1) || (m_beltState == BeltState.INTAKE_2);
+      return /*(m_beltState == BeltState.INTAKE_1) ||*/ (m_beltState == BeltState.INTAKE_2);
     }
 
 

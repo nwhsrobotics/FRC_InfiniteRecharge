@@ -298,7 +298,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
-    return m_decideGroup;
+    return m_autoCaptureGroup;
     /*
     m_autoChooser = autoChooser.getSelected();
 

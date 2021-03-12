@@ -16,8 +16,16 @@ import frc.robot.subsystems.VisionSubsystem;
 public class AutoCaptureBallCommand extends CommandBase {
 
   private static final double CENTER_X = 160.0; //center of camera view in pixels
+
+  /*
+  TURN_FACTOR SPEED_FACTOR  NOTE
+  0.75        1.0           Not enough turning, too fast
+  1.25        0.5           Turning power too high
+  1.00        0.5           Turning power too high
+  0.75        0.5
+  */
   private static final double TURN_FACTOR =  0.75 / CENTER_X; //turning power per pixel
-  private static final double SPEED_FACTOR = 1.0 / 100.0;
+  private static final double SPEED_FACTOR = 0.5 / 100.0; //Percent Power per inch
   private static final double TERMINAL_DISTANCE = 60.0;
   private static final double BASE_DISTANCE = 20.0; //distance where power equals 0
   private DriveSubsystem m_drive;
@@ -63,7 +71,7 @@ public class AutoCaptureBallCommand extends CommandBase {
     if(m_terminalStage){
       //TODO:
       System.out.println("terminalStage\n");
-      m_drive.setDrivePower(0.0,0.0);
+      //m_drive.setDrivePower(0.0,0.0);
     }
     else if(dist_inches <= 0.0){
       //TODO: seek ball
