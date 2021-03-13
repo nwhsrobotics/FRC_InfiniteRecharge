@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -56,7 +57,13 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANSparkMaxLowLevel.MotorType turretMT;
   private CANSparkMaxLowLevel.MotorType hoodMT;
 
-  public ShooterSubsystem(VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem) {
+  private XboxController m_joy;
+  private int m_axis; 
+
+  double m_inputPower = 0;
+  double m_inputChanged;
+
+  public ShooterSubsystem(VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem, XboxController joy, int axis) {
     //ADDING THE FAKE MOTOR
     
     
@@ -103,6 +110,10 @@ public class ShooterSubsystem extends SubsystemBase {
       m_flywheel2PID.setFF(kflywheelFF);
       m_flywheel2PID.setOutputRange(kflywheelminOutput, kflywheelmaxOutput);
       m_flywheel2PID.setReference(0.0, ControlType.kVelocity);
+
+      //Controller code for manual flywheel
+      m_joy = joy;
+      m_axis = axis;
     
     }
     //TODO: Add Turret
@@ -184,11 +195,17 @@ public class ShooterSubsystem extends SubsystemBase {
     //TODO: Add Flywheel
     //TODO: Add Turret
 
+    //Get Controller input
+    m_inputPower = m_joy.getRawAxis(m_axis);
+    m_inputChanged = (m_inputPower - 1.00) / 2.00; //Since slider is from -1 to 1
+    
+    //System.out.printf("Slider power: %f\n", m_inputChanged);
+
     if (m_flywheel != null || m_flywheel2 != null){
       if (m_storageSubsystem.getShootState()) {
-        setShooterPower(-0.90);
+        setShooterPower(m_inputChanged);
       } else if (m_storageSubsystem.getArmed()){
-        setShooterPower(-0.90);
+        setShooterPower(m_inputChanged);
       } else {
         setShooterPower(0);
       }

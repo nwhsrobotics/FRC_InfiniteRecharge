@@ -118,7 +118,7 @@ public class RobotContainer {
 
   // TODO: Create m_storageSubsystem
   private final StorageSubsystem m_storageSubsystem = new StorageSubsystem(m_joy1, 1);
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_visionSubsystem, m_storageSubsystem);
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_visionSubsystem, m_storageSubsystem, m_joy1, 3);
 
 
   // Create m_intakeSubsystem

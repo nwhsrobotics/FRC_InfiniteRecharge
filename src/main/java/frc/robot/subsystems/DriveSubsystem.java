@@ -62,7 +62,7 @@ public class DriveSubsystem extends SubsystemBase {
       SpeedControllerGroup right = new SpeedControllerGroup(m_right1, m_right2);
       //Declare ArcadeDrive 
       m_drive = new DifferentialDrive(left, right);
-      m_drive.setDeadband(0.05);
+      m_drive.setDeadband(0.15);
     }
   }
 
