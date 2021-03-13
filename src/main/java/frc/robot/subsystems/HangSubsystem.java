@@ -36,6 +36,9 @@ public class HangSubsystem extends SubsystemBase {
 
   public HangSubsystem() {
     ///TODO: Add Winch
+
+    /*
+
     m_winch = new CANSparkMax(Constants.Hang.CANID_WINCH, MotorType.kBrushless);
     if (Constants.Hang.CANID_WINCH == 0){
       winchExist = false;
@@ -71,14 +74,16 @@ public class HangSubsystem extends SubsystemBase {
       m_hookPID.setOutputRange(kHookminOutput, kHookmaxOutput);
       System.out.println("Sparks Initialized");
     }
+    */
   }
 
   @Override
   public void periodic() {
+    /*
     if (m_winch != null){
       m_winch.set(m_speed);
     }
-    
+    */
     // This method will be called once per scheduler run
   }
 

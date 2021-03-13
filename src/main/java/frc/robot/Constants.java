@@ -51,8 +51,8 @@ public final class Constants {
 
     // TODO: Hang
     public final class Hang{ 
-        public static final int CANID_WINCH = 3; //0
-        public static final int CANID_HOOK = 12; //0
+        public static final int CANID_WINCH = 0; //0
+        public static final int CANID_HOOK = 0; //0
     }
     
     // TODO: Control Panel (wheel)

@@ -140,6 +140,7 @@ public class ShooterSubsystem extends SubsystemBase {
       m_turret.setClosedLoopRampRate(Constants.Shooter.TURRET_RAMP_RATE);
     }
 
+    /*
     //TODO: Add Hood
     m_hoodMotor = new CANSparkMax(Constants.Shooter.CANID_HOOD, MotorType.kBrushless);
     //hoodMT = m_hoodMotor.getMotorType();
@@ -170,10 +171,12 @@ public class ShooterSubsystem extends SubsystemBase {
       m_hoodPid.setOutputRange(kHoodMinOutput, kHoodMaxOutput);
       m_hoodPid.setReference(0.0, ControlType.kPosition);
       System.out.println("Hood Sparks Initialized.");
-
+      
       
     }
+    */
   }
+
 
   @Override
   public void periodic() {
@@ -183,9 +186,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     if (m_flywheel != null || m_flywheel2 != null){
       if (m_storageSubsystem.getShootState()) {
-        setShooterPower(-0.50);
+        setShooterPower(-0.90);
       } else if (m_storageSubsystem.getArmed()){
-        setShooterPower(-0.50);
+        setShooterPower(-0.90);
       } else {
         setShooterPower(0);
       }
@@ -194,11 +197,12 @@ public class ShooterSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Rotation Position", m_turretEncoder.getPosition());
       m_x = m_visionSubsystem.getTargetX();
     }
+    /*
     //TODO: Add Hood
     if (m_hoodMotor != null){
       m_hoodMotor.set(m_hoodPower);
     }
-    
+    */
   }
 
 
@@ -233,11 +237,13 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
   //TODO: Add Hood
+  /*
   public void setHoodPower(double power){
     if (m_hoodMotor != null){
       m_hoodPower = power;
     }
   }
+  */  
 
   public void trackTarget(){
     if (m_turret != null){
@@ -264,8 +270,9 @@ public class ShooterSubsystem extends SubsystemBase {
     return flyWheelExist;
   }
 
+  /*
   public boolean getHoodExist(){
     return hoodExist;
   }
-
+  */
 }

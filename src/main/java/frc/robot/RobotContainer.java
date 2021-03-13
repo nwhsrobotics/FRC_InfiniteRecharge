@@ -157,14 +157,16 @@ public class RobotContainer {
 
 
   // TODO: Create m_hangSubsystem
-  private final HangSubsystem m_hangSubsystem = new HangSubsystem();
+  //private final HangSubsystem m_hangSubsystem = new HangSubsystem();
 
   // TODO: Create commands for hang
+  
+  /*
   private final MoveWinchCommand m_moveWinch = new MoveWinchCommand(m_hangSubsystem, 0.3);
   private final MoveWinchCommand m_stopWinch = new MoveWinchCommand(m_hangSubsystem, 0.0);
   private final ExtendHookCommand m_extendHookCommand =  new ExtendHookCommand(m_hangSubsystem, 10);
   private final ExtendHookCommand m_retractHookCommand =  new ExtendHookCommand(m_hangSubsystem, 0);
-
+  */
 
 
   // TODO: Create m_controlPanelSubsystem (wheel thing)
@@ -200,7 +202,8 @@ public class RobotContainer {
   private final SequentialCommandGroup m_blue = new SequentialCommandGroup(new BluePathCommand());
   private final SequentialCommandGroup m_red = new SequentialCommandGroup(new RedPathCommand());
   private final DecideRedBlueCommand m_decide = new DecideRedBlueCommand(m_blue, m_red, m_visionSubsystem);
-  private final SequentialCommandGroup m_decideGroup = new SequentialCommandGroup(m_intakePosDown,m_decide);
+  private final SequentialCommandGroup m_decideGroup = 
+    new SequentialCommandGroup(new IntakePosCommand(m_intakeSubsystem, true),m_decide);
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -316,10 +319,13 @@ public void robotInit() {
 
   if (m_driveSubsystem.driveExist == false){
     robotReady = false;
+  /*
   } else if (m_hangSubsystem.hookExist == false){
     robotReady = false;
   } else if (m_hangSubsystem.winchExist == false){
     robotReady = false;
+  */
+  
   } else if (m_storageSubsystem.storageExist == false){
     robotReady = false;
   } else if (m_shooterSubsystem.turretExist == false){

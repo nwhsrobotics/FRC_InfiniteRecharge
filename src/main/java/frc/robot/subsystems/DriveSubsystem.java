@@ -18,6 +18,8 @@ import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
 
+  private static final double POWER_FACTOR = 0.9;
+  private static final double TURN_FACTOR = 0.75;
   // To do: Declare motor controllers (CANSparkMax)
   private CANSparkMax m_left1 = null;
   private CANSparkMax m_left2 = null;
@@ -60,13 +62,14 @@ public class DriveSubsystem extends SubsystemBase {
       SpeedControllerGroup right = new SpeedControllerGroup(m_right1, m_right2);
       //Declare ArcadeDrive 
       m_drive = new DifferentialDrive(left, right);
+      m_drive.setDeadband(0.05);
     }
   }
 
   @Override
   public void periodic() {
 
-    m_drive.arcadeDrive(m_power, m_turn);
+    m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
     
   }
   /*
