@@ -42,8 +42,8 @@ public final class Constants {
 
     // TODO: Shooter
     public final class Shooter {
-        public static final int CANID_FLYWHEEL1=1;  //1
-        public static final int CANID_FLYWHEEL2=2; //2
+        public static final int CANID_FLYWHEEL1=0;  //1
+        public static final int CANID_FLYWHEEL2=0; //2
         public static final int CANID_TURRET= 5; 
         public static final int CANID_HOOD=0;
         public static final double TURRET_RAMP_RATE = 0.25;

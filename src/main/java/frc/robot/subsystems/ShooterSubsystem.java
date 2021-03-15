@@ -71,8 +71,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_storageSubsystem = storageSubsystem;
     //TODO: Add Flywheel
       //1621 rpm 5676: NEO max (28%)
-      m_flywheel = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL1, MotorType.kBrushless);
-      m_flywheel2 = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL2, MotorType.kBrushless);
+      
     if (Constants.Shooter.CANID_FLYWHEEL1 == 0 || Constants.Shooter.CANID_FLYWHEEL2 == 0){
       m_flywheel = null;
       m_flywheel2 = null;
@@ -81,6 +80,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     if (m_flywheel != null || m_flywheel2 != null){
+      m_flywheel = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL1, MotorType.kBrushless);
+      m_flywheel2 = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL2, MotorType.kBrushless);
       flyWheelExist = true;
       m_flyWheelEncoder = m_flywheel.getEncoder();
       m_flyWheelEncoder2 = m_flywheel2.getEncoder();
@@ -194,6 +195,12 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //TODO: Add Flywheel
     //TODO: Add Turret
+    if(m_flywheel == null){
+      return; //TODO: RESTORE THIS!!!
+    }
+    
+
+
 
     //Get Controller input
     m_inputPower = m_joy.getRawAxis(m_axis);
@@ -202,6 +209,8 @@ public class ShooterSubsystem extends SubsystemBase {
     //System.out.printf("Slider power: %f\n", m_inputChanged);
 
     if (m_flywheel != null || m_flywheel2 != null){
+      SmartDashboard.putNumber("Flywheel Motor 1 Velocity", m_flyWheelEncoder.getVelocity());
+      SmartDashboard.putNumber("Flywheel Motor 2 Velocity", m_flyWheelEncoder2.getVelocity());
       if (m_storageSubsystem.getShootState()) {
         setShooterPower(m_inputChanged);
       } else if (m_storageSubsystem.getArmed()){

@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -18,8 +19,8 @@ import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private static final double POWER_FACTOR = 0.9;
-  private static final double TURN_FACTOR = 0.75;
+  private static final double POWER_FACTOR = 0.6;
+  private static final double TURN_FACTOR = 0.55;
   // To do: Declare motor controllers (CANSparkMax)
   private CANSparkMax m_left1 = null;
   private CANSparkMax m_left2 = null;
@@ -57,12 +58,18 @@ public class DriveSubsystem extends SubsystemBase {
       driveExist = false;
     }
     if (m_left1 != null || m_left2 != null || m_right1 != null || m_right2 != null){
+      //Set Idle mode for breaking
+      m_left1.setIdleMode(IdleMode.kCoast);
+      m_left2.setIdleMode(IdleMode.kCoast);
+      m_right1.setIdleMode(IdleMode.kCoast);
+      m_right2.setIdleMode(IdleMode.kCoast);
       //Declare motor groups 
       SpeedControllerGroup left = new SpeedControllerGroup(m_left1, m_left2);
       SpeedControllerGroup right = new SpeedControllerGroup(m_right1, m_right2);
       //Declare ArcadeDrive 
       m_drive = new DifferentialDrive(left, right);
       m_drive.setDeadband(0.15);
+      
     }
   }
 
