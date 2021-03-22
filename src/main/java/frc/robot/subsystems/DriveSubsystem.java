@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.VelDiffDrive;
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -36,6 +37,7 @@ public class DriveSubsystem extends SubsystemBase {
   private boolean reverseDrive = false;
   private double m_turn = 0.0;
   private double m_power = 0.0;
+  private VelDiffDrive m_vDrive;
 
 
 
@@ -69,14 +71,16 @@ public class DriveSubsystem extends SubsystemBase {
       //Declare ArcadeDrive 
       m_drive = new DifferentialDrive(left, right);
       m_drive.setDeadband(0.15);
-      
+      m_vDrive = new VelDiffDrive(m_left1, m_left2, m_right1, m_right2);
+      m_vDrive.setDeadband(0.15);
     }
   }
 
   @Override
   public void periodic() {
 
-    m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
+    //m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
+    m_vDrive.arcadeDrive(m_power, m_turn);
     
   }
   /*

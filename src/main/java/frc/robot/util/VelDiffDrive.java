@@ -34,6 +34,10 @@ public class VelDiffDrive extends RobotDriveBase {
     private static final double DRIVE_maxOutput = 0;
     private static final double DRIVE_IMaxAccum = 0;
     private static final double DRIVE_IAccum = 0;
+    private static final double GEAR_RATIO = 5.0;
+    private static final double WHEEL_R = 0.0762; //meters(6 inch wheel)
+    private static final double SEC_PERMIN = 60;
+    private static final double FACTOR = 2.0 * Math.PI * WHEEL_R / (SEC_PERMIN * GEAR_RATIO);
 
     // Fields
     // current velocities
@@ -73,6 +77,9 @@ public class VelDiffDrive extends RobotDriveBase {
         // init accels to default
         // init velocities to zero.
         // init max velocities to defaults.
+        m_max_v_turn = DEFAULT_MAX_V_TURN;
+        m_max_v_fwd = DEFAULT_MAX_V_FWD;
+
     }
 
     //
@@ -162,20 +169,38 @@ public class VelDiffDrive extends RobotDriveBase {
             return;
         }
         // Limit inputs
-        fwd = limit(fwd);
-        turn = limit(turn);
+        //fwd = limit(fwd);
+        //turn = limit(turn);
         
         
         // Apply deadbands
         fwd = applyDeadband(fwd, m_deadband);
-        turn= applyDeadband(turn, m_deadband);
+        turn = applyDeadband(turn, m_deadband);
+
+        //convert to real units
+        fwd = fwd * m_max_v_fwd;
+        turn = turn * m_max_v_turn;
+
         // Apply accel limits to inputs to get commands
+
         // (Update command velocities)
-        // Compute forward wheel speeds
+        
         // Compute turn wheel speeds
+        double right_turn = turn * m_wheelBase / 2.0;
+        double left_turn = -turn * m_wheelBase / 2.0;
+
+        // Combine forward and turn wheel speeds
+        double right = fwd + right_turn;
+        double left = fwd + left_turn;
+
         // Normalize wheel speeds
         // Negate input to left side
+
         // Update reference vel to motors.
+        m_pid_l1.setReference(-left*FACTOR, ControlType.kVelocity);
+        m_pid_l2.setReference(-left*FACTOR, ControlType.kVelocity); 
+        m_pid_r1.setReference(right*FACTOR, ControlType.kVelocity);
+        m_pid_r2.setReference(right*FACTOR, ControlType.kVelocity);
     }
 
     @Override
