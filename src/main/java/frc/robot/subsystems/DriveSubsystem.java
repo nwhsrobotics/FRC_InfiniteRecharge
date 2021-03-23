@@ -79,8 +79,8 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    //m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
-    m_vDrive.arcadeDrive(m_power, m_turn);
+    m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
+   // m_vDrive.arcadeDrive(m_power, m_turn);
     
   }
   /*
