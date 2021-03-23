@@ -27,7 +27,7 @@ public class DriveSubsystem extends SubsystemBase {
   private CANSparkMax m_left2 = null;
   private CANSparkMax m_right1 = null;
   private CANSparkMax m_right2 = null;
-  private DifferentialDrive m_drive;
+  // private DifferentialDrive m_drive;
 
   public boolean driveExist;
   //todo: add PID control objects
@@ -55,7 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
     
     // todo: get PID controllers
     // todo: add PID parameters
-    if (Constants.Drive.CANID_LEFT1 == 0 || Constants.Drive.CANID_LEFT2 == 0 || Constants.Drive.CANID_RIGHT1 == 0 || Constants.Drive.CANID_RIGHT2 == 0){
+    if (Constants.Drive.CANID_LEFT1 == 0 || Constants.Drive.CANID_LEFT2 == 0 || Constants.Drive.CANID_RIGHT1 == 0 || Constants.Drive.CANID_RIGHT2 == 0) {
       m_left1 = null;
       driveExist = false;
     }
@@ -69,8 +69,9 @@ public class DriveSubsystem extends SubsystemBase {
       SpeedControllerGroup left = new SpeedControllerGroup(m_left1, m_left2);
       SpeedControllerGroup right = new SpeedControllerGroup(m_right1, m_right2);
       //Declare ArcadeDrive 
-      m_drive = new DifferentialDrive(left, right);
-      m_drive.setDeadband(0.15);
+      // TODO: restore.
+      // m_drive = new DifferentialDrive(left, right);
+      // m_drive.setDeadband(0.15);
       m_vDrive = new VelDiffDrive(m_left1, m_left2, m_right1, m_right2);
       m_vDrive.setDeadband(0.15);
     }
@@ -78,34 +79,43 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
-   // m_vDrive.arcadeDrive(m_power, m_turn);
-    
+    // (Moved to teleopPeriodic() )
   }
-  /*
-  @Override
+
+  public void disabledInit() {
+    m_vDrive.disable();
+    if (driveExist) {
+      m_left1.set(0.0);
+      m_left2.set(0.0);
+      m_right1.set(0.0);
+      m_right2.set(0.0);
+    }
+   }
+  
+  public void disabledPeriodic() {
+  }
+
   public void autonomousInit(){
     // todo:
   }
   
-  @Override
   public void autonomousPeriodic(){
-    m_drive.arcadeDrive(m_power, m_turn);
+    m_vDrive.arcadeDrive(m_power, m_turn);
   }
-  */
-  /*
-  @Override
+
   public void teleopInit(){
+    m_vDrive.enable();
 
   }
-  
-  
-  @Override
-  public void teleopPeriodic(){
-    m_drive.arcadeDrive(m_power, m_turn);
+  public void teleopPeriodic() {
+        // m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
+        // TODO: Restore teleop behavior after testing m_vDrive.
+        m_vDrive.arcadeDrive(m_power, m_turn);
   }
- */
+
+
+
+
 
   public void setDrivePower(double power, double turn){
     //To do: Control motors
@@ -127,5 +137,7 @@ public class DriveSubsystem extends SubsystemBase {
     reverseDrive = !reverseDrive;
     return reverseDrive;
   }
+
+
 }
 

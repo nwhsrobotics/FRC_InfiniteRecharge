@@ -7,6 +7,7 @@
 
 package frc.robot.util;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -30,14 +31,14 @@ public class VelDiffDrive extends RobotDriveBase {
     private static final double DRIVE_D = 0;
     private static final double DRIVE_Iz = 0;
     private static final double DRIVE_FF = 0.000178; //Based on 2800 RPM at 50%     
-    private static final double DRIVE_minOutput = 0;
-    private static final double DRIVE_maxOutput = 0;
+    private static final double DRIVE_minOutput = -1.0;
+    private static final double DRIVE_maxOutput = 1.0;
     private static final double DRIVE_IMaxAccum = 0;
     private static final double DRIVE_IAccum = 0;
     private static final double GEAR_RATIO = 5.0;
     private static final double WHEEL_R = 0.0762; //meters(6 inch wheel)
     private static final double SEC_PERMIN = 60;
-    private static final double FACTOR = 2.0 * Math.PI * WHEEL_R / (SEC_PERMIN * GEAR_RATIO);
+    private static final double FACTOR = (SEC_PERMIN * GEAR_RATIO) / (2.0 * Math.PI * WHEEL_R);
 
     // Fields
     // current velocities
@@ -54,6 +55,9 @@ public class VelDiffDrive extends RobotDriveBase {
 
     // Spark Max controllers
     CANSparkMax m_l1, m_l2, m_r1, m_r2;
+
+    private CANEncoder m_l1_encoder;
+    private CANEncoder m_r1_encoder;
 
     // Spark MAX PID controllers
     CANPIDController m_pid_l1, m_pid_l2, m_pid_r1, m_pid_r2;
@@ -73,6 +77,9 @@ public class VelDiffDrive extends RobotDriveBase {
         m_r1 = r1;
         m_r2 = r2;
         // init enabled flag to false
+
+        m_l1_encoder = m_l1.getEncoder();
+        m_r1_encoder = m_r1.getEncoder();
         
         // init accels to default
         // init velocities to zero.
@@ -172,7 +179,6 @@ public class VelDiffDrive extends RobotDriveBase {
         //fwd = limit(fwd);
         //turn = limit(turn);
         
-        
         // Apply deadbands
         fwd = applyDeadband(fwd, m_deadband);
         turn = applyDeadband(turn, m_deadband);
@@ -196,11 +202,19 @@ public class VelDiffDrive extends RobotDriveBase {
         // Normalize wheel speeds
         // Negate input to left side
 
+        System.out.printf("VellDiffDrive: %f (%f m/s), %f (%f m/s)\n", -left*FACTOR, -left, right*FACTOR, right);
+        System.out.printf("Actual RPM: %f, %f\n", 
+                            m_l1_encoder.getVelocity(),
+                            m_r1_encoder.getVelocity());
+
         // Update reference vel to motors.
         m_pid_l1.setReference(-left*FACTOR, ControlType.kVelocity);
         m_pid_l2.setReference(-left*FACTOR, ControlType.kVelocity); 
         m_pid_r1.setReference(right*FACTOR, ControlType.kVelocity);
         m_pid_r2.setReference(right*FACTOR, ControlType.kVelocity);
+
+        // Tell MotorSafety we updated the motors.
+        feed();
     }
 
     @Override
@@ -213,6 +227,11 @@ public class VelDiffDrive extends RobotDriveBase {
     // stopMotor for RobotDriveBase
     public void stopMotor() {
         // Stop all the motors.
+        System.out.println("MotorSafety stopped the VelDiffDrive.");
+        m_l1.set(0.0);
+        m_l2.set(0.0);
+        m_r1.set(0.0);
+        m_r2.set(0.0);
     }
 
 }

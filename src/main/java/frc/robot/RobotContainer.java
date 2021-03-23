@@ -225,7 +225,31 @@ public class RobotContainer {
 
   }
 
+  public void disabledInit() {
+    m_driveSubsystem.disabledInit();
+    m_storageSubsystem.m_isEnabled = false;
+  }
+
+
+  public void disabledPeriodic() {
+    m_driveSubsystem.disabledPeriodic();
+  }
+
+  public void autonomousInit() {
+    m_driveSubsystem.autonomousInit();
+
+    m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
+    m_storageSubsystem.m_isEnabled = true;
+    m_intakeSubsystem.resetPos();
+    //m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
+  }
+
+  public void autonomousPeriodic() {
+    m_driveSubsystem.autonomousPeriodic();
+  }
+
   public void teleopInit(){
+    m_driveSubsystem.teleopInit();
     //m_storageSubsystem.m_encoder.setPosition(0);
     //m_storageSubsystem.m_encoder2.setPosition(0);
     m_storageSubsystem.m_isEnabled = true;
@@ -234,11 +258,14 @@ public class RobotContainer {
     m_intakeSubsystem.resetPos();
   }
 
-  public void autoInit() {
-    m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
-    m_storageSubsystem.m_isEnabled = true;
-    m_intakeSubsystem.resetPos();
-    //m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
+  public void teleopPeriodic() {
+    m_driveSubsystem.teleopPeriodic();
+  }
+
+  public void testInit() {
+  }
+  
+  public void testPeriodic() {
   }
   
   /**
@@ -311,40 +338,40 @@ public class RobotContainer {
   }
 
 
-public void robotInit() {
-  autoChooser = new SendableChooser<SequentialCommandGroup>();
-  autoChooser.addDefault("Auto Mode A", m_autoCommand);
-  autoChooser.addObject("Auto Mode B", m_autoCommand2);
-  SmartDashboard.putData("Auto Mode", autoChooser);
+  public void robotInit() {
+    autoChooser = new SendableChooser<SequentialCommandGroup>();
+    autoChooser.addDefault("Auto Mode A", m_autoCommand);
+    autoChooser.addObject("Auto Mode B", m_autoCommand2);
+    SmartDashboard.putData("Auto Mode", autoChooser);
 
-  if (m_driveSubsystem.driveExist == false){
-    robotReady = false;
-  /*
-  } else if (m_hangSubsystem.hookExist == false){
-    robotReady = false;
-  } else if (m_hangSubsystem.winchExist == false){
-    robotReady = false;
-  */
-  
-  } else if (m_storageSubsystem.storageExist == false){
-    robotReady = false;
-  } else if (m_shooterSubsystem.turretExist == false){
-    robotReady = false;
-  } else if (m_shooterSubsystem.flyWheelExist == false){
-    robotReady = false;
-  } else if (m_intakeSubsystem.intakeExist == false){
-    robotReady = false;
+    if (m_driveSubsystem.driveExist == false){
+      robotReady = false;
+    /*
+    } else if (m_hangSubsystem.hookExist == false){
+      robotReady = false;
+    } else if (m_hangSubsystem.winchExist == false){
+      robotReady = false;
+    */
+    
+    } else if (m_storageSubsystem.storageExist == false){
+      robotReady = false;
+    } else if (m_shooterSubsystem.turretExist == false){
+      robotReady = false;
+    } else if (m_shooterSubsystem.flyWheelExist == false){
+      robotReady = false;
+    } else if (m_intakeSubsystem.intakeExist == false){
+      robotReady = false;
+    }
+    SmartDashboard.putBoolean("Robot Ready", robotReady);
+    Shuffleboard.getTab("SmartDashboard")
+    .add("DiffDrive", 0.5)
+    .withWidget(BuiltInWidgets.kDifferentialDrive)
+    .withProperties(Map.of("drive", 0.5));
+
   }
-  SmartDashboard.putBoolean("Robot Ready", robotReady);
-  Shuffleboard.getTab("SmartDashboard")
-  .add("DiffDrive", 0.5)
-  .withWidget(BuiltInWidgets.kDifferentialDrive)
-  .withProperties(Map.of("drive", 0.5));
-
-  }
 
 
-  public void disabledInit() {
-    m_storageSubsystem.m_isEnabled = false;
-  }
+
+
+
 }
