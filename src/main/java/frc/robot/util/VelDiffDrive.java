@@ -29,7 +29,7 @@ public class VelDiffDrive extends RobotDriveBase {
     private static final double DRIVE_I = 0;
     private static final double DRIVE_D = 0;
     private static final double DRIVE_Iz = 0;
-    private static final double DRIVE_FF = 0;
+    private static final double DRIVE_FF = 0.000178; //Based on 2800 RPM at 50%     
     private static final double DRIVE_minOutput = 0;
     private static final double DRIVE_maxOutput = 0;
     private static final double DRIVE_IMaxAccum = 0;
