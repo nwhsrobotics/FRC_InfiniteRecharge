@@ -26,11 +26,11 @@ public class VelDiffDrive extends RobotDriveBase {
     static final double DEFAULT_ACCEL_TURN = 1.0;      // [radians per second per second]
     static final double DEFAULT_MAX_V_FWD = 2.0;       // [meters per second]
     static final double DEFAULT_MAX_V_TURN = 2.0;      // [radians per second]
-    private static final double DRIVE_P = 0;
+    private static final double DRIVE_P = 0.0002;
     private static final double DRIVE_I = 0;
     private static final double DRIVE_D = 0;
     private static final double DRIVE_Iz = 0;
-    private static final double DRIVE_FF = 0.000178; //Based on 2800 RPM at 50%     
+    private static final double DRIVE_FF = 0.000182;//0.000179;     
     private static final double DRIVE_minOutput = -1.0;
     private static final double DRIVE_maxOutput = 1.0;
     private static final double DRIVE_IMaxAccum = 0;
