@@ -46,13 +46,13 @@ public class Drive1mCommand extends CommandBase {
       // decelerate
       m_v -= ACCEL * DELTA_T;
     }
-    // m_drive.setVel(m_v, 0.0);
+     m_drive.setVel(m_v, 0.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_drive.setVel(0.0, 0.0);
+     m_drive.setVel(0.0, 0.0);
   }
 
   // Returns true when the command should end.

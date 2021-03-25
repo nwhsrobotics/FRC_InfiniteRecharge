@@ -27,6 +27,7 @@ import frc.robot.commands.AutoCommandGroup2;
 import frc.robot.commands.BallOverrideCommand;
 import frc.robot.commands.BluePathCommand;
 import frc.robot.commands.DecideRedBlueCommand;
+import frc.robot.commands.DriveTestCommandGroup;
 import frc.robot.commands.MoveTurretCommand;
 import frc.robot.commands.ToggleSensorCommand;
 import frc.robot.commands.ToggleShootCommand;
@@ -328,7 +329,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
-    return m_autoCaptureGroup;
+    return new DriveTestCommandGroup(m_driveSubsystem);
+
     /*
     m_autoChooser = autoChooser.getSelected();
 

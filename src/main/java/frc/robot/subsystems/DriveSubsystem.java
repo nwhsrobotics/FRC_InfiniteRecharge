@@ -72,6 +72,13 @@ public class DriveSubsystem extends SubsystemBase {
       m_right = new SpeedControllerGroup(m_right1, m_right2);
       //Declare ArcadeDrive 
       // TODO: restore.
+      m_drive = new DifferentialDrive(m_left, m_right);
+      m_drive.setDeadband(0.15);
+      m_drive.setSafetyEnabled(false);
+
+      m_vDrive = new VelDiffDrive(m_left1, m_left2, m_right1, m_right2);
+      m_vDrive.setDeadband(0.15);
+      m_vDrive.setSafetyEnabled(false);
       
       
     }
@@ -85,12 +92,10 @@ public class DriveSubsystem extends SubsystemBase {
   public void disabledInit() {
     
     if(m_drive != null){
-      m_drive.close();
-      m_drive = null;
+      m_drive.setSafetyEnabled(false);
     }
     if(m_vDrive != null){
-      m_vDrive.disable();
-      m_vDrive = null;
+      m_vDrive.setSafetyEnabled(false);
     }
     if (driveExist) {
       m_left1.set(0.0);
@@ -104,8 +109,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void autonomousInit(){
-    m_vDrive = new VelDiffDrive(m_left1, m_left2, m_right1, m_right2);
-    m_vDrive.setDeadband(0.15);
+    m_vDrive.setSafetyEnabled(true);
+    
     // todo:
     m_vDrive.enable();
   }
@@ -115,8 +120,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void teleopInit(){
-    m_drive = new DifferentialDrive(m_left, m_right);
-    m_drive.setDeadband(0.15);
+    m_drive.setSafetyEnabled(true);
+    
+
+    System.out.print("driveSubsystem.telopInit");
     
 
   }
@@ -124,6 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
         // TODO: Restore teleop behavior after testing m_vDrive.
         //m_vDrive.arcadeDrive(m_power, m_turn);
+        System.out.print("driveSubsystem.telopPeriodic\n");
   }
 
 
@@ -150,6 +158,11 @@ public class DriveSubsystem extends SubsystemBase {
     reverseDrive = !reverseDrive;
     return reverseDrive;
   }
+
+public void setVel(double fwd, double turn) {
+  m_vDrive.setVel(fwd, turn);
+
+}
 
 
 }

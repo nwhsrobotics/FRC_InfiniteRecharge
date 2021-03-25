@@ -26,7 +26,7 @@ public class VelDiffDrive extends RobotDriveBase {
     static final double DEFAULT_ACCEL_TURN = 1.0;      // [radians per second per second]
     static final double DEFAULT_MAX_V_FWD = 2.0;       // [meters per second]
     static final double DEFAULT_MAX_V_TURN = 2.0;      // [radians per second]
-    private static final double DRIVE_P = 0.0002;
+    private static final double DRIVE_P = 0.0; //0.0002;
     private static final double DRIVE_I = 0;
     private static final double DRIVE_D = 0;
     private static final double DRIVE_Iz = 0;
@@ -35,7 +35,7 @@ public class VelDiffDrive extends RobotDriveBase {
     private static final double DRIVE_maxOutput = 1.0;
     private static final double DRIVE_IMaxAccum = 0;
     private static final double DRIVE_IAccum = 0;
-    private static final double GEAR_RATIO = 5.0;
+    private static final double GEAR_RATIO = -7.0;
     private static final double WHEEL_R = 0.0762; //meters(6 inch wheel)
     private static final double SEC_PERMIN = 60;
     private static final double FACTOR = (SEC_PERMIN * GEAR_RATIO) / (2.0 * Math.PI * WHEEL_R);
@@ -161,12 +161,14 @@ public class VelDiffDrive extends RobotDriveBase {
             //motor controller don't exist
             m_enable = false;
         }
+        setSafetyEnabled(m_enable);
         
     }
 
     public void disable() {
         // clear flag -- no more updates via arcadeDrive
         m_enable = false;
+        setSafetyEnabled(m_enable);
     }
 
     // Convert joystick inputs to velocity commands
@@ -191,30 +193,9 @@ public class VelDiffDrive extends RobotDriveBase {
 
         // (Update command velocities)
         
-        // Compute turn wheel speeds
-        double right_turn = turn * m_wheelBase / 2.0;
-        double left_turn = -turn * m_wheelBase / 2.0;
+        setVel(fwd, turn);
 
-        // Combine forward and turn wheel speeds
-        double right = fwd + right_turn;
-        double left = fwd + left_turn;
-
-        // Normalize wheel speeds
-        // Negate input to left side
-
-        System.out.printf("VellDiffDrive: %f (%f m/s), %f (%f m/s)\n", -left*FACTOR, -left, right*FACTOR, right);
-        System.out.printf("Actual RPM: %f, %f\n", 
-                            m_l1_encoder.getVelocity(),
-                            m_r1_encoder.getVelocity());
-
-        // Update reference vel to motors.
-        m_pid_l1.setReference(-left*FACTOR, ControlType.kVelocity);
-        m_pid_l2.setReference(-left*FACTOR, ControlType.kVelocity); 
-        m_pid_r1.setReference(right*FACTOR, ControlType.kVelocity);
-        m_pid_r2.setReference(right*FACTOR, ControlType.kVelocity);
-
-        // Tell MotorSafety we updated the motors.
-        feed();
+        
     }
 
     @Override
@@ -233,5 +214,35 @@ public class VelDiffDrive extends RobotDriveBase {
         m_r1.set(0.0);
         m_r2.set(0.0);
     }
+
+
+	public void setVel(double fwd, double turn) {
+        // Compute turn wheel speeds
+        double right_turn = turn * m_wheelBase / 2.0;
+        double left_turn = -turn * m_wheelBase / 2.0;
+
+        // Combine forward and turn wheel speeds
+        double right = fwd + right_turn;
+        double left = fwd + left_turn;
+
+        // Normalize wheel speeds
+        // Negate input to left side
+        
+
+        System.out.printf("VellDiffDrive: %f (%f m/s), %f (%f m/s)\n", -left*FACTOR, -left, right*FACTOR, right);
+        System.out.printf("Actual RPM: %f, %f\n", 
+                            m_l1_encoder.getVelocity(),
+                            m_r1_encoder.getVelocity());
+
+        // Update reference vel to motors.
+        m_pid_l1.setReference(-left*FACTOR, ControlType.kVelocity);
+        m_pid_l2.setReference(-left*FACTOR, ControlType.kVelocity); 
+        m_pid_r1.setReference(right*FACTOR, ControlType.kVelocity);
+        m_pid_r2.setReference(right*FACTOR, ControlType.kVelocity);
+
+        // Tell MotorSafety we updated the motors.
+        feed();
+
+	}
 
 }
