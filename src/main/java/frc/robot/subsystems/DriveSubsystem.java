@@ -19,8 +19,8 @@ import frc.robot.Constants;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private static final double POWER_FACTOR = 0.6;
-  private static final double TURN_FACTOR = 0.55;
+  private static final double POWER_FACTOR = 0.8;
+  private static final double TURN_FACTOR = 0.65;
   // To do: Declare motor controllers (CANSparkMax)
   private CANSparkMax m_left1 = null;
   private CANSparkMax m_left2 = null;
