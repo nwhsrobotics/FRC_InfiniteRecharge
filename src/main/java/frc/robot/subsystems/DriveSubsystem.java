@@ -123,7 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_drive.setSafetyEnabled(true);
     
 
-    System.out.print("driveSubsystem.telopInit");
+    //System.out.print("driveSubsystem.telopInit");
     
 
   }
@@ -131,7 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
         // TODO: Restore teleop behavior after testing m_vDrive.
         //m_vDrive.arcadeDrive(m_power, m_turn);
-        System.out.print("driveSubsystem.telopPeriodic\n");
+        //System.out.print("driveSubsystem.telopPeriodic\n");
   }
 
 

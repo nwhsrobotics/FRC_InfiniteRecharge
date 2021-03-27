@@ -136,9 +136,9 @@ public class RobotContainer {
  
 
   // TODO: create commands for shooter
-  private final MoveTurretCommand m_turretRightCommand = new MoveTurretCommand(m_shooterSubsystem, 20);
+  private final MoveTurretCommand m_turretRightCommand = new MoveTurretCommand(m_shooterSubsystem, 10);
   private final MoveTurretCommand m_stopTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
-  private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -20);
+  private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -10);
   private final FlyWheelTestingCommand m_flyWheelTestCmd = new FlyWheelTestingCommand(m_shooterSubsystem, m_joy1);
 
 
@@ -254,7 +254,7 @@ public class RobotContainer {
     //m_storageSubsystem.m_encoder.setPosition(0);
     //m_storageSubsystem.m_encoder2.setPosition(0);
     m_storageSubsystem.m_isEnabled = true;
-    m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
+    m_storageSubsystem.m_IndexerState = IndexerState.FULL;
     m_intakeOffcommand.schedule(true);
     m_intakeSubsystem.resetPos();
   }

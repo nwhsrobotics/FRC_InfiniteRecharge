@@ -214,7 +214,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     //Get Controller input
     m_inputPower = m_joy.getRawAxis(m_axis);
-    m_inputChanged = (m_inputPower - 1.00) / 2.00; //Since slider is from -1 to 1
+    m_inputChanged = -(m_inputPower - 1.00) / 2.00; //Since slider is from -1 to 1
+    
     
     //System.out.printf("Slider power: %f\n", m_inputChanged);
 
@@ -245,8 +246,15 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setShooterPower(double speed){
     if (m_flywheel != null && m_flywheel2 != null){
       //m_flyWheelSpeed = speed;
-      m_flywheelPID.setReference(speed*5600, ControlType.kVelocity);
-      m_flywheel2PID.setReference(-speed*5600, ControlType.kVelocity); //5600 is 100% power
+      double rpm = 3800 + speed*1800; //top speed: 5600
+      //double rpm = speed*5600;
+      
+      if(speed < 0.02){
+        rpm = 0;
+      }
+      
+      m_flywheelPID.setReference(-rpm, ControlType.kVelocity);
+      m_flywheel2PID.setReference(rpm, ControlType.kVelocity); //5600 is 100% power
       //m_flywheel.set(speed);
       //m_flywheel2.set(speed);
     }
