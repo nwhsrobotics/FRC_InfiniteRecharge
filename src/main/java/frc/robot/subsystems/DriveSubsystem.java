@@ -20,8 +20,8 @@ import frc.robot.util.VelDiffDrive;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private static final double POWER_FACTOR = 0.6;
-  private static final double TURN_FACTOR = 0.55;
+  private static final double POWER_FACTOR = 0.8;
+  private static final double TURN_FACTOR = 0.65;
   // To do: Declare motor controllers (CANSparkMax)
   private CANSparkMax m_left1 = null;
   private CANSparkMax m_left2 = null;
@@ -40,6 +40,8 @@ public class DriveSubsystem extends SubsystemBase {
   private VelDiffDrive m_vDrive;
   private SpeedControllerGroup m_left;
   private SpeedControllerGroup m_right;
+  private double m_fwdVel;
+  private double m_turnVel;
 
 
 
@@ -116,14 +118,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
   
   public void autonomousPeriodic(){
-    m_vDrive.arcadeDrive(m_power, m_turn);
+    m_vDrive.setVel(m_fwdVel, m_turnVel);
   }
 
   public void teleopInit(){
     m_drive.setSafetyEnabled(true);
     
 
-    System.out.print("driveSubsystem.telopInit");
+    //System.out.print("driveSubsystem.telopInit");
     
 
   }
@@ -131,7 +133,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
         // TODO: Restore teleop behavior after testing m_vDrive.
         //m_vDrive.arcadeDrive(m_power, m_turn);
-        System.out.print("driveSubsystem.telopPeriodic\n");
+        //System.out.print("driveSubsystem.telopPeriodic\n");
   }
 
 
@@ -160,7 +162,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
 public void setVel(double fwd, double turn) {
-  m_vDrive.setVel(fwd, turn);
+  m_fwdVel = fwd;
+  m_turnVel = turn;
 
 }
 

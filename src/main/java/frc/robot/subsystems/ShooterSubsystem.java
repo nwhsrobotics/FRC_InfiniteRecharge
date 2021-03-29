@@ -21,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class ShooterSubsystem extends SubsystemBase {
+  
   /**
    * Creates a new ShooterSubsystem.
    */
@@ -34,6 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private CANEncoder m_flyWheelEncoder2;
   private double kflywheelP, kflywheelI, kflywheelD, kflywheelIz, kflywheelFF, kflywheelmaxOutput, kflywheelminOutput;
   public boolean flyWheelExist = true;
+  private static final double FLYWHEEL_RAMPRATE = 1;
   //TODO: Add Turret
   private CANSparkMax m_turret = null;
   private CANPIDController m_turretPID = null;
@@ -72,6 +74,9 @@ public class ShooterSubsystem extends SubsystemBase {
     //TODO: Add Flywheel
       //1621 rpm 5676: NEO max (28%)
       
+      m_flywheel = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL1, MotorType.kBrushless);
+      m_flywheel2 = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL2, MotorType.kBrushless);
+
     if (Constants.Shooter.CANID_FLYWHEEL1 == 0 || Constants.Shooter.CANID_FLYWHEEL2 == 0){
       m_flywheel = null;
       m_flywheel2 = null;
@@ -80,15 +85,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     if (m_flywheel != null || m_flywheel2 != null){
-      m_flywheel = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL1, MotorType.kBrushless);
-      m_flywheel2 = new CANSparkMax(Constants.Shooter.CANID_FLYWHEEL2, MotorType.kBrushless);
       flyWheelExist = true;
       m_flyWheelEncoder = m_flywheel.getEncoder();
       m_flyWheelEncoder2 = m_flywheel2.getEncoder();
       m_flywheelPID = m_flywheel.getPIDController();
       m_flywheel2PID = m_flywheel2.getPIDController();
       
-      kflywheelP = 0;
+      kflywheelP = 0.0002;
       kflywheelI = 0;
       kflywheelIz = 0;
       kflywheelFF = 0.000178; //Based on 2800 at 50%      TODO: (VOLTAGE/MAXR RPM) X SETPOINT
@@ -116,6 +119,10 @@ public class ShooterSubsystem extends SubsystemBase {
       //Controller code for manual flywheel
       m_joy = joy;
       m_axis = axis;
+
+      //Ramp rate
+      m_flywheel.setClosedLoopRampRate(FLYWHEEL_RAMPRATE);
+      m_flywheel2.setClosedLoopRampRate(FLYWHEEL_RAMPRATE);
     
     }
     //TODO: Add Turret
@@ -196,16 +203,19 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //TODO: Add Flywheel
     //TODO: Add Turret
+    
+    /*
     if(m_flywheel == null){
       return; //TODO: RESTORE THIS!!!
     }
-    
+    */
 
 
 
     //Get Controller input
     m_inputPower = m_joy.getRawAxis(m_axis);
-    m_inputChanged = (m_inputPower - 1.00) / 2.00; //Since slider is from -1 to 1
+    m_inputChanged = -(m_inputPower - 1.00) / 2.00; //Since slider is from -1 to 1
+    
     
     //System.out.printf("Slider power: %f\n", m_inputChanged);
 
@@ -236,8 +246,15 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setShooterPower(double speed){
     if (m_flywheel != null && m_flywheel2 != null){
       //m_flyWheelSpeed = speed;
-      m_flywheelPID.setReference(speed*5600, ControlType.kVelocity);
-      m_flywheel2PID.setReference(-speed*5600, ControlType.kVelocity); //5600 is 100% power
+      double rpm = 3800 + speed*1800; //top speed: 5600
+      //double rpm = speed*5600;
+      
+      if(speed < 0.02){
+        rpm = 0;
+      }
+      
+      m_flywheelPID.setReference(-rpm, ControlType.kVelocity);
+      m_flywheel2PID.setReference(rpm, ControlType.kVelocity); //5600 is 100% power
       //m_flywheel.set(speed);
       //m_flywheel2.set(speed);
     }
@@ -275,7 +292,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void trackTarget(){
     if (m_turret != null){
       double currentPos = m_turretEncoder.getPosition();
-      double m_X = 0.1*(m_x - 320);
+      double m_X = 0.1*(m_x - 160);
       System.out.println(m_X);
       if (m_X > 15){
         m_X = 15;
