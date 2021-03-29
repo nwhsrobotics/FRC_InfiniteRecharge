@@ -40,6 +40,8 @@ public class DriveSubsystem extends SubsystemBase {
   private VelDiffDrive m_vDrive;
   private SpeedControllerGroup m_left;
   private SpeedControllerGroup m_right;
+  private double m_fwdVel;
+  private double m_turnVel;
 
 
 
@@ -116,7 +118,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
   
   public void autonomousPeriodic(){
-    m_vDrive.arcadeDrive(m_power, m_turn);
+    m_vDrive.setVel(m_fwdVel, m_turnVel);
   }
 
   public void teleopInit(){
@@ -160,7 +162,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
 public void setVel(double fwd, double turn) {
-  m_vDrive.setVel(fwd, turn);
+  m_fwdVel = fwd;
+  m_turnVel = turn;
 
 }
 
