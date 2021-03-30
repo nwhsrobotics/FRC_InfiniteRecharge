@@ -21,6 +21,8 @@ public class DriveTestCommandGroup extends SequentialCommandGroup {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new Drive1mCommand(driveSubsystem));
+    addCommands(new DriveFwdCommand(driveSubsystem, 10.0));
+    addCommands(new DriveFwdCommand(driveSubsystem, 5.0));
+    
   }
 }
