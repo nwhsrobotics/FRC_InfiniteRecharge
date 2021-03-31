@@ -6,23 +6,26 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class PathACommandGroup extends CommandGroup {
-  private CommandGroupBase m_ABlue;
-  private CommandGroupBase m_ARed;
+public class PathACommandGroup extends SequentialCommandGroup {
+  private PathABlueCommandGroup m_ABlue;
+  private PathARedCommandGroup m_ARed;
   private VisionSubsystem m_visionSubsystem;
   /**
    * Add your docs here.
    */
   public PathACommandGroup() {
+    // TODO: need to instantiate m_ABlue, m_ARed
+
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
     // these will run in order.
-    addSequential(new PathADecideRedBlueCommand(m_ABlue, m_ARed, m_visionSubsystem));
+    addCommands(new PathADecideRedBlueCommand(m_ABlue, m_ARed, m_visionSubsystem));
     
     // To run multiple commands at the same time,
     // use addParallel()

@@ -7,12 +7,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class DecideRedBlueCommand extends CommandBase {
+public class PathBDecideRedBlueCommand extends CommandBase {
   private static final double CENTER_X = 160.0;
   private CommandGroupBase m_blue;
   private CommandGroupBase m_red;
@@ -21,7 +20,7 @@ public class DecideRedBlueCommand extends CommandBase {
   /**
    * Creates a new DecideRedBlueCommand.
    */
-  public DecideRedBlueCommand(CommandGroupBase blue, CommandGroupBase red, VisionSubsystem visionSubsystem) {
+  public PathBDecideRedBlueCommand(CommandGroupBase blue, CommandGroupBase red, VisionSubsystem visionSubsystem) {
     m_blue = blue;
     m_red = red;
     m_visionSubsystem = visionSubsystem;
