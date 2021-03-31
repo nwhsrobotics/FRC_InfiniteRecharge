@@ -26,12 +26,12 @@ public class AutoCaptureGroup extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new IntakePosCommand(intakeSubsystem, true),
                 new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
-                new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem),
-                new PTAutoTurnCommand(driveSubsystem, 0.4, 0.25), //Turn right 40% for 0.25 sec
-                new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
-                new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem),
-                new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
                 new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem)
+                //new PTAutoTurnCommand(driveSubsystem, 0.4, 0.25), //Turn right 40% for 0.25 sec
+                //new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+               //new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem),
+                //new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+                //new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem)
                 );
   }
 }
