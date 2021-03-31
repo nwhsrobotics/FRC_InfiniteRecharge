@@ -36,6 +36,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 import frc.robot.commands.ExtendHookCommand;
 import frc.robot.commands.FlyWheelTestingCommand;
+import frc.robot.commands.FlywheelManualCommand;
 import frc.robot.commands.IndexerManualCommand;
 import frc.robot.commands.ParkCommand;
 import frc.robot.commands.RedPathCommand;
@@ -95,6 +96,9 @@ public class RobotContainer {
   private final JoystickButton joy1_b7 = new JoystickButton(m_joy1, 7);
   private final JoystickButton joy1_b8 = new JoystickButton(m_joy1, 8);
 
+  private final JoystickButton joy1_b11 = new JoystickButton(m_joy1, 11);
+  private final JoystickButton joy1_b12 = new JoystickButton(m_joy1, 12);
+
   private final POVButton joy1_upButton = new POVButton(m_joy1, 0);
   private final POVButton joy1_downButton = new POVButton(m_joy1, 180);
 
@@ -140,6 +144,9 @@ public class RobotContainer {
   private final MoveTurretCommand m_stopTurretCommand = new MoveTurretCommand(m_shooterSubsystem, 0);
   private final MoveTurretCommand m_turretLeftCommand = new MoveTurretCommand(m_shooterSubsystem, -10);
   private final FlyWheelTestingCommand m_flyWheelTestCmd = new FlyWheelTestingCommand(m_shooterSubsystem, m_joy1);
+
+  private final FlywheelManualCommand m_flywheelManual = new FlywheelManualCommand(m_shooterSubsystem, true);
+  private final FlywheelManualCommand m_flywheelAuto = new FlywheelManualCommand(m_shooterSubsystem, false);
 
 
 
@@ -309,14 +316,11 @@ public class RobotContainer {
     joy1_b6.toggleWhenPressed(m_trackTargetCommand);
     joy1_b7.whenPressed(m_indexerAuto);
     joy1_b8.whenPressed(m_indexerManual);
-    // TODO: Buttons for hang
+  
+    joy1_b11.whenPressed(m_flywheelAuto);
+    joy1_b12.whenPressed(m_flywheelManual);
 
-    //joy0_a.whenPressed(m_moveWinch);
-    //joy0_a.whenReleased(m_stopWinch);
-    //joy0_y.whenPressed(m_extendHookCommand);
-    //joy0_y.whenReleased(m_retractHookCommand);
-
-     // TODO: Buttons for drive
+    // TODO: Buttons for drive
     // TODO: Buttons for vision
     joy0_startButton.whenPressed(m_switchCameraCommand);
     // TODO: Buttons for control panel
@@ -329,7 +333,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
-    return new DriveTestCommandGroup(m_driveSubsystem);
+    return new AutoCaptureGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem, m_storageSubsystem);
 
     /*
     m_autoChooser = autoChooser.getSelected();

@@ -62,8 +62,15 @@ public class ShooterSubsystem extends SubsystemBase {
   private XboxController m_joy;
   private int m_axis; 
 
-  double m_inputPower = 0;
-  double m_inputChanged;
+  private double m_inputPower = 0;  //Did not have private before. Not sure if that was a problem
+  private double m_inputChanged; //Did not have private before. Not sure if that was a problem
+  private boolean m_manualFlywheel = true; //Starts in manual
+  private int m_misses = 0;
+  private double m_interpolatedRPM = 0;
+  //Arrays for interpolation
+  //TODO: FIND VALUES FOR ARRAY
+  private static final double[] DIST_IN_ARRAY = {0, 90, 150, 210, 270, 360}; //THIS IS IN INCHES
+  private static final double[] RPM_ARRAY = {1000, 2000, 2500, 3000, 4000, 5600}; //MAX RPM IS 5600
 
   public ShooterSubsystem(VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem, XboxController joy, int axis) {
     //ADDING THE FAKE MOTOR
@@ -203,29 +210,37 @@ public class ShooterSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //TODO: Add Flywheel
     //TODO: Add Turret
-    
-    /*
-    if(m_flywheel == null){
-      return; //TODO: RESTORE THIS!!!
-    }
-    */
-
-
-
-    //Get Controller input
-    m_inputPower = m_joy.getRawAxis(m_axis);
-    m_inputChanged = -(m_inputPower - 1.00) / 2.00; //Since slider is from -1 to 1
-    
-    
     //System.out.printf("Slider power: %f\n", m_inputChanged);
 
     if (m_flywheel != null || m_flywheel2 != null){
+
+      //Get Controller input 
+      m_inputPower = m_joy.getRawAxis(m_axis);
+      m_inputChanged = -(m_inputPower - 1.00) / 2.00; //Since slider is from -1 to 1
+
       SmartDashboard.putNumber("Flywheel Motor 1 Velocity", m_flyWheelEncoder.getVelocity());
       SmartDashboard.putNumber("Flywheel Motor 2 Velocity", m_flyWheelEncoder2.getVelocity());
       if (m_storageSubsystem.getShootState()) {
-        setShooterPower(m_inputChanged);
+
+        //If manual is true, shooter is driven by joystick
+        if(m_manualFlywheel){
+          setShooterPower(m_inputChanged);
+        }
+        else{
+          //Automatic distance to RPM
+          setShooterPower(interpolateRPM()); //Pass interpolation through for RPM
+        }
+        
       } else if (m_storageSubsystem.getArmed()){
-        setShooterPower(m_inputChanged);
+        //If manual is true, shooter is driven by joystick
+        if(m_manualFlywheel){
+          setShooterPower(m_inputChanged);
+        }
+        else{
+          //Automatic distance to RPM
+          setShooterPower(interpolateRPM()); //Pass interpolation through for RPM
+        }
+        
       } else {
         setShooterPower(0);
       }
@@ -245,11 +260,20 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setShooterPower(double speed){
     if (m_flywheel != null && m_flywheel2 != null){
-      //m_flyWheelSpeed = speed;
-      double rpm = 3800 + speed*1800; //top speed: 5600
-      //double rpm = speed*5600;
       
-      if(speed < 0.02){
+      double rpm;
+
+      //When in manual mode, account for control by using joystick
+      if(m_manualFlywheel){
+        rpm = 3800 + speed*1800; //top speed: 5600
+      }
+      else{
+        //This is when interpolation is passed through, meaning that speed = rpm
+        rpm = speed;
+      }
+      
+      
+      if(speed < 0.01){
         rpm = 0;
       }
       
@@ -259,6 +283,48 @@ public class ShooterSubsystem extends SubsystemBase {
       //m_flywheel2.set(speed);
     }
     
+  }
+
+  public void setManualFlywheel(boolean state){
+    //If true, makes flywheel controlled by joystick
+    m_manualFlywheel = state;
+  }
+
+  public double interpolateRPM(){
+    double m_distance = m_visionSubsystem.getTargetdistance();
+    int i;
+    //When no target is visible, set RPM to zero.
+    if(m_distance <= 0){
+      if(m_misses >= 10){
+        m_interpolatedRPM = 0;
+      }
+      else{
+        m_misses += 1;
+      }
+    }
+    //When target is seen...
+    else{
+      //If seen, reset miss counter
+      m_misses = 0;
+      //First find which range points distance is inbetween
+      for(i = 0; i<DIST_IN_ARRAY.length; i++){
+        if(DIST_IN_ARRAY[i] > m_distance){
+          break;
+        }
+      }
+      //Past furthest range in array
+      if(i >= DIST_IN_ARRAY.length){
+        m_interpolatedRPM = 0;
+      }
+      //Inbetweem DIST_ARRAY[i] and DIST_ARRAY[i-1], so interpolate with those points for linear interpolation
+      else{
+        //y = y1 + ((y2 - y1)/(x2 - x1)) * (x - x1)
+        m_interpolatedRPM = RPM_ARRAY[i-1] + ((RPM_ARRAY[i]-RPM_ARRAY[i-1])/(DIST_IN_ARRAY[i]-DIST_IN_ARRAY[i-1])) * (m_distance - DIST_IN_ARRAY[i-1]);
+      }
+    }
+    System.out.printf("Interpolated RPM: %f\n", m_interpolatedRPM);
+    //Return Calculated RPM
+    return m_interpolatedRPM;
   }
 
   //TODO: Add Turret

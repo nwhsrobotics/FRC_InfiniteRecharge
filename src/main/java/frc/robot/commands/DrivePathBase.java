@@ -51,9 +51,19 @@ public class DrivePathBase extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.printf("m_index: =%d", m_index);
+    System.out.printf("m_path[m_index] = %s", m_path[m_index]);
     if (m_index < m_path.length) {
+      if(m_drive == null){
+        System.out.println("m_drive is null");
+      }
+      if(m_path == null){
+        System.out.println("m_path is null");
+      }
+      
       m_drive.setVel(m_path[m_index].m_vel_mps, 
                      m_path[m_index].m_rot_rps);
+                    
       m_index += 1;
     }
   }

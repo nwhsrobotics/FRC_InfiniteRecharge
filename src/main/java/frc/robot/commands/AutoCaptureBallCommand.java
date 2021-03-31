@@ -24,8 +24,8 @@ public class AutoCaptureBallCommand extends CommandBase {
   1.00        0.5           Turning power too high
   0.75        0.5
   */
-  private static final double TURN_FACTOR =  0.75 / CENTER_X; //turning power per pixel
-  private static final double SPEED_FACTOR = 0.5 / 100.0; //Percent Power per inch
+  private static final double TURN_FACTOR =  -1.5 / CENTER_X; //turning radians per second per pixel
+  private static final double SPEED_FACTOR = 0.5 / 36.0; //meters per second per inch
   private static final double TERMINAL_DISTANCE = 60.0;
   private static final double BASE_DISTANCE = 20.0; //distance where power equals 0
   private DriveSubsystem m_drive;
@@ -71,12 +71,12 @@ public class AutoCaptureBallCommand extends CommandBase {
     if(m_terminalStage){
       //TODO:
       System.out.println("terminalStage\n");
-      //m_drive.setDrivePower(0.0,0.0);
+      m_drive.setDrivePower(0.0,0.0);
     }
     else if(dist_inches <= 0.0){
       //TODO: seek ball
       System.out.println("no ball\n");
-      m_drive.setDrivePower(0.0,0.0); //no ball to chase
+      m_drive.setVel(0.0,1.0); //no ball to chase
 
     }
     else{
@@ -90,15 +90,9 @@ public class AutoCaptureBallCommand extends CommandBase {
       }
 
       //convert distance to drive power
-      double power = (dist_inches - BASE_DISTANCE) * SPEED_FACTOR;
-      if(power < -1.0){
-        power = -1.0;
-      }
-      if(power > 1.0){
-        power = 1.0;
-      }
-      System.out.printf("power %f turn %f\n", power, turn);
-      m_drive.setDrivePower(power, turn);
+      double speed = (dist_inches - BASE_DISTANCE) * SPEED_FACTOR;
+      System.out.printf("power %f turn %f\n", speed, turn);
+      m_drive.setVel(speed, turn);
     }
 
     
