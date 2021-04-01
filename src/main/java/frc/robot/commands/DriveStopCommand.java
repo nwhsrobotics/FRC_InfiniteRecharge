@@ -8,22 +8,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
-public class PathBDecideRedBlueCommand extends CommandBase {
-  private static final double CENTER_X = 160.0;
-  private CommandGroupBase m_blue;
-  private CommandGroupBase m_red;
-  private VisionSubsystem m_visionSubsystem;
+public class DriveStopCommand extends CommandBase {
+  private DriveSubsystem m_drive;
 
   /**
-   * Creates a new DecideRedBlueCommand.
+   * Creates a new DriveStopCommand.
    */
-  public PathBDecideRedBlueCommand(CommandGroupBase blue, CommandGroupBase red, VisionSubsystem visionSubsystem) {
-    m_blue = blue;
-    m_red = red;
-    m_visionSubsystem = visionSubsystem;
+  public DriveStopCommand(DriveSubsystem driveSubsystem) {
+    m_drive = driveSubsystem;
+    addRequirements(driveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -35,17 +30,7 @@ public class PathBDecideRedBlueCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x_pixels = m_visionSubsystem.getBallX() - CENTER_X;
-    if(x_pixels <= 0){
-      System.out.println("Decided Blue\n");
-      m_blue.schedule();
-    }
-    else{
-      System.out.println("Decided Red\n");
-      m_red.schedule();
-    }
-    
-    
+    m_drive.setVel(0.0,0.0);
   }
 
   // Called once the command ends or is interrupted.

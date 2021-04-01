@@ -9,23 +9,35 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandGroupBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.StorageSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class PathACommandGroup extends SequentialCommandGroup {
-  private PathABlueCommandGroup m_ABlue;
-  private PathARedCommandGroup m_ARed;
+public class GalacticChallengeCommandGroup extends SequentialCommandGroup {
   private VisionSubsystem m_visionSubsystem;
   /**
    * Add your docs here.
    */
-  public PathACommandGroup() {
+  public GalacticChallengeCommandGroup(IntakeSubsystem intakeSubsystem, 
+  DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem) {
     // TODO: need to instantiate m_ABlue, m_ARed
 
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
     // these will run in order.
-    addCommands(new PathADecideRedBlueCommand(m_ABlue, m_ARed, m_visionSubsystem));
+    addCommands(
+      new IntakePosCommand(intakeSubsystem, true),
+      new PathDecideCommand(
+        new PathABlueCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
+        new PathARedCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
+        new PathBBlueCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
+        new PathBRedCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
+         
+       
+        m_visionSubsystem)
+      );
     
     // To run multiple commands at the same time,
     // use addParallel()
