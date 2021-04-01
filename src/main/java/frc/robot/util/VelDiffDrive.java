@@ -20,8 +20,7 @@ import edu.wpi.first.wpilibj.drive.RobotDriveBase;
  */
 public class VelDiffDrive extends RobotDriveBase {
     // Constants
-    static final double DEFAULT_METERS_PER_REV = 1.0;  // TODO
-    static final double DEFAULT_WHEEL_BASE = 1.0;      // TODO
+    static final double DEFAULT_WHEEL_BASE = 0.559;      // [meters] (22 inches)
     static final double DEFAULT_ACCEL_FWD = 1.0;       // [meters per second per second]
     static final double DEFAULT_ACCEL_TURN = 1.0;      // [radians per second per second]
     static final double DEFAULT_MAX_V_FWD = 2.0;       // [meters per second]
@@ -65,7 +64,6 @@ public class VelDiffDrive extends RobotDriveBase {
     // Position and heading estimates
     double m_x, m_y;   // [meters]
     double m_heading;  // [radians]
-    private double m_metersPerRev = DEFAULT_METERS_PER_REV;
     private double m_wheelBase = DEFAULT_WHEEL_BASE;
     private boolean m_enable = false;
 
@@ -87,11 +85,6 @@ public class VelDiffDrive extends RobotDriveBase {
         m_max_v_turn = DEFAULT_MAX_V_TURN;
         m_max_v_fwd = DEFAULT_MAX_V_FWD;
 
-    }
-
-    //
-    public void setMetersPerRev(double meters) {
-        m_metersPerRev = meters;
     }
 
     public void setWheelBase(double meters) {
