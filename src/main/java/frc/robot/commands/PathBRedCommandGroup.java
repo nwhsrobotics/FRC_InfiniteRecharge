@@ -7,18 +7,35 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.StorageSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
-public class PathBRedCommandGroup extends CommandGroup {
+public class PathBRedCommandGroup extends SequentialCommandGroup {
   /**
    * Add your docs here.
    */
-  public PathBRedCommandGroup() {
+  public PathBRedCommandGroup(IntakeSubsystem intakeSubsystem, 
+  DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem) {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
     // these will run in order.
-
+    addCommands(
+      new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+      new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
+      new DriveTurnCommand(driveSubsystem, -45.0), 
+      new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+      new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
+      new DriveTurnCommand(driveSubsystem, 90.0), 
+      new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+      new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
+      new DriveTurnCommand(driveSubsystem, -45.0),
+      new DriveFwdCommand(driveSubsystem, 12.0),
+      new DriveStopCommand(driveSubsystem)
+      );
     // To run multiple commands at the same time,
     // use addParallel()
     // e.g. addParallel(new Command1());
