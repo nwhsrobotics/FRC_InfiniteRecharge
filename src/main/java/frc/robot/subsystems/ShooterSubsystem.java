@@ -64,13 +64,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double m_inputPower = 0;  //Did not have private before. Not sure if that was a problem
   private double m_inputChanged; //Did not have private before. Not sure if that was a problem
-  private boolean m_manualFlywheel = true; //Starts in manual
+  private boolean m_manualFlywheel = false; //Starts in manual
   private int m_misses = 0;
   private double m_interpolatedRPM = 0;
   //Arrays for interpolation
   //TODO: FIND VALUES FOR ARRAY
-  private static final double[] DIST_IN_ARRAY = {0, 90, 150, 210, 270, 360}; //THIS IS IN INCHES
-  private static final double[] RPM_ARRAY = {1000, 2000, 2500, 3000, 4000, 5600}; //MAX RPM IS 5600
+  private static final double[] DIST_IN_ARRAY = {0, 109, 137, 163, 189, 236}; //THIS IS IN INCHES
+  private static final double[] RPM_ARRAY = {4400, 4400, 4450, 4550, 4700, 5600}; //MAX RPM IS 5600
+  private static final double CENTER_X = 162;
 
   public ShooterSubsystem(VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem, XboxController joy, int axis) {
     //ADDING THE FAKE MOTOR
@@ -358,7 +359,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void trackTarget(){
     if (m_turret != null){
       double currentPos = m_turretEncoder.getPosition();
-      double m_X = 0.1*(m_x - 160);
+      double m_X = 0.1*(m_x - CENTER_X);
       System.out.println(m_X);
       if (m_X > 15){
         m_X = 15;

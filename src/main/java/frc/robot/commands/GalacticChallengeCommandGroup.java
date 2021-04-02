@@ -27,6 +27,7 @@ public class GalacticChallengeCommandGroup extends SequentialCommandGroup {
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
     // these will run in order.
+    /*
     addCommands(
       new IntakePosCommand(intakeSubsystem, true),
       new PathDecideCommand(
@@ -38,7 +39,7 @@ public class GalacticChallengeCommandGroup extends SequentialCommandGroup {
        
         m_visionSubsystem)
       );
-    
+    */
     // To run multiple commands at the same time,
     // use addParallel()
     // e.g. addParallel(new Command1());
