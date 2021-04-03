@@ -131,6 +131,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
   public void teleopPeriodic() {
         m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
+        //m_drive.curvatureDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, false);
         // TODO: Restore teleop behavior after testing m_vDrive.
         //m_vDrive.arcadeDrive(m_power, m_turn);
         //System.out.print("driveSubsystem.telopPeriodic\n");

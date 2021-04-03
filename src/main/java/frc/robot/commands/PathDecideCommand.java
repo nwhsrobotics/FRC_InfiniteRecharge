@@ -15,7 +15,8 @@ public class PathDecideCommand extends CommandBase {
   private static final double CENTER_X = 160.0;
   private static final double DECISION_DIST_INCHES = 140; //todo:
   private static final double X_RED = 123; //todo:
-  private static final double X_BLUE = 163;//todo:
+  private static final double X1_BLUE = 105;//todo:
+  private static final double X2_BLUE = 155;
   private static final int NUM_OBSERVATIONS = 50;
   private CommandGroupBase m_A_blue;
   private CommandGroupBase m_A_red;
@@ -73,7 +74,7 @@ public class PathDecideCommand extends CommandBase {
         m_A_red.schedule();
       }
     }else{
-      if(x_pixels <= X_BLUE){
+      if((x_pixels >= X1_BLUE) && (x_pixels <= X2_BLUE)){
         System.out.printf("Decided Path B Blue\n");
         m_B_blue.schedule();
       }

@@ -64,7 +64,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double m_inputPower = 0;  //Did not have private before. Not sure if that was a problem
   private double m_inputChanged; //Did not have private before. Not sure if that was a problem
-  private boolean m_manualFlywheel = false; //Starts in manual
+  private boolean m_manualFlywheel = true; //Starts in manual
   private int m_misses = 0;
   private double m_interpolatedRPM = 0;
   //Arrays for interpolation
@@ -266,7 +266,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
       //When in manual mode, account for control by using joystick
       if(m_manualFlywheel){
-        rpm = 3800 + speed*1800; //top speed: 5600
+        rpm = 3300 + speed*2300; //top speed: 5600
       }
       else{
         //This is when interpolation is passed through, meaning that speed = rpm

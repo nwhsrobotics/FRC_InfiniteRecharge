@@ -26,14 +26,14 @@ public class PathBRedCommandGroup extends SequentialCommandGroup {
     addCommands(
       new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
       new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
-      new DriveTurnCommand(driveSubsystem, -90.0),
+      new DriveTurnCommand(driveSubsystem, -50.0),
       new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
       new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
-      new DriveTurnCommand(driveSubsystem, 90.0), 
+      new DriveTurnCommand(driveSubsystem, 60.0), 
       new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
       new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
-      new DriveTurnCommand(driveSubsystem, -75.0),
-      new DriveFwdCommand(driveSubsystem, 12.0),
+      new DriveTurnCommand(driveSubsystem, -45.0),
+      new DriveFwdCommand(driveSubsystem, 15.0),
       new DriveStopCommand(driveSubsystem)
       );
     // To run multiple commands at the same time,

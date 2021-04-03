@@ -35,6 +35,8 @@ public class AutoCaptureBallCommand extends CommandBase {
   private VisionSubsystem m_visionSubsystem;
 
   private double m_speed;
+
+  private int m_noballs;
  
   /**
    * Creates a new AutoCaptureBallCommand.
@@ -53,6 +55,7 @@ public class AutoCaptureBallCommand extends CommandBase {
   @Override
   public void initialize() {
     m_speed = 0;
+    m_noballs = 0;
     m_terminalStage = false;
     System.out.println("This captureBallCommand started\n");
   }
@@ -80,12 +83,16 @@ public class AutoCaptureBallCommand extends CommandBase {
     }
     else if(dist_inches <= 0.0){
       //TODO: seek ball
-      System.out.println("no ball\n");
-      m_drive.setVel(0.0,1.0); //no ball to chase
-
+      m_noballs += 1;
+      System.out.printf("No balls counter: %d", m_noballs);
+      if(m_noballs > 10){
+        System.out.println("Terminated due to seeing no balls");
+        m_terminalStage = true;
+      }
     }
     else{
       //convert angle to turning power
+      m_noballs = 0;
       double turn = x_pixels * TURN_FACTOR;
       if(turn <= -1.0){
         turn = -1.0;
