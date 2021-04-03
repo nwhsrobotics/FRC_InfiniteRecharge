@@ -13,9 +13,9 @@ import frc.robot.subsystems.VisionSubsystem;
 
 public class PathDecideCommand extends CommandBase {
   private static final double CENTER_X = 160.0;
-  private static final double DECISION_DIST_INCHES = 0; //todo:
-  private static final double X1 = 0; //todo:
-  private static final double X2 = 0;//todo:
+  private static final double DECISION_DIST_INCHES = 140; //todo:
+  private static final double X_RED = 105; //todo:
+  private static final double X_BLUE = 155;//todo:
   private CommandGroupBase m_A_blue;
   private CommandGroupBase m_A_red;
   private CommandGroupBase m_B_blue;
@@ -57,7 +57,7 @@ public class PathDecideCommand extends CommandBase {
       m_observations += 1;
     }
     if(dist_inches < DECISION_DIST_INCHES){
-      if(x_pixels <= X1){
+      if(x_pixels <= X_RED){
         System.out.println("Decide Path B Red\n");
         m_B_red.schedule();
       }
@@ -66,7 +66,7 @@ public class PathDecideCommand extends CommandBase {
         m_A_red.schedule();
       }
     }else{
-      if(x_pixels <= X2){
+      if(x_pixels <= X_BLUE){
         System.out.println("Decided Path B Blue\n");
         m_B_blue.schedule();
       }
