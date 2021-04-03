@@ -24,9 +24,12 @@ public class PathBRedCommandGroup extends SequentialCommandGroup {
     // addSequential(new Command2());
     // these will run in order.
     addCommands(
-      new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
-      new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
+      //new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+      //new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
+      new DriveTurnCommand(driveSubsystem, +45.0),
+      new DriveFwdCommand(driveSubsystem, 12.0),
       new DriveTurnCommand(driveSubsystem, -45.0), 
+      /*
       new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
       new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
       new DriveTurnCommand(driveSubsystem, 90.0), 
@@ -34,6 +37,7 @@ public class PathBRedCommandGroup extends SequentialCommandGroup {
       new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
       new DriveTurnCommand(driveSubsystem, -45.0),
       new DriveFwdCommand(driveSubsystem, 12.0),
+      */
       new DriveStopCommand(driveSubsystem)
       );
     // To run multiple commands at the same time,

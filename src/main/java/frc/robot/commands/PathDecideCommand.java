@@ -21,6 +21,7 @@ public class PathDecideCommand extends CommandBase {
   private CommandGroupBase m_B_blue;
   private CommandGroupBase m_B_red;
   private VisionSubsystem m_visionSubsystem;
+  private int m_observations;
 
   /**
    * Creates a new DecideRedBlueCommand.
@@ -38,14 +39,23 @@ public class PathDecideCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_observations = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(m_visionSubsystem == null){
+      System.out.println("Yea its def null");
+    }
     double dist_inches = m_visionSubsystem.getBalldistance();
     double x_pixels = m_visionSubsystem.getBallX();
-
+    if(dist_inches < 0){
+      return;
+    }
+    else{
+      m_observations += 1;
+    }
     if(dist_inches < DECISION_DIST_INCHES){
       if(x_pixels <= X1){
         System.out.println("Decide Path B Red\n");
@@ -79,6 +89,6 @@ public class PathDecideCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return m_observations >= 3;
   }
 }

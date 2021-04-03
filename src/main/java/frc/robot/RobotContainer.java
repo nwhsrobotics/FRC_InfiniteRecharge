@@ -37,6 +37,7 @@ import frc.robot.subsystems.StorageSubsystem;
 import frc.robot.commands.ExtendHookCommand;
 import frc.robot.commands.FlyWheelTestingCommand;
 import frc.robot.commands.FlywheelManualCommand;
+import frc.robot.commands.GalacticChallengeCommandGroup;
 import frc.robot.commands.IndexerManualCommand;
 import frc.robot.commands.ParkCommand;
 import frc.robot.commands.RedPathCommand;
@@ -333,7 +334,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
-    return new AutoCaptureGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem, m_storageSubsystem);
+    return new GalacticChallengeCommandGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem, m_storageSubsystem);
 
     /*
     m_autoChooser = autoChooser.getSelected();

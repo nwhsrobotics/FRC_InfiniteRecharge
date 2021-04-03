@@ -55,6 +55,7 @@ public class StorageSubsystem extends SubsystemBase {
       ARMING,
       SHOOTING_S1,
       SHOOTING_S2,
+      SHOOTING_S3,
       SHOOTING_ALL;
     }
 
@@ -322,10 +323,21 @@ public class StorageSubsystem extends SubsystemBase {
 
       case SHOOTING_S2:
         if (sensor[2] == false) {
-          m_beltState = BeltState.IDLE;
+          m_beltState = BeltState.SHOOTING_S3; //MOVES to S3 to put ball at sensor for next shot.
         }
         SmartDashboard.putString("Belt State is:   ", "Stage SHOOTING_2");
       break;
+
+      case SHOOTING_S3:
+        //Puts next ball at sensor[2] for next shot.
+
+        //If there are no balls, just go to idle OR if there is a ball then wait till ball is at sensor.
+        if ((m_IndexerState == IndexerState.EMPTYBALLS) || (sensor[2] == true)){
+          m_beltState = BeltState.IDLE;
+        }
+        SmartDashboard.putString("Belt State is:   ", "Stage SHOOTING_S3");
+      break;
+
 
       case SHOOTING_ALL:
       SmartDashboard.putString("Belt State is:   ", "Stage SHOOTING_ALL");
@@ -370,6 +382,10 @@ public class StorageSubsystem extends SubsystemBase {
       m_belt_2Position_in += M2_FACTOR*BELT_SHOOTINGSPEED;
       break;
 
+      case SHOOTING_S3:
+      m_belt_1Position_in += BELT_ARMINGSPEED;
+      m_belt_2Position_in += M2_FACTOR*BELT_ARMINGSPEED;
+      break;
 
       
     }
@@ -543,6 +559,7 @@ public class StorageSubsystem extends SubsystemBase {
     public void setManual(boolean state) {
       manual_switch = state;
       m_IndexerState = IndexerState.EMPTYBALLS;
+      m_beltState = BeltState.IDLE;
       m_belt_1Position_in = 0;
       m_belt_2Position_in = 0;
       m_encoder.setPosition(0);
