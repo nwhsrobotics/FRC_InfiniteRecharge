@@ -32,11 +32,10 @@ public class GalacticChallengeCommandGroup extends SequentialCommandGroup {
     addCommands(
       new IntakePosCommand(intakeSubsystem, true),
       new PathDecideCommand(
-        new PathBRedCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
-        new PathBRedCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
-        new PathBRedCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
-        new PathBRedCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
-         
+        new PathABlueCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
+        new PathARedCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
+        new PathBBlueCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem),
+        new PathBRedCommandGroup(intakeSubsystem, driveSubsystem, visionSubsystem, storageSubsystem), 
        
         m_visionSubsystem)
       );

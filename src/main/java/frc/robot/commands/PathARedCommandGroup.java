@@ -8,6 +8,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.StorageSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -16,9 +20,21 @@ public class PathARedCommandGroup extends SequentialCommandGroup {
   /**
    * Creates a new PathARedCommandGroup.
    */
-  public PathARedCommandGroup() {
+  public PathARedCommandGroup(IntakeSubsystem intakeSubsystem, 
+  DriveSubsystem driveSubsystem, VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+    addCommands(
+      new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+      new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
+      new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+      new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
+      new DriveTurnCommand(driveSubsystem, 90.0), 
+      new AutoCaptureBallCommand(driveSubsystem, visionSubsystem),
+      new AutoIntakeBallCommand(driveSubsystem, intakeSubsystem, storageSubsystem), 
+      new DriveTurnCommand(driveSubsystem, -90.0),
+      new DriveFwdCommand(driveSubsystem, 15.0),
+      new DriveStopCommand(driveSubsystem)
+      );
   }
 }
