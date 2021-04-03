@@ -28,9 +28,13 @@ public class AutoCaptureBallCommand extends CommandBase {
   private static final double SPEED_FACTOR = 0.5 / 36.0; //meters per second per inch
   private static final double TERMINAL_DISTANCE = 60.0;
   private static final double BASE_DISTANCE = 20.0; //distance where power equals 0
+
+  private static final double ACCEL = 4.0;
   private DriveSubsystem m_drive;
   private boolean m_terminalStage;
   private VisionSubsystem m_visionSubsystem;
+
+  private double m_speed;
  
   /**
    * Creates a new AutoCaptureBallCommand.
@@ -48,6 +52,7 @@ public class AutoCaptureBallCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_speed = 0;
     m_terminalStage = false;
     System.out.println("This captureBallCommand started\n");
   }
@@ -71,7 +76,7 @@ public class AutoCaptureBallCommand extends CommandBase {
     if(m_terminalStage){
       //TODO:
       System.out.println("terminalStage\n");
-      m_drive.setDrivePower(0.0,0.0);
+      //m_drive.setVel(0.0,0.0);
     }
     else if(dist_inches <= 0.0){
       //TODO: seek ball
@@ -91,8 +96,14 @@ public class AutoCaptureBallCommand extends CommandBase {
 
       //convert distance to drive power
       double speed = (dist_inches - BASE_DISTANCE) * SPEED_FACTOR;
-      System.out.printf("power %f turn %f\n", speed, turn);
-      m_drive.setVel(speed, turn);
+      if(speed > m_speed + 0.02 * ACCEL){
+        m_speed += 0.02 * ACCEL;
+      }
+      else{
+        m_speed = speed;
+      }
+      System.out.printf("power %f turn %f\n", m_speed, turn);
+      m_drive.setVel(m_speed, turn);
     }
 
     

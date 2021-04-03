@@ -221,12 +221,14 @@ public class VelDiffDrive extends RobotDriveBase {
         // Normalize wheel speeds
         // Negate input to left side
         
-
+        /*
         System.out.printf("VellDiffDrive: %f (%f m/s), %f (%f m/s)\n", -left*FACTOR, -left, right*FACTOR, right);
         System.out.printf("Actual RPM: %f, %f\n", 
                             m_l1_encoder.getVelocity(),
                             m_r1_encoder.getVelocity());
 
+        */
+        
         // Update reference vel to motors.
         m_pid_l1.setReference(-left*FACTOR, ControlType.kVelocity);
         m_pid_l2.setReference(-left*FACTOR, ControlType.kVelocity); 

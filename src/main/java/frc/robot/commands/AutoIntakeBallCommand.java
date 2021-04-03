@@ -13,8 +13,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.StorageSubsystem;
 
 public class AutoIntakeBallCommand extends CommandBase {
-  private static final double DRIVE_POWER = 0.4; //Drive power during autoIntake
-  private static final double AUTOINTAKETIME1 = 0.50; //Time that drive power is on
+  private static final double FWD_SPEED = 3.0; //Drive power during autoIntake
+  private static final double AUTOINTAKETIME1 = 1.5; //Time that drive power is on
   private static final double AUTOINTAKETIME2 = 5.0; //Time that intake runs
   private static final double INTAKE_POWER = 0.9; //Power that intake arm uses
   private DriveSubsystem m_drive;
@@ -44,7 +44,7 @@ public class AutoIntakeBallCommand extends CommandBase {
     m_elapsed = 0.0;
     m_finished = false;
     m_intook = false;
-    m_drive.setDrivePower(DRIVE_POWER, 0.0);
+    m_drive.setVel(FWD_SPEED, 0.0);
     m_intake.setIntakeStatus(true);
     m_intake.intakeMotor(INTAKE_POWER);
   }
@@ -55,7 +55,7 @@ public class AutoIntakeBallCommand extends CommandBase {
     m_elapsed += 0.020;
     System.out.printf("AutoIntakeBallCommand %f\n", m_elapsed);
     if(m_elapsed >= AUTOINTAKETIME1){
-      m_drive.setDrivePower(0.0, 0.0);
+      m_drive.setVel(0.0, 0.0);
     }
     if(m_storageSubsystem.isStorageRunning()){
       m_intake.intakeMotor(0.0);
@@ -72,7 +72,7 @@ public class AutoIntakeBallCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     System.out.println("AutoIntake Ended\n");
-    m_drive.setDrivePower(0.0, 0.0);
+    m_drive.setVel(0.0, 0.0);
     m_intake.intakeMotor(0.0);
     m_intake.setIntakeStatus(false);
     
