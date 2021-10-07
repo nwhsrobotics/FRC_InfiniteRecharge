@@ -334,7 +334,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public SequentialCommandGroup getAutonomousCommand() {
-    return new GalacticChallengeCommandGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem, m_storageSubsystem);
+    
+    return new InfiniteRechargeAutoCommandGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem, m_storageSubsystem, m_shooterSubsystem);
+    //return new GalacticChallengeCommandGroup(m_intakeSubsystem, m_driveSubsystem, m_visionSubsystem, m_storageSubsystem);
 
     /*
     m_autoChooser = autoChooser.getSelected();

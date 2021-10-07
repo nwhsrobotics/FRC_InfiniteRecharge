@@ -72,7 +72,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final double[] DIST_IN_ARRAY = {0, 109, 137, 163, 189, 236}; //THIS IS IN INCHES
   private static final double[] RPM_ARRAY = {4400, 4400, 4450, 4550, 4700, 5600}; //MAX RPM IS 5600
   private static final double CENTER_X = 162;
-
+  private boolean m_onTarget = false;
   public ShooterSubsystem(VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem, XboxController joy, int axis) {
     //ADDING THE FAKE MOTOR
     
@@ -368,10 +368,21 @@ public class ShooterSubsystem extends SubsystemBase {
       } 
 
 
+
+
       if (m_x != -1){
         m_turretPID.setReference((currentPos + m_X), ControlType.kPosition);
+        
+          m_onTarget =  (m_X == 0);
+        
+      } else{
+        m_onTarget = false;
       }
     }
+  }
+
+  public boolean getOnTarget(){
+    return m_onTarget;
   }
   public boolean getTurretExist(){
     return turretExist;
