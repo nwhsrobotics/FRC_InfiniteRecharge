@@ -39,6 +39,7 @@ import frc.robot.commands.FlyWheelTestingCommand;
 import frc.robot.commands.FlywheelManualCommand;
 import frc.robot.commands.GalacticChallengeCommandGroup;
 import frc.robot.commands.IndexerManualCommand;
+import frc.robot.commands.InfiniteRechargeAutoCommandGroup;
 import frc.robot.commands.ParkCommand;
 import frc.robot.commands.RedPathCommand;
 import frc.robot.commands.ReverseCommand;
