@@ -328,6 +328,17 @@ public class ShooterSubsystem extends SubsystemBase {
     return m_interpolatedRPM;
   }
 
+  public boolean isFlywheelReady(){
+    double targetSpeed = interpolateRPM();
+    double actualSpeed = m_flyWheelEncoder.getVelocity();
+
+    if (Math.abs(targetSpeed - actualSpeed) < 0.01*targetSpeed){
+      return true;
+    } else{
+      return false;
+    }
+  }
+
   //TODO: Add Turret
   public void MoveTurret(double setPoint){
     if (m_turret != null){

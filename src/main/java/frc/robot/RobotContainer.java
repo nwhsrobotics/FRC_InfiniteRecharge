@@ -248,10 +248,10 @@ public class RobotContainer {
   public void autonomousInit() {
     m_driveSubsystem.autonomousInit();
 
-    m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
+    //m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
     m_storageSubsystem.m_isEnabled = true;
     m_intakeSubsystem.resetPos();
-    //m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
+    m_storageSubsystem.m_IndexerState = IndexerState.INTAKE_S3;
   }
 
   public void autonomousPeriodic() {

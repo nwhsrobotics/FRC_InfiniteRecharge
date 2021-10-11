@@ -16,6 +16,8 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.ToggleArmedCommand;
 import frc.robot.commands.FlywheelManualCommand;
 
+
+
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
@@ -31,7 +33,15 @@ public class InfiniteRechargeAutoCommandGroup extends SequentialCommandGroup {
       new FlywheelManualCommand(shooterSubsytem, false), //flywheel on auto
       new ToggleArmedCommand(storageSubsystem), //TODO: Change to set armed command 
       new DriveFwdCommand(driveSubsystem, 5.0),
-      new TrackTargetAutoCommand(shooterSubsytem)
+      new TrackTargetAutoCommand(shooterSubsytem),
+      new WaitForFlywheelCommand(shooterSubsytem),
+      new ToggleShootCommand(storageSubsystem),
+      new TrackTargetAutoCommand(shooterSubsytem),
+      new WaitForFlywheelCommand(shooterSubsytem),
+      new ToggleShootCommand(storageSubsystem),
+      new TrackTargetAutoCommand(shooterSubsytem),
+      new WaitForFlywheelCommand(shooterSubsytem),
+      new ToggleShootCommand(storageSubsystem)
       //TODO: Continue developing autonomous routine
        
       
