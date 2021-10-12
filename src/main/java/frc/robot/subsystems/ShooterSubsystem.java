@@ -146,7 +146,7 @@ public class ShooterSubsystem extends SubsystemBase {
       turretExist = true;
       m_turretPID = m_turret.getPIDController();
       m_turretEncoder = m_turret.getEncoder();
-      m_turretEncoder.setPosition(0); //Zero at initial position
+      m_turretEncoder.setPosition(130); //initial position
 
       kP = 0.05;
       kI = 0;
@@ -343,15 +343,19 @@ public class ShooterSubsystem extends SubsystemBase {
   public void MoveTurret(double setPoint){
     if (m_turret != null){
       double currentPos = m_turretEncoder.getPosition();
-      if(m_turretEncoder.getPosition() >= 128) {
-        m_turretPID.setReference( 127 , ControlType.kPosition);
-      } else if(m_turretEncoder.getPosition() <= -128){
-        m_turretPID.setReference( -127 , ControlType.kPosition);
+      //System.out.println(currentPos);
+      SmartDashboard.putNumber("Turrent Current Pos", currentPos);
+      if(m_turretEncoder.getPosition() >= 200) {
+        m_turretPID.setReference( 200 , ControlType.kPosition);
+      } else if(m_turretEncoder.getPosition() <= -200){
+        m_turretPID.setReference( -200 , ControlType.kPosition);
       } else {
         m_turretPID.setReference( (currentPos + setPoint) , ControlType.kPosition);
       }
     }
   }
+
+  
   
   public void CenterTurret(){
     if (m_turret != null){
