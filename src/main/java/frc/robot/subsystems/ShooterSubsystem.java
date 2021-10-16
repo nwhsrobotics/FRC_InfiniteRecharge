@@ -72,6 +72,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final double[] DIST_IN_ARRAY = {0, 109, 137, 163, 189, 236}; //THIS IS IN INCHES
   private static final double[] RPM_ARRAY = {4400, 4400, 4450, 4550, 4700, 5600}; //MAX RPM IS 5600
   private static final double CENTER_X = 162;
+  private static final double FLYWHEEL_TOLERANCE = 0.10;  // Flywheel ready when within +/- this error.  Didn't work at 1%
   private boolean m_onTarget = false;
   public ShooterSubsystem(VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem, XboxController joy, int axis) {
     //ADDING THE FAKE MOTOR
@@ -331,8 +332,8 @@ public class ShooterSubsystem extends SubsystemBase {
   public boolean isFlywheelReady(){
     double targetSpeed = interpolateRPM();
     double actualSpeed = m_flyWheelEncoder.getVelocity();
-
-    if (Math.abs(targetSpeed - actualSpeed) < 0.01*targetSpeed){
+    SmartDashboard.putNumber("FlyWheel Desired Velocity:", targetSpeed);
+    if (Math.abs(targetSpeed - actualSpeed) < FLYWHEEL_TOLERANCE*targetSpeed){
       return true;
     } else{
       return false;
@@ -344,6 +345,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (m_turret != null){
       double currentPos = m_turretEncoder.getPosition();
       //System.out.println(currentPos);
+    
       SmartDashboard.putNumber("Turrent Current Pos", currentPos);
       if(m_turretEncoder.getPosition() >= 200) {
         m_turretPID.setReference( 200 , ControlType.kPosition);

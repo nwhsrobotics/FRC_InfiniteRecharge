@@ -38,7 +38,7 @@ public class ReverseCommand extends CommandBase {
   public void execute() {
     boolean reverse = m_driveSubsystem.Reverse();
     if(reverse){
-      m_visionSubsystem.setCamera(3);
+      m_visionSubsystem.setCamera(2);
     }
     else{
       m_visionSubsystem.setCamera(1);

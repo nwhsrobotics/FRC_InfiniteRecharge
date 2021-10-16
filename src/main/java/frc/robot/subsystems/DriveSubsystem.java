@@ -65,10 +65,10 @@ public class DriveSubsystem extends SubsystemBase {
     }
     if (m_left1 != null || m_left2 != null || m_right1 != null || m_right2 != null){
       //Set Idle mode for breaking
-      m_left1.setIdleMode(IdleMode.kCoast);
-      m_left2.setIdleMode(IdleMode.kCoast);
-      m_right1.setIdleMode(IdleMode.kCoast);
-      m_right2.setIdleMode(IdleMode.kCoast);
+      m_left1.setIdleMode(IdleMode.kBrake);
+      m_left2.setIdleMode(IdleMode.kBrake);
+      m_right1.setIdleMode(IdleMode.kBrake);
+      m_right2.setIdleMode(IdleMode.kBrake);
       //Declare motor groups 
       m_left  = new SpeedControllerGroup(m_left1, m_left2);
       m_right = new SpeedControllerGroup(m_right1, m_right2);

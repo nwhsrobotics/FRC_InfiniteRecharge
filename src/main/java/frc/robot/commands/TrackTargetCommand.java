@@ -33,7 +33,6 @@ public class TrackTargetCommand extends CommandBase {
   @Override
   public void execute() {
     m_shooterSubsystem.trackTarget();
-    System.out.println();
   }
 
   // Called once the command ends or is interrupted.

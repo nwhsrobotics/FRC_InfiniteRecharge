@@ -11,7 +11,8 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class WaitForFlywheelCommand extends CommandBase {
   /** Creates a new WaitForFlywheelCommand. */
   private ShooterSubsystem m_shooterSubsystem;
-  
+  private double m_time_s = 0.0;
+
   public WaitForFlywheelCommand(ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooterSubsystem);
@@ -20,11 +21,15 @@ public class WaitForFlywheelCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_time_s = 1.0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_time_s -= 0.02;
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -33,6 +38,6 @@ public class WaitForFlywheelCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_shooterSubsystem.isFlywheelReady();
+    return (m_shooterSubsystem.isFlywheelReady() || m_time_s <= 0.0);
   }
 }
