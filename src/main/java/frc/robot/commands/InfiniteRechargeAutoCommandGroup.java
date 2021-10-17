@@ -33,7 +33,7 @@ public class InfiniteRechargeAutoCommandGroup extends SequentialCommandGroup {
       new FlywheelManualCommand(shooterSubsytem, false), //flywheel on auto
       new TurretAutoMoveCommand(shooterSubsytem),
       //new ToggleArmedCommand(storageSubsystem),//TODO: Change to set armed command 
-      new DriveFwdCommand(driveSubsystem, 6.0),
+      new DriveAutoFwdCommand(driveSubsystem, 6.0),
       new TrackTargetAutoCommand(shooterSubsytem),
       new WaitForFlywheelCommand(shooterSubsytem),
       new ToggleShootCommand(storageSubsystem),

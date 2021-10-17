@@ -251,7 +251,7 @@ public class RobotContainer {
     //m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
     m_storageSubsystem.m_isEnabled = true;
     m_intakeSubsystem.resetPos();
-    m_storageSubsystem.m_IndexerState = IndexerState.ARMED_S3;
+    m_storageSubsystem.m_IndexerState = IndexerState.INTAKE_S2;
   }
 
   public void autonomousPeriodic() {
@@ -263,7 +263,7 @@ public class RobotContainer {
     //m_storageSubsystem.m_encoder.setPosition(0);
     //m_storageSubsystem.m_encoder2.setPosition(0);
     m_storageSubsystem.m_isEnabled = true;
-    m_storageSubsystem.m_IndexerState = IndexerState.FULL;
+    //m_storageSubsystem.m_IndexerState = IndexerState.EMPTYBALLS;
     m_intakeOffcommand.schedule(true);
     m_intakeSubsystem.resetPos();
   }

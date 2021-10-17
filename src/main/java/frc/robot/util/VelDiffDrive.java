@@ -160,6 +160,11 @@ public class VelDiffDrive extends RobotDriveBase {
 
     public void disable() {
         // clear flag -- no more updates via arcadeDrive
+        m_l1.getPIDController().setReference(0.0, ControlType.kDutyCycle);
+        m_l2.getPIDController().setReference(0.0, ControlType.kDutyCycle);
+        m_r1.getPIDController().setReference(0.0, ControlType.kDutyCycle);
+        m_r2.getPIDController().setReference(0.0, ControlType.kDutyCycle);
+
         m_enable = false;
         setSafetyEnabled(m_enable);
     }

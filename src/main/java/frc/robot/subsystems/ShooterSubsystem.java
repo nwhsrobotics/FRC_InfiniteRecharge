@@ -72,7 +72,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final double[] DIST_IN_ARRAY = {0, 109, 137, 163, 189, 236}; //THIS IS IN INCHES
   private static final double[] RPM_ARRAY = {4400, 4400, 4450, 4550, 4700, 5600}; //MAX RPM IS 5600
   private static final double CENTER_X = 162;
-  private static final double FLYWHEEL_TOLERANCE = 0.10;  // Flywheel ready when within +/- this error.  Didn't work at 1%
+  private static final double FLYWHEEL_TOLERANCE = 0.2;  // Flywheel ready when within +/- this error.  Didn't work at 1%
   private boolean m_onTarget = false;
   public ShooterSubsystem(VisionSubsystem visionSubsystem, StorageSubsystem storageSubsystem, XboxController joy, int axis) {
     //ADDING THE FAKE MOTOR

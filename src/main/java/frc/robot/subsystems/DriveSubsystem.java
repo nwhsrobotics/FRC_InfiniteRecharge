@@ -37,7 +37,7 @@ public class DriveSubsystem extends SubsystemBase {
   private boolean reverseDrive = false;
   private double m_turn = 0.0;
   private double m_power = 0.0;
-  private VelDiffDrive m_vDrive;
+  // private VelDiffDrive m_vDrive;
   private SpeedControllerGroup m_left;
   private SpeedControllerGroup m_right;
   private double m_fwdVel;
@@ -78,9 +78,9 @@ public class DriveSubsystem extends SubsystemBase {
       m_drive.setDeadband(0.15);
       m_drive.setSafetyEnabled(false);
 
-      m_vDrive = new VelDiffDrive(m_left1, m_left2, m_right1, m_right2);
-      m_vDrive.setDeadband(0.15);
-      m_vDrive.setSafetyEnabled(false);
+      // m_vDrive = new VelDiffDrive(m_left1, m_left2, m_right1, m_right2);
+      // m_vDrive.setDeadband(0.15);
+      // m_vDrive.setSafetyEnabled(false);
       
       
     }
@@ -96,9 +96,10 @@ public class DriveSubsystem extends SubsystemBase {
     if(m_drive != null){
       m_drive.setSafetyEnabled(false);
     }
-    if(m_vDrive != null){
-      m_vDrive.setSafetyEnabled(false);
-    }
+    // if(m_vDrive != null){
+    //   m_vDrive.setSafetyEnabled(false);
+    //   m_vDrive.disable();
+    // }
     if (driveExist) {
       m_left1.set(0.0);
       m_left2.set(0.0);
@@ -111,17 +112,21 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void autonomousInit(){
-    m_vDrive.setSafetyEnabled(true);
+    // m_vDrive.setSafetyEnabled(true);
     
     // todo:
-    m_vDrive.enable();
+    // m_vDrive.enable();
   }
   
   public void autonomousPeriodic(){
-    m_vDrive.setVel(m_fwdVel, m_turnVel);
+    // m_vDrive.setVel(m_fwdVel, m_turnVel);
+    m_drive.arcadeDrive(m_power * POWER_FACTOR, m_turn * TURN_FACTOR, true);
   }
 
   public void teleopInit(){
+    // if (m_vDrive != null) {
+    //   m_vDrive.disable();
+    // }
     m_drive.setSafetyEnabled(true);
     
 

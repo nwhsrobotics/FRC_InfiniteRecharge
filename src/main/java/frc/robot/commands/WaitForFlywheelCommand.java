@@ -38,6 +38,6 @@ public class WaitForFlywheelCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_shooterSubsystem.isFlywheelReady() || m_time_s <= 0.0);
+    return (m_shooterSubsystem.isFlywheelReady());
   }
 }
